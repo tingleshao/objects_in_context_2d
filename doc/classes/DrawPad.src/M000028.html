@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>refresh (DrawPad)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File module/drawPad.rb, line 39</span>
+   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">refresh</span>()
+     <span class="ruby-identifier">paint</span>
+     <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">click</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">button</span>, <span class="ruby-identifier">left</span>, <span class="ruby-identifier">top</span><span class="ruby-operator">|</span>
+       <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@inCircle</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">false</span>
+         <span class="ruby-ivar">@atoms</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-identifier">left</span>, <span class="ruby-identifier">top</span>, <span class="ruby-value">10</span>]
+         <span class="ruby-ivar">@inCircle</span> = <span class="ruby-keyword kw">true</span>
+         <span class="ruby-identifier">paint</span>
+       <span class="ruby-keyword kw">else</span> 
+         <span class="ruby-ivar">@atoms</span>.<span class="ruby-identifier">last</span>[<span class="ruby-value">2</span>] = <span class="ruby-ivar">@atoms</span>.<span class="ruby-identifier">last</span>[<span class="ruby-value">2</span>] <span class="ruby-operator">+</span> <span class="ruby-value">1.5</span>
+         <span class="ruby-identifier">paint</span>
+       <span class="ruby-keyword kw">end</span>
+   <span class="ruby-keyword kw">end</span>
+   <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">keypress</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">k</span><span class="ruby-operator">|</span>
+     <span class="ruby-keyword kw">if</span> <span class="ruby-node">&quot;#{k.inspect}&quot;</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;g&quot;</span>
+     <span class="ruby-keyword kw">else</span>
+       <span class="ruby-ivar">@inCircle</span> = <span class="ruby-keyword kw">false</span>
+     <span class="ruby-keyword kw">end</span>
+   <span class="ruby-keyword kw">end</span>
+ <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

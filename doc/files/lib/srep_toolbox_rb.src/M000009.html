@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>computeBaseKappa (lib/srep_toolbox.rb)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/srep_toolbox.rb, line 227</span>
+<span class="ruby-keyword kw">def</span> <span class="ruby-identifier">computeBaseKappa</span>(<span class="ruby-identifier">xt</span>,<span class="ruby-identifier">yt</span>, <span class="ruby-identifier">indices</span>, <span class="ruby-identifier">h</span>, <span class="ruby-identifier">rt</span>)
+  <span class="ruby-comment cmt"># this function computes kappas at base points using the curvature formula</span>
+  <span class="ruby-comment cmt"># also checks whether rk at these base points are smaller than 1</span>
+  <span class="ruby-comment cmt"># k = (x'y''-y'x'') / (x'^2+y'^2)^(3/2)</span>
+  <span class="ruby-comment cmt"># compute numerical derivatives </span>
+  <span class="ruby-comment cmt"># for end points the way to compute derivatives are different</span>
+  <span class="ruby-comment cmt"># the index should not contain the first and the last index</span>
+  <span class="ruby-identifier">dx</span> = []
+  <span class="ruby-identifier">dy</span> = []
+  <span class="ruby-identifier">ddx</span> = []
+  <span class="ruby-identifier">ddy</span> = []
+  <span class="ruby-identifier">dx0</span> = (<span class="ruby-identifier">xt</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">xt</span>[<span class="ruby-value">0</span>]) <span class="ruby-operator">/</span> <span class="ruby-identifier">h</span>
+  <span class="ruby-identifier">dx1</span> = (<span class="ruby-identifier">xt</span>[<span class="ruby-value">2</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">xt</span>[<span class="ruby-value">1</span>]) <span class="ruby-operator">/</span> <span class="ruby-identifier">h</span>
+  <span class="ruby-identifier">dxe</span> = (<span class="ruby-identifier">xt</span>[<span class="ruby-value">-1</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">xt</span>[<span class="ruby-value">-2</span>]) <span class="ruby-operator">/</span> <span class="ruby-identifier">h</span>
+  <span class="ruby-identifier">dxem1</span> = (<span class="ruby-identifier">xt</span>[<span class="ruby-value">-2</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">xt</span>[<span class="ruby-value">-3</span>]) <span class="ruby-operator">/</span> <span class="ruby-identifier">h</span>
+  <span class="ruby-identifier">ddx0</span> = (<span class="ruby-identifier">dx1</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">dx0</span>) <span class="ruby-operator">/</span> <span class="ruby-identifier">h</span>
+  <span class="ruby-identifier">ddxe</span> = (<span class="ruby-identifier">dxe</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">dxem1</span>) <span class="ruby-operator">/</span> <span class="ruby-identifier">h</span>
+  <span class="ruby-identifier">dy0</span> = (<span class="ruby-identifier">yt</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">yt</span>[<span class="ruby-value">0</span>]) <span class="ruby-operator">/</span> <span class="ruby-identifier">h</span>
+  <span class="ruby-identifier">dy1</span> = (<span class="ruby-identifier">yt</span>[<span class="ruby-value">2</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">yt</span>[<span class="ruby-value">1</span>]) <span class="ruby-operator">/</span> <span class="ruby-identifier">h</span>
+  <span class="ruby-identifier">dye</span> = (<span class="ruby-identifier">yt</span>[<span class="ruby-value">-1</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">yt</span>[<span class="ruby-value">-2</span>]) <span class="ruby-operator">/</span> <span class="ruby-identifier">h</span>
+  <span class="ruby-identifier">dyem1</span> = (<span class="ruby-identifier">yt</span>[<span class="ruby-value">-2</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">yt</span>[<span class="ruby-value">-3</span>]) <span class="ruby-operator">/</span> <span class="ruby-identifier">h</span>
+  <span class="ruby-identifier">ddy0</span> = (<span class="ruby-identifier">dy1</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">dy0</span>) <span class="ruby-operator">/</span> <span class="ruby-identifier">h</span>
+  <span class="ruby-identifier">ddye</span> = (<span class="ruby-identifier">dye</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">dyem1</span>) <span class="ruby-operator">/</span> <span class="ruby-identifier">h</span>
+  <span class="ruby-identifier">dx</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">dx0</span>
+  <span class="ruby-identifier">dy</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">dy0</span>
+  <span class="ruby-identifier">ddx</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">ddx0</span>
+  <span class="ruby-identifier">ddy</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">ddy0</span>
+ 
+  <span class="ruby-identifier">rs</span> = []
+  <span class="ruby-identifier">rs</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">rt</span>[<span class="ruby-value">0</span>]
+ 
+  <span class="ruby-identifier">indices</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">i</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">i</span> <span class="ruby-operator">!=</span> (<span class="ruby-identifier">xt</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>)   
+      <span class="ruby-identifier">dxi</span> = ( <span class="ruby-identifier">xt</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">xt</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>] ) <span class="ruby-operator">/</span> (<span class="ruby-value">2</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">h</span>)
+      <span class="ruby-identifier">dyi</span> = ( <span class="ruby-identifier">yt</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">yt</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>] ) <span class="ruby-operator">/</span> (<span class="ruby-value">2</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">h</span>)
+      <span class="ruby-identifier">ddxi</span> = (<span class="ruby-identifier">xt</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>] <span class="ruby-operator">-</span> (<span class="ruby-value">2</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">xt</span>[<span class="ruby-identifier">i</span>]) <span class="ruby-operator">+</span> <span class="ruby-identifier">xt</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>]) <span class="ruby-operator">/</span> (<span class="ruby-identifier">h</span><span class="ruby-operator">**</span><span class="ruby-value">2.0</span>)
+      <span class="ruby-identifier">ddyi</span> = (<span class="ruby-identifier">yt</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>] <span class="ruby-operator">-</span> (<span class="ruby-value">2</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">yt</span>[<span class="ruby-identifier">i</span>]) <span class="ruby-operator">+</span> <span class="ruby-identifier">yt</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>]) <span class="ruby-operator">/</span> (<span class="ruby-identifier">h</span><span class="ruby-operator">**</span><span class="ruby-value">2.0</span>) 
+      <span class="ruby-identifier">dx</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">dxi</span> 
+      <span class="ruby-identifier">dy</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">dyi</span> 
+      <span class="ruby-identifier">ddx</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">ddxi</span>
+      <span class="ruby-identifier">ddy</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">ddyi</span>
+ 
+      <span class="ruby-identifier">rs</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">rt</span>[<span class="ruby-identifier">i</span>]
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span>
+
+  <span class="ruby-identifier">rs</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">rt</span>[<span class="ruby-value">-1</span>]
+  <span class="ruby-identifier">dx</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">dxe</span>
+  <span class="ruby-identifier">dy</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">dye</span>
+  <span class="ruby-identifier">ddx</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">ddxe</span>
+  <span class="ruby-identifier">ddy</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">ddye</span>
+  <span class="ruby-identifier">kappa</span> = []
+  <span class="ruby-identifier">kr</span> = []
+  <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;***********************************&quot;</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;dx: &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">dx</span>.<span class="ruby-identifier">to_s</span>
+  <span class="ruby-identifier">dx</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">dxi</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">ki</span> = (<span class="ruby-identifier">dx</span>[<span class="ruby-identifier">i</span>] <span class="ruby-operator">*</span> <span class="ruby-identifier">ddy</span>[<span class="ruby-identifier">i</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">dy</span>[<span class="ruby-identifier">i</span>] <span class="ruby-operator">*</span> <span class="ruby-identifier">ddx</span>[<span class="ruby-identifier">i</span>]) <span class="ruby-operator">/</span> ((<span class="ruby-identifier">dx</span>[<span class="ruby-identifier">i</span>]<span class="ruby-operator">**</span><span class="ruby-value">2</span>)<span class="ruby-operator">+</span>(<span class="ruby-identifier">dy</span>[<span class="ruby-identifier">i</span>]<span class="ruby-operator">**</span><span class="ruby-value">2</span>))<span class="ruby-operator">**</span>(<span class="ruby-value">3.0</span><span class="ruby-operator">/</span><span class="ruby-value">2.0</span>) 
+    <span class="ruby-identifier">kappa</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">ki</span>
+    <span class="ruby-comment cmt">#compute k * r </span>
+    <span class="ruby-identifier">kri</span> = <span class="ruby-identifier">ki</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">rs</span>[<span class="ruby-identifier">i</span>]
+    <span class="ruby-identifier">kr</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">kri</span>
+  <span class="ruby-keyword kw">end</span>
+ 
+  <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">kappa</span>, <span class="ruby-identifier">kr</span> 
+<span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

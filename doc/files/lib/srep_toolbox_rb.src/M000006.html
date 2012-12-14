@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>interpolateSkeletalCurveGamma (lib/srep_toolbox.rb)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/srep_toolbox.rb, line 164</span>
+<span class="ruby-keyword kw">def</span> <span class="ruby-identifier">interpolateSkeletalCurveGamma</span>(<span class="ruby-identifier">xt</span>,<span class="ruby-identifier">yt</span>,<span class="ruby-identifier">step_size</span>,<span class="ruby-identifier">index</span>)
+<span class="ruby-comment cmt"># this function takes the discrete base points and interpolate the gamma (skeletal curves)</span>
+<span class="ruby-comment cmt">#   - interpolate gamma can be done using cubic spline </span>
+<span class="ruby-comment cmt">#   - this function uses system call on a python routine</span>
+  <span class="ruby-comment cmt"># give x, y, stepsize, retrun a interpolated dense points and write it into a file.</span>
+  <span class="ruby-comment cmt"># read that file. </span>
+  <span class="ruby-comment cmt"># then we have the gamma values. That is for one srep.</span>
+  <span class="ruby-comment cmt"># call the python script to generate intepolated gammas</span>
+  <span class="ruby-identifier">xs</span> = <span class="ruby-value str">'&quot;['</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">xt</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot; &quot;</span>) <span class="ruby-operator">+</span> <span class="ruby-value str">']&quot;'</span>
+  <span class="ruby-identifier">ys</span> = <span class="ruby-value str">'&quot;['</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">yt</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot; &quot;</span>) <span class="ruby-operator">+</span> <span class="ruby-value str">']&quot;'</span>
+  <span class="ruby-identifier">step_size_s</span> = <span class="ruby-identifier">step_size</span>.<span class="ruby-identifier">to_s</span>
+  <span class="ruby-identifier">index</span> = <span class="ruby-identifier">index</span>.<span class="ruby-identifier">to_s</span>
+  <span class="ruby-identifier">system</span>(<span class="ruby-value str">&quot;python python/curve_interpolate.py &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">xs</span> <span class="ruby-operator">+</span> <span class="ruby-value str">' '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">ys</span> <span class="ruby-operator">+</span> <span class="ruby-value str">' '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">step_size_s</span> <span class="ruby-operator">+</span> <span class="ruby-value str">' '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">index</span>.<span class="ruby-identifier">to_s</span>)
+  <span class="ruby-comment cmt"># the 'interpolated_points_[index]' file contains interpolated points</span>
+
+  <span class="ruby-identifier">curve_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">$points_file_path</span><span class="ruby-operator">+</span><span class="ruby-identifier">index</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-value str">&quot;r&quot;</span>)
+  <span class="ruby-identifier">ixs</span> = <span class="ruby-identifier">curve_file</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">split</span>(<span class="ruby-value str">' '</span>).<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">to_f</span>}
+  <span class="ruby-identifier">iys</span> = <span class="ruby-identifier">curve_file</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">split</span>(<span class="ruby-value str">' '</span>).<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">to_f</span>}
+  <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">ixs</span>, <span class="ruby-identifier">iys</span>
+<span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

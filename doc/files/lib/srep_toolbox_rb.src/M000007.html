@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>interpolateRadius (lib/srep_toolbox.rb)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/srep_toolbox.rb, line 185</span>
+<span class="ruby-keyword kw">def</span> <span class="ruby-identifier">interpolateRadius</span>(<span class="ruby-identifier">xt</span>,<span class="ruby-identifier">yt</span>,<span class="ruby-identifier">rt</span>,<span class="ruby-identifier">step_size</span>,<span class="ruby-identifier">index</span>)
+<span class="ruby-comment cmt"># this function interpolates r values</span>
+<span class="ruby-comment cmt"># parameters: x values         xt</span>
+<span class="ruby-comment cmt">#             y values         yt</span>
+<span class="ruby-comment cmt">#             r values         rt </span>
+<span class="ruby-comment cmt">#             step size        step_size</span>
+  <span class="ruby-identifier">xyt</span> = [<span class="ruby-value str">&quot;0&quot;</span>]
+  <span class="ruby-identifier">xt</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">x</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">i</span> <span class="ruby-operator">!=</span><span class="ruby-value">0</span> 
+      <span class="ruby-identifier">xy</span> = <span class="ruby-identifier">xyt</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>].<span class="ruby-identifier">to_f</span> <span class="ruby-operator">+</span> <span class="ruby-constant">Math</span>.<span class="ruby-identifier">sqrt</span>( (<span class="ruby-identifier">xt</span>[<span class="ruby-identifier">i</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">xt</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>]) <span class="ruby-operator">**</span> <span class="ruby-value">2</span> <span class="ruby-operator">+</span> (<span class="ruby-identifier">yt</span>[<span class="ruby-identifier">i</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">yt</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>]) <span class="ruby-operator">**</span> <span class="ruby-value">2</span> )
+      <span class="ruby-identifier">xyt</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">xy</span>.<span class="ruby-identifier">to_s</span>
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span>
+  <span class="ruby-identifier">xs</span> = <span class="ruby-value str">'&quot;['</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">xyt</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot; &quot;</span>) <span class="ruby-operator">+</span> <span class="ruby-value str">']&quot;'</span>
+  <span class="ruby-identifier">rs</span> = <span class="ruby-value str">'&quot;['</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">rt</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot; &quot;</span>) <span class="ruby-operator">+</span> <span class="ruby-value str">']&quot;'</span>
+  <span class="ruby-identifier">step_size_s</span> = <span class="ruby-identifier">step_size</span>.<span class="ruby-identifier">to_s</span>
+  <span class="ruby-identifier">system</span>(<span class="ruby-value str">&quot;python python/radius_interpolate.py &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">xs</span> <span class="ruby-operator">+</span> <span class="ruby-value str">' '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">rs</span> <span class="ruby-operator">+</span> <span class="ruby-value str">' '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">step_size_s</span> <span class="ruby-operator">+</span> <span class="ruby-value str">' '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">index</span> )
+  <span class="ruby-comment cmt"># the 'interpolated_radius_[index]' file contains interpolated points</span>
+  <span class="ruby-identifier">r_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">$radius_file_path</span><span class="ruby-operator">+</span><span class="ruby-identifier">index</span>, <span class="ruby-value str">&quot;r&quot;</span>)
+  <span class="ruby-identifier">irs</span> = <span class="ruby-identifier">r_file</span>.<span class="ruby-identifier">gets</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;irs: &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">irs</span>  
+  <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">irs</span>
+<span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>interpolateKappa (lib/srep_toolbox.rb)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/srep_toolbox.rb, line 209</span>
+<span class="ruby-keyword kw">def</span> <span class="ruby-identifier">interpolateKappa</span>(<span class="ruby-identifier">rt</span>, <span class="ruby-identifier">kt</span>, <span class="ruby-identifier">step_size</span>, <span class="ruby-identifier">index</span>)
+<span class="ruby-comment cmt"># since rk &lt; 1, we need get r to interpolate kappa</span>
+<span class="ruby-comment cmt"># rt is an array that contains radius </span>
+<span class="ruby-comment cmt"># this function produces the k array that has the same length as the r array</span>
+  <span class="ruby-identifier">rk</span> = [<span class="ruby-identifier">rt</span>,<span class="ruby-identifier">kt</span>].<span class="ruby-identifier">transpose</span>.<span class="ruby-identifier">map</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">reduce</span>(<span class="ruby-identifier">:*</span>)}
+  <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;inside 1: &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">rk</span>.<span class="ruby-identifier">to_s</span>
+  <span class="ruby-identifier">rkm1</span> = <span class="ruby-identifier">rk</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-value">1</span><span class="ruby-operator">-</span><span class="ruby-identifier">x</span>}
+  <span class="ruby-identifier">logrkm1</span> = <span class="ruby-identifier">rkm1</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-constant">Math</span>.<span class="ruby-identifier">log</span>(<span class="ruby-identifier">x</span>)}
+  <span class="ruby-identifier">logrkm1s</span> = <span class="ruby-value str">'&quot;['</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">logrkm1</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot; &quot;</span>) <span class="ruby-operator">+</span> <span class="ruby-value str">']&quot;'</span>
+  <span class="ruby-identifier">step_size_s</span> = <span class="ruby-identifier">step_size</span>.<span class="ruby-identifier">to_s</span>
+  <span class="ruby-identifier">system</span>(<span class="ruby-value str">&quot;python python/logrk_interpolate.py &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">logrkm1s</span> <span class="ruby-operator">+</span> <span class="ruby-value str">' '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">step_size_s</span> <span class="ruby-operator">+</span> <span class="ruby-value str">' '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">index</span>.<span class="ruby-identifier">to_s</span>)
+  <span class="ruby-comment cmt"># the 'interpolated_logrkm1s' file contains interpolated log(1-rk)</span>
+  <span class="ruby-identifier">logrkm1_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">$logrk_file_path</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">index</span>.<span class="ruby-identifier">to_s</span> , <span class="ruby-value str">&quot;r&quot;</span>)
+  <span class="ruby-identifier">ilogrkm1s</span> = <span class="ruby-identifier">logrkm1_file</span>.<span class="ruby-identifier">gets</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;ilogrkm1s: &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">ilogrkm1s</span>
+  <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">ilogrkm1s</span>
+<span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

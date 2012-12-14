@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>render_curve (Field)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File rablo2d.rb, line 129</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">render_curve</span>(<span class="ruby-identifier">sreps</span>, <span class="ruby-identifier">index</span>, <span class="ruby-identifier">srep</span>, <span class="ruby-identifier">shiftx</span>, <span class="ruby-identifier">shifty</span>)
+    <span class="ruby-identifier">file_name</span> = <span class="ruby-identifier">$points_file_path</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">index</span>.<span class="ruby-identifier">to_s</span>
+    <span class="ruby-keyword kw">if</span> <span class="ruby-constant">File</span><span class="ruby-operator">::</span><span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">file_name</span>)
+      <span class="ruby-identifier">gamma_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">file_name</span>, <span class="ruby-value str">&quot;r&quot;</span>)
+    <span class="ruby-keyword kw">else</span>
+      <span class="ruby-identifier">alert</span>(<span class="ruby-value str">'file does not exist, interpolate it now'</span>)
+      <span class="ruby-identifier">xt</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">atoms</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">atom</span><span class="ruby-operator">|</span> <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">x</span>}
+      <span class="ruby-identifier">yt</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">atoms</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">atom</span><span class="ruby-operator">|</span> <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">y</span>}
+      <span class="ruby-identifier">step_size</span> = <span class="ruby-value">0</span><span class="ruby-value">.01</span>
+      <span class="ruby-identifier">interpolateSkeletalCurveGamma</span>(<span class="ruby-identifier">xt</span>,<span class="ruby-identifier">yt</span>,<span class="ruby-identifier">step_size</span>,<span class="ruby-identifier">srep</span>.<span class="ruby-identifier">index</span>)
+      <span class="ruby-identifier">gamma_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">file_name</span>, <span class="ruby-value str">&quot;r&quot;</span>)
+    <span class="ruby-keyword kw">end</span> 
+    <span class="ruby-identifier">xs</span> = <span class="ruby-identifier">gamma_file</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">split</span>(<span class="ruby-value str">&quot; &quot;</span>).<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">to_f</span>}
+    <span class="ruby-identifier">ys</span> = <span class="ruby-identifier">gamma_file</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">split</span>(<span class="ruby-value str">&quot; &quot;</span>).<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">y</span><span class="ruby-operator">|</span> <span class="ruby-identifier">y</span>.<span class="ruby-identifier">to_f</span>}
+   
+    <span class="ruby-keyword kw">if</span> (<span class="ruby-identifier">srep</span>.<span class="ruby-identifier">interpolate_finished</span>)
+      <span class="ruby-identifier">xs</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">x</span>,<span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">spoke_ind</span> = <span class="ruby-identifier">i</span><span class="ruby-operator">*</span><span class="ruby-value">2</span>
+        <span class="ruby-identifier">atom_type</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">getExtendInterpolatedSpokesEnd</span>()[<span class="ruby-identifier">spoke_ind</span>][<span class="ruby-value">4</span>]
+        <span class="ruby-identifier">back_atom_type</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">getExtendInterpolatedSpokesEnd</span>()[<span class="ruby-identifier">spoke_ind</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>][<span class="ruby-value">4</span>]
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">atom_type</span> <span class="ruby-operator">!=</span> <span class="ruby-value str">'end'</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">back_atom_type</span> <span class="ruby-operator">!=</span> <span class="ruby-value str">'end'</span>
+          <span class="ruby-identifier">linkingIndex</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">getExtendInterpolatedSpokesEnd</span>()[<span class="ruby-identifier">spoke_ind</span>][<span class="ruby-value">2</span>]
+          <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">linkingIndex</span> <span class="ruby-operator">==</span> <span class="ruby-value">-1</span>
+            <span class="ruby-identifier">color1</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">color</span>
+          <span class="ruby-keyword kw">else</span> 
+            <span class="ruby-identifier">color1</span> = <span class="ruby-identifier">sreps</span>[<span class="ruby-identifier">linkingIndex</span>].<span class="ruby-identifier">color</span>
+          <span class="ruby-keyword kw">end</span>
+            <span class="ruby-identifier">linkingIndex</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">getExtendInterpolatedSpokesEnd</span>()[<span class="ruby-identifier">spoke_ind</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>][<span class="ruby-value">2</span>]
+          <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">linkingIndex</span> <span class="ruby-operator">==</span> <span class="ruby-value">-1</span>
+            <span class="ruby-identifier">color2</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">color</span>
+          <span class="ruby-keyword kw">else</span> 
+            <span class="ruby-identifier">color2</span> = <span class="ruby-identifier">sreps</span>[<span class="ruby-identifier">linkingIndex</span>].<span class="ruby-identifier">color</span>
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">else</span> 
+          <span class="ruby-identifier">color1</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">color</span>
+          <span class="ruby-identifier">color2</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">color</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-identifier">render_atom</span>(<span class="ruby-identifier">x</span><span class="ruby-operator">+</span><span class="ruby-identifier">shiftx</span>,<span class="ruby-identifier">ys</span>[<span class="ruby-identifier">i</span>]<span class="ruby-operator">+</span><span class="ruby-identifier">shifty</span>, <span class="ruby-identifier">color1</span>)
+        <span class="ruby-identifier">render_atom</span>(<span class="ruby-identifier">x</span><span class="ruby-operator">+</span><span class="ruby-identifier">shiftx</span><span class="ruby-operator">+</span><span class="ruby-value">3</span><span class="ruby-operator">*</span><span class="ruby-identifier">srep</span>.<span class="ruby-identifier">orientation</span>[<span class="ruby-value">0</span>], <span class="ruby-identifier">ys</span>[<span class="ruby-identifier">i</span>]<span class="ruby-operator">+</span><span class="ruby-identifier">shifty</span><span class="ruby-operator">+</span><span class="ruby-value">3</span><span class="ruby-operator">*</span><span class="ruby-identifier">srep</span>.<span class="ruby-identifier">orientation</span>[<span class="ruby-value">1</span>], <span class="ruby-identifier">color2</span>)
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">else</span> 
+      <span class="ruby-identifier">xs</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">x</span>,<span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">render_atom</span>(<span class="ruby-identifier">x</span><span class="ruby-operator">+</span><span class="ruby-identifier">shiftx</span>,<span class="ruby-identifier">ys</span>[<span class="ruby-identifier">i</span>]<span class="ruby-operator">+</span><span class="ruby-identifier">shifty</span>, <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">color</span>)
+        <span class="ruby-identifier">render_atom</span>(<span class="ruby-identifier">x</span><span class="ruby-operator">+</span><span class="ruby-identifier">shiftx</span><span class="ruby-operator">+</span><span class="ruby-value">3</span><span class="ruby-operator">*</span><span class="ruby-identifier">srep</span>.<span class="ruby-identifier">orientation</span>[<span class="ruby-value">0</span>], <span class="ruby-identifier">ys</span>[<span class="ruby-identifier">i</span>]<span class="ruby-operator">+</span><span class="ruby-identifier">shifty</span><span class="ruby-operator">+</span><span class="ruby-value">3</span><span class="ruby-operator">*</span><span class="ruby-identifier">srep</span>.<span class="ruby-identifier">orientation</span>[<span class="ruby-value">1</span>], <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">color</span>)
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

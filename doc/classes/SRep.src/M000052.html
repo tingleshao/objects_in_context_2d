@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>extendInterpolatedSpokes (SRep)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File module/srep.rb, line 88</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">extendInterpolatedSpokes</span>(<span class="ruby-identifier">ratio</span>, <span class="ruby-identifier">sreps</span>, <span class="ruby-identifier">checkIntersection</span>)
+    <span class="ruby-identifier">intersection_points</span> = []
+    <span class="ruby-comment cmt"># if the @extend_interpolated_spokes_end is not synchronzied with</span>
+    <span class="ruby-comment cmt">#   @interpolated_spokes_end, it means that it is the first time extension </span>
+    <span class="ruby-comment cmt"># so deep copy the array @interpolated_spokes_end into @extend_interpolated_spokes_end</span>
+    <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@extend_interpolated_spokes_end</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">!=</span> <span class="ruby-ivar">@interpolated_spokes_end</span>.<span class="ruby-identifier">length</span>
+      <span class="ruby-ivar">@extend_interpolated_spokes_end</span> = <span class="ruby-ivar">@interpolated_spokes_end</span>.<span class="ruby-identifier">dup</span>
+    <span class="ruby-keyword kw">end</span>
+
+    <span class="ruby-ivar">@extend_interpolated_spokes_end</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">isb</span>, <span class="ruby-identifier">ind</span><span class="ruby-operator">|</span>
+      <span class="ruby-comment cmt"># if mask_func[ind] == -1) &lt;-- have not intersected to anyone</span>
+      <span class="ruby-comment cmt">#extend spoke</span>
+      <span class="ruby-comment cmt"># calculate direction</span>
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">isb</span>[<span class="ruby-value">2</span>] <span class="ruby-operator">==</span> <span class="ruby-value">-1</span>
+        <span class="ruby-identifier">spoke_begin</span> = <span class="ruby-ivar">@interpolated_spokes_begin</span>[<span class="ruby-identifier">ind</span>]
+        <span class="ruby-identifier">spoke_v</span> = [ <span class="ruby-identifier">isb</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">spoke_begin</span>[<span class="ruby-value">0</span>], <span class="ruby-identifier">isb</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">spoke_begin</span>[<span class="ruby-value">1</span>]]
+        <span class="ruby-identifier">extend_v</span> = <span class="ruby-identifier">spoke_v</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">e</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">ratio</span> }
+        <span class="ruby-identifier">extend_v_end</span> = [<span class="ruby-identifier">spoke_begin</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">+</span> <span class="ruby-identifier">extend_v</span>[<span class="ruby-value">0</span>], <span class="ruby-identifier">spoke_begin</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">+</span> <span class="ruby-identifier">extend_v</span>[<span class="ruby-value">1</span>], <span class="ruby-identifier">isb</span>[<span class="ruby-value">2</span>], <span class="ruby-identifier">isb</span>[<span class="ruby-value">3</span>] ,<span class="ruby-identifier">isb</span>[<span class="ruby-value">4</span>]]
+
+        <span class="ruby-ivar">@extend_interpolated_spokes_end</span>[<span class="ruby-identifier">ind</span>] = <span class="ruby-identifier">extend_v_end</span>
+        <span class="ruby-comment cmt"># check intersection with others </span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">checkIntersection</span> 
+          
+          <span class="ruby-identifier">sreps</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">srep</span>, <span class="ruby-identifier">srep_ind</span><span class="ruby-operator">|</span>   
+            <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">extend_interpolated_spokes_end</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">spoke_end</span>, <span class="ruby-identifier">spoke_end_index</span><span class="ruby-operator">|</span>
+              <span class="ruby-keyword kw">if</span> ( ( <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">index</span> <span class="ruby-operator">!=</span> <span class="ruby-ivar">@index</span> ) <span class="ruby-operator">||</span> ( (<span class="ruby-identifier">ind</span><span class="ruby-operator">-</span><span class="ruby-identifier">spoke_end_index</span>).<span class="ruby-identifier">abs</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span> ) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">index</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@index</span> )
+                <span class="ruby-identifier">check_result</span> = <span class="ruby-identifier">checkSpokeIntersection</span>(<span class="ruby-ivar">@interpolated_spokes_end</span>[<span class="ruby-identifier">ind</span>][<span class="ruby-value">0</span>], <span class="ruby-ivar">@interpolated_spokes_end</span>[<span class="ruby-identifier">ind</span>][<span class="ruby-value">1</span>], <span class="ruby-identifier">extend_v_end</span>[<span class="ruby-value">0</span>], <span class="ruby-identifier">extend_v_end</span>[<span class="ruby-value">1</span>], <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">interpolated_spokes_end</span>[<span class="ruby-identifier">spoke_end_index</span>][<span class="ruby-value">0</span>], <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">interpolated_spokes_end</span>[<span class="ruby-identifier">spoke_end_index</span>][<span class="ruby-value">1</span>], <span class="ruby-identifier">spoke_end</span>[<span class="ruby-value">0</span>], <span class="ruby-identifier">spoke_end</span>[<span class="ruby-value">1</span>])
+                <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">check_result</span>[<span class="ruby-value">0</span>] 
+                  <span class="ruby-ivar">@extend_interpolated_spokes_end</span>[<span class="ruby-identifier">ind</span>] = <span class="ruby-identifier">isb</span>
+                  <span class="ruby-ivar">@extend_interpolated_spokes_end</span>[<span class="ruby-identifier">ind</span>][<span class="ruby-value">2</span>] = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">index</span>
+                  <span class="ruby-ivar">@extend_interpolated_spokes_end</span>[<span class="ruby-identifier">ind</span>][<span class="ruby-value">3</span>] = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">extend_interpolated_spokes_end</span>[<span class="ruby-identifier">spoke_end_index</span>]
+                  <span class="ruby-identifier">intersection_points</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-identifier">check_result</span>[<span class="ruby-value">1</span>], <span class="ruby-identifier">check_result</span>[<span class="ruby-value">2</span>]]
+                  <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">spoke_end</span>[<span class="ruby-value">2</span>] <span class="ruby-operator">==</span> <span class="ruby-value">-1</span>
+                    <span class="ruby-identifier">spoke_end</span>[<span class="ruby-value">2</span>] = <span class="ruby-ivar">@index</span>
+                    <span class="ruby-identifier">spoke_end</span>[<span class="ruby-value">3</span>] = <span class="ruby-ivar">@extend_interpolated_spokes_end</span>[<span class="ruby-identifier">ind</span>]
+                  <span class="ruby-keyword kw">end</span>
+                <span class="ruby-comment cmt"># prevent some spokes that from escaping the intersections  </span>
+                <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">index</span> <span class="ruby-operator">!=</span> <span class="ruby-ivar">@index</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">checkSpokeEndAndDiskIntersection</span>(<span class="ruby-ivar">@extend_interpolated_spokes_end</span>[<span class="ruby-identifier">ind</span>][<span class="ruby-value">0</span>], <span class="ruby-ivar">@extend_interpolated_spokes_end</span>[<span class="ruby-identifier">ind</span>][<span class="ruby-value">1</span>], <span class="ruby-identifier">srep</span>)
+                  <span class="ruby-ivar">@extend_interpolated_spokes_end</span>[<span class="ruby-identifier">ind</span>] = <span class="ruby-identifier">isb</span>
+                  <span class="ruby-ivar">@extend_interpolated_spokes_end</span>[<span class="ruby-identifier">ind</span>][<span class="ruby-value">2</span>] = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">index</span>
+                <span class="ruby-keyword kw">end</span>
+              <span class="ruby-keyword kw">end</span>
+            <span class="ruby-keyword kw">end</span>
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">intersection_points</span>
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

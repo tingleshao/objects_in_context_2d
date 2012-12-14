@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>checkSrepIntersection (lib/srep_toolbox.rb)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/srep_toolbox.rb, line 132</span>
+<span class="ruby-keyword kw">def</span> <span class="ruby-identifier">checkSrepIntersection</span>(<span class="ruby-identifier">srep1</span>, <span class="ruby-identifier">srep2</span>, <span class="ruby-identifier">shift1</span>, <span class="ruby-identifier">shift2</span>)
+  <span class="ruby-comment cmt"># this function checks the intersection between s-reps before spoke interpolation</span>
+  <span class="ruby-comment cmt"># returns a list indicates that for each atom in srep1, what is the correspoinding neighbor srep color </span>
+  <span class="ruby-identifier">correLst</span> = []
+  <span class="ruby-identifier">srep1</span>.<span class="ruby-identifier">atoms</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">atom1</span>, <span class="ruby-identifier">j</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">correLst</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-value">0</span>, <span class="ruby-keyword kw">nil</span>]
+    <span class="ruby-identifier">atom1posX</span> = <span class="ruby-identifier">atom1</span>.<span class="ruby-identifier">x</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">shift1</span>
+    <span class="ruby-identifier">atom1posY</span> = <span class="ruby-identifier">atom1</span>.<span class="ruby-identifier">y</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">shift1</span>
+    <span class="ruby-identifier">srep2_0PosX</span> = <span class="ruby-identifier">srep2</span>.<span class="ruby-identifier">atoms</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">x</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">shift2</span>
+    <span class="ruby-identifier">srep2_0PosY</span> = <span class="ruby-identifier">srep2</span>.<span class="ruby-identifier">atoms</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">y</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">shift2</span>
+    <span class="ruby-identifier">minDistSoFar</span> = <span class="ruby-identifier">getDistance</span>(<span class="ruby-identifier">atom1posX</span>, <span class="ruby-identifier">atom1posY</span>, <span class="ruby-identifier">srep2_0PosX</span>, <span class="ruby-identifier">srep2_0PosY</span>)
+    <span class="ruby-identifier">distToSrep2_0</span> = <span class="ruby-identifier">atom1</span>.<span class="ruby-identifier">spoke_length</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">+</span> <span class="ruby-identifier">srep2</span>.<span class="ruby-identifier">atoms</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">spoke_length</span>[<span class="ruby-value">0</span>]
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">minDistSoFar</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">distToSrep2_0</span>
+      <span class="ruby-identifier">correLst</span>[<span class="ruby-identifier">j</span>] = [<span class="ruby-value">1</span>,<span class="ruby-value">0</span>]
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-identifier">srep2</span>.<span class="ruby-identifier">atoms</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">atom2</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">atom2posX</span> = <span class="ruby-identifier">atom2</span>.<span class="ruby-identifier">x</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">shift2</span>
+      <span class="ruby-identifier">atom2posY</span> = <span class="ruby-identifier">atom2</span>.<span class="ruby-identifier">y</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">shift2</span>
+      <span class="ruby-comment cmt"># asssume all three r's for one atom are equivalent to each other (partial blum?  case)</span>
+      <span class="ruby-identifier">r1PlusR2</span> = <span class="ruby-identifier">atom1</span>.<span class="ruby-identifier">spoke_length</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">+</span> <span class="ruby-identifier">atom2</span>.<span class="ruby-identifier">spoke_length</span>[<span class="ruby-value">0</span>]
+      <span class="ruby-identifier">dist</span> =  <span class="ruby-identifier">getDistance</span>(<span class="ruby-identifier">atom1posX</span>, <span class="ruby-identifier">atom1posY</span>, <span class="ruby-identifier">atom2posX</span>, <span class="ruby-identifier">atom2posY</span>) 
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">dist</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">r1PlusR2</span> 
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">dist</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">minDistSoFar</span>
+          <span class="ruby-identifier">correLst</span>[<span class="ruby-identifier">j</span>] = [<span class="ruby-value">1</span>, <span class="ruby-identifier">i</span>]
+          <span class="ruby-identifier">minDistSoFar</span> = <span class="ruby-identifier">dist</span>
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">correLst</span>
+<span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

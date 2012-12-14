@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>render_field (rablo2d.rb)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File rablo2d.rb, line 321</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">render_field</span>
+    <span class="ruby-identifier">clear</span> <span class="ruby-keyword kw">do</span>
+      <span class="ruby-identifier">background</span> <span class="ruby-identifier">rgb</span>(<span class="ruby-value">50</span>, <span class="ruby-value">50</span>, <span class="ruby-value">90</span>, <span class="ruby-value">0</span><span class="ruby-value">.7</span>)
+      <span class="ruby-identifier">flow</span> <span class="ruby-identifier">:margin</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">6</span> <span class="ruby-keyword kw">do</span>
+
+       <span class="ruby-comment cmt"># code for buttons</span>
+        <span class="ruby-identifier">button</span>(<span class="ruby-value str">&quot;Dilate&quot;</span>) { 
+          <span class="ruby-identifier">$sreps</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">srep</span><span class="ruby-operator">|</span>
+            <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">atoms</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">atom</span><span class="ruby-operator">|</span>
+              <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">dilate</span>(<span class="ruby-identifier">$dilate_ratio</span>)
+            <span class="ruby-keyword kw">end</span>
+            <span class="ruby-comment cmt"># dilate interpolated spokes</span>
+            <span class="ruby-comment cmt"># and check intersection </span>
+            <span class="ruby-comment cmt"># user can specify first serval count to speed up dilate</span>
+            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">$dilateCount</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">6</span>
+              <span class="ruby-identifier">sublinkingPts</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">extendInterpolatedSpokes</span>(<span class="ruby-identifier">$dilate_ratio</span>, <span class="ruby-identifier">$sreps</span>, <span class="ruby-keyword kw">true</span>)
+              <span class="ruby-identifier">sublinkingPts</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span>
+                <span class="ruby-identifier">$linkingPts</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">p</span>
+              <span class="ruby-keyword kw">end</span>
+            <span class="ruby-keyword kw">else</span>
+              <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">extendInterpolatedSpokes</span>(<span class="ruby-identifier">$dilate_ratio</span>, <span class="ruby-identifier">$sreps</span>, <span class="ruby-keyword kw">false</span>)
+            <span class="ruby-keyword kw">end</span>
+          <span class="ruby-keyword kw">end</span>
+          <span class="ruby-identifier">$linkingPts</span> = <span class="ruby-identifier">$linkingPts</span>.<span class="ruby-identifier">uniq</span>
+          <span class="ruby-identifier">$dilateCount</span> = <span class="ruby-identifier">$dilateCount</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>
+          <span class="ruby-identifier">refresh</span> <span class="ruby-ivar">@points</span>, <span class="ruby-identifier">$sreps</span>, <span class="ruby-ivar">@shifts</span>
+        }
+
+        <span class="ruby-identifier">button</span>(<span class="ruby-value str">&quot;Reset&quot;</span>) {
+          <span class="ruby-ivar">@dontGrowLst</span>= []
+          <span class="ruby-identifier">initialConfig</span>
+        }
+
+        <span class="ruby-identifier">button</span>(<span class="ruby-value str">&quot;Check r-k File&quot;</span>) {
+          <span class="ruby-identifier">window</span> <span class="ruby-identifier">:title</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;draw srep&quot;</span>, <span class="ruby-identifier">:width</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">402</span>, <span class="ruby-identifier">:height</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">375</span> <span class="ruby-keyword kw">do</span>
+            <span class="ruby-identifier">dp</span> = <span class="ruby-constant">InterpolateControl</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>)
+          <span class="ruby-keyword kw">end</span>
+        }
+          
+        <span class="ruby-identifier">button</span>(<span class="ruby-value str">&quot;Interpolate All Spokes&quot;</span>) {
+         <span class="ruby-identifier">$sreps</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">srep</span>, <span class="ruby-identifier">srep_index</span><span class="ruby-operator">|</span> 
+           <span class="ruby-identifier">$a_big_number</span>.<span class="ruby-identifier">times</span> <span class="ruby-keyword kw">do</span>
+             <span class="ruby-comment cmt"># interpolate one side</span>
+             <span class="ruby-identifier">indices</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">base_index</span>
+             <span class="ruby-identifier">base_index</span> = <span class="ruby-identifier">$current_base_index</span>
+             <span class="ruby-identifier">distance_to_next_base</span> = ( <span class="ruby-identifier">indices</span>[<span class="ruby-identifier">base_index</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">indices</span>[<span class="ruby-identifier">base_index</span>] ) <span class="ruby-operator">-</span> <span class="ruby-identifier">$step_go_so_far</span> 
+             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">distance_to_next_base</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span> <span class="ruby-comment cmt"># &lt;= reached another base point</span>
+               <span class="ruby-identifier">$step_go_so_far</span>  = <span class="ruby-value">0</span>
+               <span class="ruby-identifier">$current_base_index</span> = <span class="ruby-identifier">$current_base_index</span> <span class="ruby-operator">+</span><span class="ruby-value">1</span>    
+               <span class="ruby-identifier">distance_to_next_base</span> = ( <span class="ruby-identifier">indices</span>[<span class="ruby-identifier">base_index</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">indices</span>[<span class="ruby-identifier">base_index</span>] ) <span class="ruby-operator">-</span> <span class="ruby-identifier">$step_go_so_far</span> 
+               <span class="ruby-identifier">spoke_index</span> = <span class="ruby-identifier">$current_base_index</span>
+             <span class="ruby-keyword kw">end</span>
+          
+             <span class="ruby-identifier">curr_index</span> = <span class="ruby-identifier">indices</span>[<span class="ruby-identifier">base_index</span>] <span class="ruby-operator">+</span> <span class="ruby-identifier">$step_go_so_far</span>  <span class="ruby-operator">+</span> <span class="ruby-value">1</span> 
+            
+             <span class="ruby-identifier">d1t</span> = <span class="ruby-value">0</span><span class="ruby-value">.01</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">$step_go_so_far</span> 
+             <span class="ruby-identifier">d2t</span> = <span class="ruby-identifier">distance_to_next_base</span> <span class="ruby-operator">*</span> <span class="ruby-value">0</span><span class="ruby-value">.01</span> 
+
+             <span class="ruby-comment cmt"># calculate parameters</span>
+             <span class="ruby-comment cmt"># read all points, rs, logrkm1s from the file</span>
+             <span class="ruby-identifier">file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">$points_file_path</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">srep_index</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-value str">'r'</span>)
+             <span class="ruby-identifier">xt</span> = <span class="ruby-identifier">file</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">split</span>(<span class="ruby-value str">' '</span>).<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">to_f</span>}
+             <span class="ruby-identifier">yt</span> = <span class="ruby-identifier">file</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">split</span>(<span class="ruby-value str">' '</span>).<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">y</span><span class="ruby-operator">|</span> <span class="ruby-identifier">y</span>.<span class="ruby-identifier">to_f</span>}
+             <span class="ruby-identifier">file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">$radius_file_path</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">srep_index</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-value str">'r'</span>)
+             <span class="ruby-identifier">rt</span> = <span class="ruby-identifier">file</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">split</span>(<span class="ruby-value str">' '</span>).<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">to_f</span>}
+             <span class="ruby-identifier">file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">$logrk_file_path</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">srep_index</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-value str">'r'</span>)
+             <span class="ruby-identifier">logrkm1</span> = <span class="ruby-identifier">file</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">split</span>(<span class="ruby-value str">' '</span>).<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">logrkm1</span><span class="ruby-operator">|</span> <span class="ruby-identifier">logrkm1</span>.<span class="ruby-identifier">to_f</span>}
+
+             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">curr_index</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">xt</span>.<span class="ruby-identifier">length</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>
+               <span class="ruby-identifier">v1t</span> = [<span class="ruby-identifier">xt</span>[<span class="ruby-identifier">curr_index</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">xt</span>[<span class="ruby-identifier">indices</span>[<span class="ruby-identifier">base_index</span>]], <span class="ruby-identifier">yt</span>[<span class="ruby-identifier">curr_index</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">yt</span>[<span class="ruby-identifier">indices</span>[<span class="ruby-identifier">base_index</span>]]]
+               <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">curr_index</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">indices</span>[<span class="ruby-identifier">base_index</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>]
+                 <span class="ruby-identifier">v2t</span> = [<span class="ruby-identifier">xt</span>[<span class="ruby-identifier">indices</span>[<span class="ruby-identifier">base_index</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>]<span class="ruby-operator">+</span><span class="ruby-value">1</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">xt</span>[<span class="ruby-identifier">curr_index</span>], <span class="ruby-identifier">yt</span>[<span class="ruby-identifier">indices</span>[<span class="ruby-identifier">base_index</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>]<span class="ruby-operator">+</span><span class="ruby-value">1</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">yt</span>[<span class="ruby-identifier">curr_index</span>]]
+               <span class="ruby-keyword kw">else</span>
+                 <span class="ruby-identifier">v2t</span> = [<span class="ruby-identifier">xt</span>[<span class="ruby-identifier">indices</span>[<span class="ruby-identifier">base_index</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>]] <span class="ruby-operator">-</span> <span class="ruby-identifier">xt</span>[<span class="ruby-identifier">curr_index</span>], <span class="ruby-identifier">yt</span>[<span class="ruby-identifier">indices</span>[<span class="ruby-identifier">base_index</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>]] <span class="ruby-operator">-</span> <span class="ruby-identifier">yt</span>[<span class="ruby-identifier">curr_index</span>]]
+               <span class="ruby-keyword kw">end</span>
+               <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;v1t: &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">v1t</span>.<span class="ruby-identifier">to_s</span>
+               <span class="ruby-identifier">size_v1t</span> = <span class="ruby-identifier">v1t</span>[<span class="ruby-value">0</span>]<span class="ruby-operator">**</span><span class="ruby-value">2</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">v1t</span>[<span class="ruby-value">1</span>]<span class="ruby-operator">**</span><span class="ruby-value">2</span>
+               <span class="ruby-identifier">norm_v1t</span> = <span class="ruby-identifier">v1t</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-identifier">v</span> <span class="ruby-operator">/</span> <span class="ruby-identifier">size_v1t</span>} 
+ 
+               <span class="ruby-identifier">size_v2t</span> = <span class="ruby-identifier">v2t</span>[<span class="ruby-value">0</span>]<span class="ruby-operator">**</span><span class="ruby-value">2</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">v2t</span>[<span class="ruby-value">1</span>]<span class="ruby-operator">**</span><span class="ruby-value">2</span>
+               <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;size_v2t: &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">size_v2t</span>.<span class="ruby-identifier">to_s</span>
+               <span class="ruby-identifier">norm_v2t</span> = <span class="ruby-identifier">v2t</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-identifier">v</span> <span class="ruby-operator">/</span> <span class="ruby-identifier">size_v2t</span>} 
+          
+               <span class="ruby-identifier">k1t</span> = ( <span class="ruby-value">1</span> <span class="ruby-operator">+</span> ( <span class="ruby-value">-1</span> <span class="ruby-operator">*</span> <span class="ruby-constant">Math</span>.<span class="ruby-identifier">exp</span>(<span class="ruby-identifier">logrkm1</span>[<span class="ruby-identifier">indices</span>[<span class="ruby-identifier">base_index</span>]]   ) ) ) <span class="ruby-operator">/</span> <span class="ruby-identifier">rt</span>[<span class="ruby-identifier">indices</span>[<span class="ruby-identifier">base_index</span>]] 
+               <span class="ruby-identifier">k2t</span> = ( <span class="ruby-value">1</span> <span class="ruby-operator">+</span> ( <span class="ruby-value">-1</span> <span class="ruby-operator">*</span> <span class="ruby-constant">Math</span>.<span class="ruby-identifier">exp</span>(<span class="ruby-identifier">logrkm1</span>[<span class="ruby-identifier">indices</span>[<span class="ruby-identifier">base_index</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>]] ) ) ) <span class="ruby-operator">/</span> <span class="ruby-identifier">rt</span>[<span class="ruby-identifier">indices</span>[<span class="ruby-identifier">base_index</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>]] 
+            
+               <span class="ruby-identifier">u1t</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">atoms</span>[<span class="ruby-identifier">base_index</span>].<span class="ruby-identifier">spoke_direction</span>[<span class="ruby-value">0</span>]
+               <span class="ruby-identifier">u2t</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">atoms</span>[<span class="ruby-identifier">base_index</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>].<span class="ruby-identifier">spoke_direction</span>[<span class="ruby-value">0</span>]
+               <span class="ruby-identifier">ui</span> = <span class="ruby-identifier">interpolateSpokeAtPos</span>(<span class="ruby-identifier">u1t</span>, <span class="ruby-identifier">norm_v1t</span>, <span class="ruby-identifier">k1t</span>, <span class="ruby-identifier">d1t</span>, <span class="ruby-identifier">u2t</span>, <span class="ruby-identifier">norm_v2t</span>, <span class="ruby-identifier">k2t</span>, <span class="ruby-identifier">d2t</span>)
+               <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;ui: &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">ui</span>.<span class="ruby-identifier">to_s</span>
+               <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">interpolated_spokes_begin</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-identifier">xt</span>[<span class="ruby-identifier">curr_index</span>],<span class="ruby-identifier">yt</span>[<span class="ruby-identifier">curr_index</span>],<span class="ruby-value">-1</span>]    
+               <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;rt: &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">rt</span>[<span class="ruby-identifier">curr_index</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>].<span class="ruby-identifier">to_s</span>
+               <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">interpolated_spokes_end</span>  <span class="ruby-operator">&lt;&lt;</span>  [<span class="ruby-identifier">xt</span>[<span class="ruby-identifier">curr_index</span>]<span class="ruby-operator">+</span><span class="ruby-identifier">ui</span>[<span class="ruby-value">0</span>]<span class="ruby-operator">*</span><span class="ruby-identifier">rt</span>[<span class="ruby-identifier">curr_index</span>],<span class="ruby-identifier">yt</span>[<span class="ruby-identifier">curr_index</span>]<span class="ruby-operator">-</span><span class="ruby-identifier">ui</span>[<span class="ruby-value">1</span>]<span class="ruby-operator">*</span><span class="ruby-identifier">rt</span>[<span class="ruby-identifier">curr_index</span>],<span class="ruby-value">-1</span>,[],<span class="ruby-value str">'regular'</span>]
+               <span class="ruby-comment cmt"># interpolate another side</span>
+               <span class="ruby-identifier">u1t</span> = <span class="ruby-identifier">$sreps</span>[<span class="ruby-identifier">srep_index</span>].<span class="ruby-identifier">atoms</span>[<span class="ruby-identifier">base_index</span>].<span class="ruby-identifier">spoke_direction</span>[<span class="ruby-value">1</span>]
+               <span class="ruby-identifier">u2t</span> = <span class="ruby-identifier">$sreps</span>[<span class="ruby-identifier">srep_index</span>].<span class="ruby-identifier">atoms</span>[<span class="ruby-identifier">base_index</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>].<span class="ruby-identifier">spoke_direction</span>[<span class="ruby-value">1</span>]
+               <span class="ruby-identifier">ui</span> = <span class="ruby-identifier">interpolateSpokeAtPos</span>(<span class="ruby-identifier">u1t</span>, <span class="ruby-identifier">norm_v1t</span>, <span class="ruby-identifier">k1t</span>, <span class="ruby-identifier">d1t</span>, <span class="ruby-identifier">u2t</span>, <span class="ruby-identifier">norm_v2t</span>, <span class="ruby-identifier">k2t</span>, <span class="ruby-identifier">d2t</span>)
+               <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;ui: &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">ui</span>.<span class="ruby-identifier">to_s</span>
+               <span class="ruby-identifier">spoke_index</span> = <span class="ruby-identifier">indices</span>[<span class="ruby-identifier">base_index</span>]<span class="ruby-operator">+</span><span class="ruby-identifier">$step_go_so_far</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>
+               <span class="ruby-identifier">spoke_begin_x</span> = <span class="ruby-identifier">xt</span>[<span class="ruby-identifier">spoke_index</span>]
+               <span class="ruby-identifier">spoke_begin_y</span> = <span class="ruby-identifier">yt</span>[<span class="ruby-identifier">spoke_index</span> ]
+               <span class="ruby-identifier">$sreps</span>[<span class="ruby-identifier">srep_index</span>].<span class="ruby-identifier">interpolated_spokes_begin</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-identifier">spoke_begin_x</span>,<span class="ruby-identifier">spoke_begin_y</span>,<span class="ruby-value">-1</span>,[],<span class="ruby-value str">'regular'</span>]    
+               <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;rt: &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">rt</span>[<span class="ruby-identifier">indices</span>[<span class="ruby-identifier">base_index</span>]<span class="ruby-operator">+</span><span class="ruby-identifier">$step_go_so_far</span>].<span class="ruby-identifier">to_s</span>
+               <span class="ruby-identifier">spoke_end_x</span> = <span class="ruby-identifier">spoke_begin_x</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">ui</span>[<span class="ruby-value">0</span>]<span class="ruby-operator">*</span><span class="ruby-identifier">rt</span>[<span class="ruby-identifier">spoke_index</span>]
+               <span class="ruby-identifier">spoke_end_y</span> = <span class="ruby-identifier">spoke_begin_y</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">ui</span>[<span class="ruby-value">1</span>]<span class="ruby-operator">*</span><span class="ruby-identifier">rt</span>[<span class="ruby-identifier">spoke_index</span>]
+               <span class="ruby-identifier">$sreps</span>[<span class="ruby-identifier">srep_index</span>].<span class="ruby-identifier">interpolated_spokes_end</span>  <span class="ruby-operator">&lt;&lt;</span>  [<span class="ruby-identifier">spoke_end_x</span>,<span class="ruby-identifier">spoke_end_y</span>,<span class="ruby-value">-1</span>,[],<span class="ruby-value str">'regular'</span>]
+             <span class="ruby-keyword kw">else</span>
+               <span class="ruby-comment cmt"># add spoke interpolation for end disks</span>
+               <span class="ruby-comment cmt"># get atom for end disks</span>
+               <span class="ruby-identifier">end_atom_one</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">atoms</span>[<span class="ruby-value">0</span>]
+               <span class="ruby-identifier">end_atom_two</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">atoms</span>[<span class="ruby-value">-1</span>]
+               <span class="ruby-identifier">end_atoms</span> = [<span class="ruby-identifier">end_atom_one</span>, <span class="ruby-identifier">end_atom_two</span>]
+               <span class="ruby-comment cmt"># get upper and lower and middle spokes</span>
+               <span class="ruby-identifier">end_atoms</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">atom</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+                 <span class="ruby-identifier">atom_spoke_dir_plus1</span> = <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">spoke_direction</span>[<span class="ruby-value">0</span>]
+                 <span class="ruby-identifier">atom_spoke_dir_minus1</span> = <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">spoke_direction</span>[<span class="ruby-value">1</span>]
+                 <span class="ruby-identifier">atom_spoke_dir_zero</span> = <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">spoke_direction</span>[<span class="ruby-value">2</span>]
+                 <span class="ruby-identifier">x_diff_1</span> = <span class="ruby-identifier">atom_spoke_dir_zero</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">atom_spoke_dir_plus1</span>[<span class="ruby-value">0</span>]
+                 <span class="ruby-identifier">x_diff_2</span> = <span class="ruby-identifier">atom_spoke_dir_zero</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">atom_spoke_dir_minus1</span>[<span class="ruby-value">0</span>]
+                 <span class="ruby-identifier">y_diff_1</span> = <span class="ruby-identifier">atom_spoke_dir_zero</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">atom_spoke_dir_plus1</span>[<span class="ruby-value">1</span>]
+                 <span class="ruby-identifier">y_diff_2</span> = <span class="ruby-identifier">atom_spoke_dir_zero</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">atom_spoke_dir_minus1</span>[<span class="ruby-value">1</span>]
+                 <span class="ruby-identifier">x_step_size_1</span> = <span class="ruby-identifier">x_diff_1</span>.<span class="ruby-identifier">to_f</span> <span class="ruby-operator">/</span> <span class="ruby-value">15</span>
+                 <span class="ruby-identifier">y_step_size_1</span> = <span class="ruby-identifier">y_diff_1</span>.<span class="ruby-identifier">to_f</span> <span class="ruby-operator">/</span> <span class="ruby-value">15</span>
+                 <span class="ruby-identifier">x_step_size_2</span> = <span class="ruby-identifier">x_diff_2</span>.<span class="ruby-identifier">to_f</span> <span class="ruby-operator">/</span> <span class="ruby-value">15</span>
+                 <span class="ruby-identifier">y_step_size_2</span> = <span class="ruby-identifier">y_diff_2</span>.<span class="ruby-identifier">to_f</span> <span class="ruby-operator">/</span> <span class="ruby-value">15</span>
+                 <span class="ruby-identifier">previous_x</span> = <span class="ruby-identifier">atom_spoke_dir_plus1</span>[<span class="ruby-value">0</span>] 
+                 <span class="ruby-identifier">previous_y</span> = <span class="ruby-identifier">atom_spoke_dir_plus1</span>[<span class="ruby-value">1</span>] 
+                 <span class="ruby-identifier">$end_disk_spoke_number</span>.<span class="ruby-identifier">times</span> <span class="ruby-keyword kw">do</span> 
+                   <span class="ruby-identifier">new_spoke_dir_x</span> = <span class="ruby-identifier">previous_x</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">x_step_size_1</span>
+                   <span class="ruby-identifier">new_spoke_dir_y</span> = <span class="ruby-identifier">previous_y</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">y_step_size_1</span>
+                   <span class="ruby-comment cmt"># normalize </span>
+                   <span class="ruby-identifier">length_new_spoke</span> = <span class="ruby-constant">Math</span>.<span class="ruby-identifier">sqrt</span>(<span class="ruby-identifier">new_spoke_dir_x</span><span class="ruby-operator">**</span><span class="ruby-value">2</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">new_spoke_dir_y</span><span class="ruby-operator">**</span><span class="ruby-value">2</span>)
+                   <span class="ruby-identifier">new_spoke_dir_x</span> = <span class="ruby-identifier">new_spoke_dir_x</span> <span class="ruby-operator">/</span> <span class="ruby-identifier">length_new_spoke</span>
+                   <span class="ruby-identifier">new_spoke_dir_y</span> = <span class="ruby-identifier">new_spoke_dir_y</span> <span class="ruby-operator">/</span> <span class="ruby-identifier">length_new_spoke</span>
+                   <span class="ruby-identifier">previous_x</span> = <span class="ruby-identifier">new_spoke_dir_x</span>
+                   <span class="ruby-identifier">previous_y</span> = <span class="ruby-identifier">new_spoke_dir_y</span>
+                   <span class="ruby-comment cmt"># calculate interpolated spoke end</span>
+                   <span class="ruby-identifier">new_spoke_vector_x</span> = <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">spoke_length</span>[<span class="ruby-value">0</span>]<span class="ruby-operator">*</span><span class="ruby-identifier">new_spoke_dir_x</span>
+                   <span class="ruby-identifier">new_spoke_vector_y</span> = <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">spoke_length</span>[<span class="ruby-value">0</span>]<span class="ruby-operator">*</span><span class="ruby-identifier">new_spoke_dir_y</span>
+                   <span class="ruby-identifier">new_spoke_end</span> = [<span class="ruby-identifier">atom</span>.<span class="ruby-identifier">x</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">new_spoke_vector_x</span>, <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">y</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">new_spoke_vector_y</span>,<span class="ruby-value">-1</span>,[],<span class="ruby-value str">'end'</span>]
+                   <span class="ruby-identifier">$sreps</span>[<span class="ruby-identifier">srep_index</span>].<span class="ruby-identifier">interpolated_spokes_begin</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-identifier">atom</span>.<span class="ruby-identifier">x</span>, <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">y</span>]
+                   <span class="ruby-identifier">$sreps</span>[<span class="ruby-identifier">srep_index</span>].<span class="ruby-identifier">interpolated_spokes_end</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">new_spoke_end</span>
+                 <span class="ruby-keyword kw">end</span>
+                 <span class="ruby-identifier">previous_x</span> = <span class="ruby-identifier">atom_spoke_dir_minus1</span>[<span class="ruby-value">0</span>]
+                 <span class="ruby-identifier">previous_y</span> = <span class="ruby-identifier">atom_spoke_dir_minus1</span>[<span class="ruby-value">1</span>]
+                 <span class="ruby-identifier">$end_disk_spoke_number</span>.<span class="ruby-identifier">times</span> <span class="ruby-keyword kw">do</span> 
+                   <span class="ruby-identifier">new_spoke_dir_x</span> = <span class="ruby-identifier">previous_x</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">x_step_size_2</span>
+                   <span class="ruby-identifier">new_spoke_dir_y</span> = <span class="ruby-identifier">previous_y</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">y_step_size_2</span>
+                   <span class="ruby-comment cmt"># normalize </span>
+                   <span class="ruby-identifier">length_new_spoke</span> = <span class="ruby-constant">Math</span>.<span class="ruby-identifier">sqrt</span>(<span class="ruby-identifier">new_spoke_dir_x</span><span class="ruby-operator">**</span><span class="ruby-value">2</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">new_spoke_dir_y</span><span class="ruby-operator">**</span><span class="ruby-value">2</span>)
+                   <span class="ruby-identifier">new_spoke_dir_x</span> = <span class="ruby-identifier">new_spoke_dir_x</span> <span class="ruby-operator">/</span> <span class="ruby-identifier">length_new_spoke</span>
+                   <span class="ruby-identifier">new_spoke_dir_y</span> = <span class="ruby-identifier">new_spoke_dir_y</span> <span class="ruby-operator">/</span> <span class="ruby-identifier">length_new_spoke</span>
+                   <span class="ruby-identifier">previous_x</span> = <span class="ruby-identifier">new_spoke_dir_x</span>
+                   <span class="ruby-identifier">previous_y</span> = <span class="ruby-identifier">new_spoke_dir_y</span>
+                   <span class="ruby-comment cmt"># calculate interpolated spoke end</span>
+                   <span class="ruby-identifier">new_spoke_vector_x</span> = <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">spoke_length</span>[<span class="ruby-value">0</span>]<span class="ruby-operator">*</span><span class="ruby-identifier">new_spoke_dir_x</span>
+                   <span class="ruby-identifier">new_spoke_vector_y</span> = <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">spoke_length</span>[<span class="ruby-value">0</span>]<span class="ruby-operator">*</span><span class="ruby-identifier">new_spoke_dir_y</span>
+                   <span class="ruby-identifier">new_spoke_end</span> = [<span class="ruby-identifier">atom</span>.<span class="ruby-identifier">x</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">new_spoke_vector_x</span>, <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">y</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">new_spoke_vector_y</span>,<span class="ruby-value">-1</span>,[],<span class="ruby-value str">'end'</span>]
+                   <span class="ruby-identifier">$sreps</span>[<span class="ruby-identifier">srep_index</span>].<span class="ruby-identifier">interpolated_spokes_begin</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-identifier">atom</span>.<span class="ruby-identifier">x</span>, <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">y</span>]
+                   <span class="ruby-identifier">$sreps</span>[<span class="ruby-identifier">srep_index</span>].<span class="ruby-identifier">interpolated_spokes_end</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">new_spoke_end</span>
+                   <span class="ruby-identifier">$sreps</span>[<span class="ruby-identifier">srep_index</span>].<span class="ruby-identifier">interpolate_finished</span> = <span class="ruby-keyword kw">true</span>
+                 <span class="ruby-keyword kw">end</span>
+               <span class="ruby-keyword kw">end</span>
+               <span class="ruby-identifier">$info</span> = <span class="ruby-value str">&quot;interpolation finished&quot;</span>
+             <span class="ruby-keyword kw">end</span>
+             <span class="ruby-identifier">$step_go_so_far</span> = <span class="ruby-identifier">$step_go_so_far</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>
+             <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;count: &quot;</span><span class="ruby-operator">+</span> <span class="ruby-identifier">$step_go_so_far</span>.<span class="ruby-identifier">to_s</span>
+             
+             <span class="ruby-identifier">refresh</span> <span class="ruby-ivar">@points</span>, <span class="ruby-identifier">$sreps</span>, <span class="ruby-ivar">@shifts</span>
+           <span class="ruby-keyword kw">end</span>
+           <span class="ruby-identifier">$step_go_so_far</span> = <span class="ruby-value">1</span>
+           <span class="ruby-identifier">$current_base_index</span> = <span class="ruby-value">0</span>
+         <span class="ruby-keyword kw">end</span>
+       }
+
+     <span class="ruby-keyword kw">end</span>
+     <span class="ruby-comment cmt"># code for the check list </span>
+     <span class="ruby-ivar">@list</span> = [<span class="ruby-value str">'Medial Curve'</span>, <span class="ruby-value str">'Interpolated Spokes'</span>, <span class="ruby-value str">'Extended Spokes'</span>, <span class="ruby-value str">'Extended Disks'</span>, <span class="ruby-value str">'Linking Structure'</span>]
+     <span class="ruby-identifier">stack</span> <span class="ruby-keyword kw">do</span>
+       <span class="ruby-ivar">@list</span>.<span class="ruby-identifier">map!</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">name</span><span class="ruby-operator">|</span>
+         <span class="ruby-identifier">flow</span> { <span class="ruby-ivar">@c</span> = <span class="ruby-identifier">check</span>; <span class="ruby-identifier">para</span> <span class="ruby-identifier">name</span> }
+         [<span class="ruby-ivar">@c</span>, <span class="ruby-identifier">name</span>]
+       <span class="ruby-keyword kw">end</span>
+       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">$sreps</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">show_curve</span> 
+         <span class="ruby-ivar">@list</span>[<span class="ruby-value">0</span>][<span class="ruby-value">0</span>].<span class="ruby-identifier">checked</span> = <span class="ruby-keyword kw">true</span>
+       <span class="ruby-keyword kw">end</span>
+       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">$sreps</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">show_interpolated_spokes</span>
+         <span class="ruby-ivar">@list</span>[<span class="ruby-value">1</span>][<span class="ruby-value">0</span>].<span class="ruby-identifier">checked</span> = <span class="ruby-keyword kw">true</span>
+       <span class="ruby-keyword kw">end</span>
+       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">$sreps</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">show_extend_spokes</span> 
+         <span class="ruby-ivar">@list</span>[<span class="ruby-value">2</span>][<span class="ruby-value">0</span>].<span class="ruby-identifier">checked</span> = <span class="ruby-keyword kw">true</span>
+       <span class="ruby-keyword kw">end</span>
+       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">$sreps</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">show_extend_disk</span> 
+         <span class="ruby-ivar">@list</span>[<span class="ruby-value">3</span>][<span class="ruby-value">0</span>].<span class="ruby-identifier">checked</span> = <span class="ruby-keyword kw">true</span>
+       <span class="ruby-keyword kw">end</span>
+       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">$show_linking_structure</span>
+         <span class="ruby-ivar">@list</span>[<span class="ruby-value">4</span>][<span class="ruby-value">0</span>].<span class="ruby-identifier">checked</span> = <span class="ruby-keyword kw">true</span>
+       <span class="ruby-keyword kw">end</span>
+       <span class="ruby-identifier">button</span> <span class="ruby-value str">&quot;Refresh&quot;</span> <span class="ruby-keyword kw">do</span>
+         <span class="ruby-identifier">$sreps</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">srep</span><span class="ruby-operator">|</span> 
+           <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">show_curve</span> = <span class="ruby-ivar">@list</span>[<span class="ruby-value">0</span>][<span class="ruby-value">0</span>].<span class="ruby-identifier">checked?</span>
+           <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">show_interpolated_spokes</span> = <span class="ruby-ivar">@list</span>[<span class="ruby-value">1</span>][<span class="ruby-value">0</span>].<span class="ruby-identifier">checked?</span>
+           <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">show_extend_spokes</span> = <span class="ruby-ivar">@list</span>[<span class="ruby-value">2</span>][<span class="ruby-value">0</span>].<span class="ruby-identifier">checked?</span>
+           <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">show_extend_disk</span> = <span class="ruby-ivar">@list</span>[<span class="ruby-value">3</span>][<span class="ruby-value">0</span>].<span class="ruby-identifier">checked?</span>
+         <span class="ruby-keyword kw">end</span>
+         <span class="ruby-identifier">$show_linking_structure</span> = <span class="ruby-ivar">@list</span>[<span class="ruby-value">4</span>][<span class="ruby-value">0</span>].<span class="ruby-identifier">checked?</span>
+         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@list</span>[<span class="ruby-value">4</span>][<span class="ruby-value">0</span>].<span class="ruby-identifier">checked?</span>
+           <span class="ruby-identifier">$sreps</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">srep</span><span class="ruby-operator">|</span>
+             <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">extend_interpolated_spokes_end</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">spoke_end</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+                <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">spoke_end</span>[<span class="ruby-value">2</span>] <span class="ruby-operator">!=</span> <span class="ruby-value">-1</span> 
+                   <span class="ruby-identifier">$linkingPts</span> <span class="ruby-operator">&lt;&lt;</span> [<span class="ruby-identifier">spoke_end</span>[<span class="ruby-value">0</span>], <span class="ruby-identifier">spoke_end</span>[<span class="ruby-value">1</span>]]  
+                <span class="ruby-keyword kw">end</span>
+             <span class="ruby-keyword kw">end</span>
+           <span class="ruby-keyword kw">end</span>
+         <span class="ruby-keyword kw">end</span>
+         <span class="ruby-identifier">refresh</span> <span class="ruby-ivar">@points</span>, <span class="ruby-identifier">$sreps</span>, <span class="ruby-ivar">@shifts</span>
+         <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@list</span>[<span class="ruby-value">4</span>][<span class="ruby-value">0</span>].<span class="ruby-identifier">checked?</span>
+       <span class="ruby-comment cmt">#    linkLinkingStructurePoints($sreps, self, 300) </span>
+         <span class="ruby-keyword kw">end</span>         
+       <span class="ruby-keyword kw">end</span>
+     <span class="ruby-keyword kw">end</span>
+
+     <span class="ruby-identifier">stack</span> <span class="ruby-keyword kw">do</span> <span class="ruby-ivar">@status</span> = <span class="ruby-identifier">para</span> <span class="ruby-identifier">:stroke</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">black</span> <span class="ruby-keyword kw">end</span>
+     <span class="ruby-ivar">@field</span>.<span class="ruby-identifier">paint</span>
+     <span class="ruby-identifier">para</span> <span class="ruby-identifier">$info</span>
+   <span class="ruby-keyword kw">end</span>  
+ <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

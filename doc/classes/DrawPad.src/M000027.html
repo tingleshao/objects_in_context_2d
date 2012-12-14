@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>paint (DrawPad)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File module/drawPad.rb, line 10</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">paint</span>()
+    <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">clear</span>
+    <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">background</span> <span class="ruby-value str">'pat101_21.png'</span>
+    <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">flow</span> <span class="ruby-identifier">:margin</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">3</span> <span class="ruby-keyword kw">do</span>
+      <span class="ruby-ivar">@fileName</span> = <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">edit_line</span>
+      <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">button</span>(<span class="ruby-value str">&quot;Save&quot;</span>) {
+        <span class="ruby-identifier">alert</span> <span class="ruby-ivar">@atoms</span>.<span class="ruby-identifier">to_s</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@fileName</span>.<span class="ruby-identifier">text</span> <span class="ruby-operator">!=</span> <span class="ruby-value str">&quot;&quot;</span>
+          <span class="ruby-identifier">fn</span> = <span class="ruby-ivar">@fileName</span>.<span class="ruby-identifier">text</span>
+        <span class="ruby-keyword kw">else</span> 
+          <span class="ruby-identifier">fn</span> = <span class="ruby-value str">&quot;srep_temp&quot;</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">fn</span> <span class="ruby-operator">+</span> <span class="ruby-value str">'.txt'</span>,<span class="ruby-value str">'w'</span>) {<span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">file</span>.<span class="ruby-identifier">write</span> (<span class="ruby-ivar">@atoms</span>.<span class="ruby-identifier">to_s</span>)
+          <span class="ruby-identifier">file</span>.<span class="ruby-identifier">close</span>}
+      }
+      <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">button</span>(<span class="ruby-value str">&quot;Undo&quot;</span>) {
+        <span class="ruby-keyword kw">if</span>(<span class="ruby-ivar">@atoms</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>)
+          <span class="ruby-ivar">@atoms</span>.<span class="ruby-identifier">pop</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-ivar">@inCircle</span> = <span class="ruby-keyword kw">false</span>
+          <span class="ruby-identifier">refresh</span> }
+     <span class="ruby-keyword kw">end</span>
+     <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">nofill</span>
+     <span class="ruby-identifier">atoms</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">atom</span><span class="ruby-operator">|</span>
+       <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">oval</span> <span class="ruby-identifier">atom</span>[<span class="ruby-value">0</span>]<span class="ruby-operator">-</span><span class="ruby-identifier">atom</span>[<span class="ruby-value">2</span>]<span class="ruby-operator">/</span><span class="ruby-value">2</span>, <span class="ruby-identifier">atom</span>[<span class="ruby-value">1</span>]<span class="ruby-operator">-</span><span class="ruby-identifier">atom</span>[<span class="ruby-value">2</span>]<span class="ruby-operator">/</span><span class="ruby-value">2</span>, <span class="ruby-identifier">atom</span>[<span class="ruby-value">2</span>]
+     <span class="ruby-keyword kw">end</span>
+   <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

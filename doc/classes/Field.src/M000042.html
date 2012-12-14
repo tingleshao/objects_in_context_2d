@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>paint (Field)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File rablo2d.rb, line 209</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">paint</span>
+    <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">nostroke</span>
+    <span class="ruby-identifier">checkSrepIntersection</span>
+
+    <span class="ruby-identifier">$sreps</span>.<span class="ruby-identifier">each</span>.<span class="ruby-identifier">with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">srep</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">render_srep</span>(<span class="ruby-identifier">srep</span>, <span class="ruby-ivar">@shifts</span>[<span class="ruby-identifier">i</span>] , <span class="ruby-ivar">@shifts</span>[<span class="ruby-identifier">i</span>] , <span class="ruby-value">1.5</span>, <span class="ruby-keyword kw">true</span>)
+    <span class="ruby-keyword kw">end</span>
+
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">$show_linking_structure</span> 
+       <span class="ruby-identifier">render_linking_structure</span>(<span class="ruby-ivar">@shifts</span>)
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

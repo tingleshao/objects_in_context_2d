@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>paint (InterpolateControl)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File rablo2d.rb, line 254</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">paint</span>()
+    <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">clear</span>
+    <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">flow</span> <span class="ruby-identifier">:margin</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">3</span> <span class="ruby-keyword kw">do</span>
+      <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">button</span>(<span class="ruby-value str">&quot;Check&quot;</span>) {
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">checkIndexEmpty</span>()
+          <span class="ruby-ivar">@msg</span>.<span class="ruby-identifier">text</span> = <span class="ruby-value str">&quot;empty index!&quot;</span>
+        <span class="ruby-keyword kw">else</span>
+          <span class="ruby-identifier">file_name</span> = <span class="ruby-identifier">$radius_file_path</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@index</span>.<span class="ruby-identifier">text</span>
+          <span class="ruby-ivar">@msg</span>.<span class="ruby-identifier">text</span> = <span class="ruby-value str">&quot;file exists: &quot;</span><span class="ruby-operator">+</span>  <span class="ruby-constant">File</span><span class="ruby-operator">::</span><span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">file_name</span>).<span class="ruby-identifier">to_s</span>
+        <span class="ruby-keyword kw">end</span>
+      }
+      <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">button</span>(<span class="ruby-value str">&quot;Interpolate&quot;</span>) {
+      <span class="ruby-comment cmt"># interpolate radius</span>
+          <span class="ruby-identifier">index</span> = <span class="ruby-ivar">@index</span>.<span class="ruby-identifier">text</span>
+          <span class="ruby-identifier">srep</span> =  <span class="ruby-identifier">$sreps</span>[<span class="ruby-identifier">index</span>.<span class="ruby-identifier">to_i</span>]
+          <span class="ruby-identifier">xt</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">atoms</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">atom</span><span class="ruby-operator">|</span> <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">x</span>}
+          <span class="ruby-identifier">yt</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">atoms</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">atom</span><span class="ruby-operator">|</span> <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">y</span>}
+          <span class="ruby-identifier">rt</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">atoms</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">atom</span><span class="ruby-operator">|</span> <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">spoke_length</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">to_s</span>} 
+          <span class="ruby-identifier">step_size</span> = <span class="ruby-value">0</span><span class="ruby-value">.01</span>
+          <span class="ruby-identifier">rs</span> = <span class="ruby-identifier">interpolateRadius</span>(<span class="ruby-identifier">xt</span>,<span class="ruby-identifier">yt</span>,<span class="ruby-identifier">rt</span>,<span class="ruby-identifier">step_size</span>,<span class="ruby-identifier">index</span>)
+          <span class="ruby-identifier">rr</span> = <span class="ruby-identifier">rs</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">split</span>(<span class="ruby-value str">' '</span>).<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">to_f</span>} 
+          <span class="ruby-comment cmt"># interpolate kappa</span>
+          <span class="ruby-comment cmt"># read interpolated file</span>
+          <span class="ruby-identifier">step_size</span> = <span class="ruby-value">0</span><span class="ruby-value">.01</span>
+          <span class="ruby-comment cmt"># rt and kt are the r's and k's on the base points </span>
+          <span class="ruby-comment cmt"># calculate kappa at base positions using the curvature formula</span>
+          <span class="ruby-identifier">f</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">$points_file_path</span><span class="ruby-operator">+</span> <span class="ruby-identifier">index</span>, <span class="ruby-value str">'r'</span>)   
+          <span class="ruby-identifier">xs</span> = <span class="ruby-identifier">f</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">split</span>(<span class="ruby-value str">' '</span>)
+          <span class="ruby-identifier">ys</span> = <span class="ruby-identifier">f</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">split</span>(<span class="ruby-value str">' '</span>)
+          <span class="ruby-identifier">xt</span> = []
+          <span class="ruby-identifier">xs</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span>
+            <span class="ruby-identifier">xt</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">to_f</span>
+          <span class="ruby-keyword kw">end</span>
+          <span class="ruby-identifier">yt</span> = []
+          <span class="ruby-identifier">ys</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">y</span><span class="ruby-operator">|</span>
+            <span class="ruby-identifier">yt</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">y</span>.<span class="ruby-identifier">to_f</span>
+          <span class="ruby-keyword kw">end</span>
+          <span class="ruby-identifier">h</span> = <span class="ruby-identifier">step_size</span>
+          <span class="ruby-identifier">f</span>.<span class="ruby-identifier">close</span>
+          <span class="ruby-identifier">ff</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">$radius_file_path</span><span class="ruby-operator">+</span><span class="ruby-identifier">index</span>, <span class="ruby-value str">'r'</span>)
+          <span class="ruby-identifier">rs</span> = <span class="ruby-identifier">ff</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">split</span>(<span class="ruby-value str">' '</span>)
+          <span class="ruby-identifier">indices</span>= <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">base_index</span>
+          <span class="ruby-identifier">foo</span> = <span class="ruby-identifier">computeBaseKappa</span>(<span class="ruby-identifier">xt</span>,<span class="ruby-identifier">yt</span>, <span class="ruby-identifier">indices</span>, <span class="ruby-identifier">h</span>, <span class="ruby-identifier">rr</span>)
+          <span class="ruby-identifier">kappa</span> = <span class="ruby-identifier">foo</span>[<span class="ruby-value">0</span>]
+          <span class="ruby-identifier">rt</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">atoms</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">atom</span><span class="ruby-operator">|</span> <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">spoke_length</span>[<span class="ruby-value">0</span>]} 
+          <span class="ruby-identifier">interpolateKappa</span>(<span class="ruby-identifier">rt</span>, <span class="ruby-identifier">kappa</span>, <span class="ruby-identifier">step_size</span>, <span class="ruby-identifier">index</span>)
+      }
+   <span class="ruby-keyword kw">end</span>
+   <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">stack</span> <span class="ruby-identifier">:margin</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">3</span> <span class="ruby-keyword kw">do</span> 
+       <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">para</span> <span class="ruby-value str">&quot;enter the index of the srep&quot;</span>
+       <span class="ruby-ivar">@index</span> = <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">edit_line</span> <span class="ruby-identifier">:width</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">50</span>
+       <span class="ruby-ivar">@msg</span> = <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">para</span> <span class="ruby-value str">&quot;&quot;</span>
+     <span class="ruby-keyword kw">end</span>
+     <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">nofill</span>
+   <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

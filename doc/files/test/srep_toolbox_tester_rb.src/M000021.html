@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>ddl6 (test/srep_toolbox_tester.rb)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File test/srep_toolbox_tester.rb, line 77</span>
+<span class="ruby-keyword kw">def</span> <span class="ruby-identifier">ddl6</span>
+<span class="ruby-comment cmt"># test what the file exactl gets</span>
+<span class="ruby-identifier">foo</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-value str">'interpolated_points_0'</span>, <span class="ruby-value str">'r'</span>)
+<span class="ruby-identifier">x</span> = <span class="ruby-identifier">foo</span>.<span class="ruby-identifier">gets</span>
+<span class="ruby-identifier">y</span> = <span class="ruby-identifier">foo</span>.<span class="ruby-identifier">gets</span>
+<span class="ruby-identifier">foo</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-value str">'interpolated_rs_0'</span>, <span class="ruby-value str">'r'</span>)
+<span class="ruby-identifier">r</span> = <span class="ruby-identifier">foo</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">split</span>(<span class="ruby-value str">' '</span>).<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">bar</span><span class="ruby-operator">|</span> <span class="ruby-identifier">bar</span>.<span class="ruby-identifier">to_f</span>}
+<span class="ruby-identifier">foo</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-value str">'interpolated_logrkm1s_0'</span>, <span class="ruby-value str">'r'</span>)
+<span class="ruby-identifier">logrkm1</span> = <span class="ruby-identifier">foo</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">split</span>(<span class="ruby-value str">&quot; &quot;</span>).<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">bar</span><span class="ruby-operator">|</span> <span class="ruby-identifier">bar</span>.<span class="ruby-identifier">to_f</span>    }
+<span class="ruby-identifier">puts</span> <span class="ruby-value str">'x: '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">x</span>
+<span class="ruby-identifier">puts</span> <span class="ruby-value str">'y: '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">y</span>
+<span class="ruby-identifier">puts</span> <span class="ruby-value str">'r: '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_s</span>
+<span class="ruby-identifier">puts</span> <span class="ruby-value str">'logrkm1: '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">logrkm1</span>.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_s</span>
+
+<span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>
