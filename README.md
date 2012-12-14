@@ -1,4 +1,4 @@
-2d Objects in Context Prototyping System
+2D Objects in Context Prototyping System
 =======
 
 ##Description
