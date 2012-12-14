@@ -1,4 +1,4 @@
-rablo2d
+2d Objects in Context Prototyping System
 =======
 
 ##Description
@@ -15,27 +15,9 @@ To use me, you need to install:
   * current version uses functions in SciPy and NumPy to compute B-Spline interpolation. This may be changed later. 
 
 
-##Short Introduction
+##Start
 <br/>
 To run me, you can go to the directory that contains me and type the following command:
 
-      $ shoes rablo2d.rb
+      $ shoes main.rb
       
-In rablo2d you can play around with multiple 2d objects. Each one has a boundary that implied by a series of disks. <br/><br/>
-![img1](https://lh6.googleusercontent.com/-UfgaVkImm2I/UMEMozFNtOI/AAAAAAAAC6w/4cFSuiA2Sa4/s640/Screenshot%2520from%25202012-12-06%252016%253A18%253A01.jpg)
-<br/>
-<br/>
-By pushing "Interpolate All" button, the spokes that in between base points will be interpolated.<br/><br/>
-![img2](https://lh4.googleusercontent.com/-Qp3j9wAyWKs/UMEMo2FHkwI/AAAAAAAAC64/Wj0QJcnIR6s/s640/Screenshot%2520from%25202012-12-06%252016%253A18%253A26.jpg)
-<br/>
-<br/>
-By keeping push "Dilate" button, all the spokes will extend by a small ratio, once it intersects with other spokes, it will stop extending itself. Finally this process yields a linking structure in the spakes between objects.<br/><br/>
-![img3](https://lh6.googleusercontent.com/-rOI0k-YHYLI/UMEMoyyBX4I/AAAAAAAAC60/srwV3Efu81U/s640/Screenshot%2520from%25202012-12-06%252016%253A20%253A25.jpg)
-<br/>
-<br/>
-The linking structure can be displayed.<br/><br/>
-![img4](https://lh4.googleusercontent.com/-c8JSBUiqn4o/UMTQbilhxAI/AAAAAAAADCo/0_PTHE0jPgo/s640/Screenshot%2520from%25202012-12-09%252012%253A49%253A08.jpg)
-<br/>
-<br/>
-User can change the visibility of any elements to make the result more clear.<br/><br>/
-![img5](https://lh4.googleusercontent.com/-vvS6IxvZHV4/UMTQbspNEjI/AAAAAAAADCs/TV0yV7vhDOY/s640/Screenshot%2520from%25202012-12-09%252012%253A49%253A13.jpg)
