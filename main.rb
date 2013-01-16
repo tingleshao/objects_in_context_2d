@@ -1,4 +1,4 @@
-# main.rb
+# file: main.rb
 # This is the main program of the 2D objects in context protypeing system.
 # It contains a class Field that abstracts the canvas of the main window that displays the s-reps. 
 # It contains a class InterpolationControl that abstracts a subwindow for user 
@@ -297,9 +297,9 @@ class InterpolateControl
           kappa = foo[0]
           rt = srep.atoms.collect{|atom| atom.spoke_length[0]} 
           interpolateKappa(rt, kappa, step_size, index)
-      }
-   end
-   @app.stack :margin => 3 do 
+     }
+     end
+     @app.stack :margin => 3 do 
        @app.para "enter the index of the srep"
        @index = @app.edit_line :width => 50
        @msg = @app.para ""
@@ -491,6 +491,13 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
            $step_go_so_far = 1
            $current_base_index = 0
          end
+       }
+
+       button("s-reps info") {
+          window :title => "s-rep info", :width => 402, :height => 375 do
+            # si = sreps info
+	    si = SrepInfo.new(self)
+          end  
        }
 
      end

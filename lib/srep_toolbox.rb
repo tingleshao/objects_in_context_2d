@@ -1,4 +1,4 @@
-# srep_toolbox.rb
+# file: srep_toolbox.rb
 # This file contains functions for generating discrete 2D sreps and 
 #  functions for interpolating spokes from base atoms information.
 #
@@ -9,6 +9,7 @@
 load 'module/srep.rb'
 load 'module/atom.rb'
 load 'lib/color.rb'
+load 'view/srep_info.rb'
 
 $points_file_path = "data/interpolated_points_"
 $radius_file_path = "data/interpolated_rs_"
