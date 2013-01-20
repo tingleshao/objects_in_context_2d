@@ -26,7 +26,7 @@ class SrepInfo
   def refresh()
     paint()
   end
-
+# format srep info 
   def formatSrepInfo(srep)
     info = "\tname: " + "nil\n\tindex: " + srep.index.to_s() + "\n\tcolor: " + srep.color.to_s() + "\n"
     return info
