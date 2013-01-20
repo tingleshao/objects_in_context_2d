@@ -14,12 +14,19 @@ class SrepInfo
   def paint()
     @app.clear
     @app.para("hello world")
-    @app.para($sreps.to_s)
-
+# sub window can access $ variables
+#    @app.para($sreps.to_s)
+    @app.para(@app.to_s)
+    
   end
 
   def refresh()
     paint()
+  end
+
+  def formatSrepInfo(srep)
+    info = ""
+    
   end
 end
 
