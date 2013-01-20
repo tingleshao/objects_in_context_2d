@@ -13,11 +13,14 @@ class SrepInfo
 
   def paint()
     @app.clear
-    @app.para("hello world")
 # sub window can access $ variables
-#    @app.para($sreps.to_s)
-    @app.para(@app.to_s)
-    
+    @app.para("Number of objects: " + $sreps.length.to_s())
+    @app.para("\n")
+    @app.para("########################\n")
+    $sreps.each_with_index do |srep,i|
+      @app.para("object " + i.to_s() + " ") 
+      @app.para(self.formatSrepInfo(srep))
+    end 
   end
 
   def refresh()
@@ -25,8 +28,8 @@ class SrepInfo
   end
 
   def formatSrepInfo(srep)
-    info = ""
-    
+    info = "\tname: " + "nil\n\tindex: " + srep.index.to_s() + "\n\tcolor: " + srep.color.to_s() + "\n"
+    return info
   end
 end
 
