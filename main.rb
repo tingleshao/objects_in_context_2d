@@ -13,6 +13,8 @@ load 'lib/srep_toolbox.rb'
 load 'lib/color.rb'
 load 'view/interpolate_control.rb'
 load 'view/srep_info.rb'
+load 'view/file_loader_view.rb'
+
 
 $points_file_path = "data/interpolated_points_"
 $radius_file_path = "data/interpolated_rs_"
@@ -281,11 +283,13 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 
         button("Check File") {
           window :title => "draw srep", :width => 402, :height => 375 do
-	    dp = InterpolateControl.new(self)
+	          ip = InterpolateControl.new(self) # change dp to ip
           end
         }
         button("Load") {
-
+         window :title => "choose file", :width => 402, :height => 375 do
+           flv = FileLoaderView.new(self) 
+         end
         }
         button("Interpolate Spokes") {
          $sreps.each_with_index do |srep, srep_index| 
