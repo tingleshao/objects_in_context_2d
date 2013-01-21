@@ -351,13 +351,15 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 	  initialConfig
 	}
 
-        button("Check r-k File") {
+        button("Check File") {
           window :title => "draw srep", :width => 402, :height => 375 do
 	    dp = InterpolateControl.new(self)
           end
         }
-          
-        button("Interpolate All Spokes") {
+        button("Load") {
+
+        }
+        button("Interpolate Spokes") {
          $sreps.each_with_index do |srep, srep_index| 
            $a_big_number.times do
              # interpolate one side
@@ -380,9 +382,9 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
              # read all points, rs, logrkm1s from the file
              file = File.open($points_file_path + srep_index.to_s, 'r')
              xt = file.gets.split(' ').collect{|x| x.to_f}
-	     yt = file.gets.split(' ').collect{|y| y.to_f}
+	           yt = file.gets.split(' ').collect{|y| y.to_f}
              file = File.open($radius_file_path + srep_index.to_s, 'r')
-    	     rt = file.gets.split(' ').collect{|r| r.to_f}
+    	       rt = file.gets.split(' ').collect{|r| r.to_f}
              file = File.open($logrk_file_path + srep_index.to_s, 'r')
              logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
 
@@ -393,12 +395,12 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
                else
                  v2t = [xt[indices[base_index+1]] - xt[curr_index], yt[indices[base_index+1]] - yt[curr_index]]
                end
-               puts "v1t: " + v1t.to_s
+    #           puts "v1t: " + v1t.to_s
                size_v1t = v1t[0]**2 + v1t[1]**2
                norm_v1t = v1t.collect{|v| v / size_v1t} 
  
                size_v2t = v2t[0]**2 + v2t[1]**2
-               puts "size_v2t: " + size_v2t.to_s
+     #          puts "size_v2t: " + size_v2t.to_s
                norm_v2t = v2t.collect{|v| v / size_v2t} 
           
                k1t = ( 1 + ( -1 * Math.exp(logrkm1[indices[base_index]]   ) ) ) / rt[indices[base_index]] 
@@ -407,20 +409,20 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
                u1t = srep.atoms[base_index].spoke_direction[0]
                u2t = srep.atoms[base_index+1].spoke_direction[0]
                ui = interpolateSpokeAtPos(u1t, norm_v1t, k1t, d1t, u2t, norm_v2t, k2t, d2t)
-               puts "ui: " + ui.to_s
+      #        puts "ui: " + ui.to_s
                srep.interpolated_spokes_begin << [xt[curr_index],yt[curr_index],-1]    
-               puts "rt: " + rt[curr_index-1].to_s
+      #        puts "rt: " + rt[curr_index-1].to_s
                srep.interpolated_spokes_end  <<  [xt[curr_index]+ui[0]*rt[curr_index],yt[curr_index]-ui[1]*rt[curr_index],-1,[],'regular']
                # interpolate another side
                u1t = $sreps[srep_index].atoms[base_index].spoke_direction[1]
                u2t = $sreps[srep_index].atoms[base_index+1].spoke_direction[1]
                ui = interpolateSpokeAtPos(u1t, norm_v1t, k1t, d1t, u2t, norm_v2t, k2t, d2t)
-               puts "ui: " + ui.to_s
+       #       puts "ui: " + ui.to_s
                spoke_index = indices[base_index]+$step_go_so_far+1
                spoke_begin_x = xt[spoke_index]
                spoke_begin_y = yt[spoke_index ]
                $sreps[srep_index].interpolated_spokes_begin << [spoke_begin_x,spoke_begin_y,-1,[],'regular']    
-               puts "rt: " + rt[indices[base_index]+$step_go_so_far].to_s
+     #          puts "rt: " + rt[indices[base_index]+$step_go_so_far].to_s
                spoke_end_x = spoke_begin_x + ui[0]*rt[spoke_index]
                spoke_end_y = spoke_begin_y - ui[1]*rt[spoke_index]
                $sreps[srep_index].interpolated_spokes_end  <<  [spoke_end_x,spoke_end_y,-1,[],'regular']
@@ -484,7 +486,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
                $info = "interpolation finished"
              end
              $step_go_so_far = $step_go_so_far + 1
-             puts "count: "+ $step_go_so_far.to_s
+     #        puts "count: "+ $step_go_so_far.to_s
              
              refresh @points, $sreps, @shifts
            end
@@ -493,7 +495,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
          end
        }
 
-       button("s-reps info") {
+       button("Info") {
           window :title => "s-rep info", :width => 402, :height => 375 do
             # si = sreps info
 	          si = SrepInfo.new(self)
