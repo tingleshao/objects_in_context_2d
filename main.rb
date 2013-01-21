@@ -324,8 +324,8 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
       flow :margin => 6 do
 
        # code for buttons
-        button("Dilate") { 
-	  $sreps.each do |srep|
+      button("Dilate") { 
+	    $sreps.each do |srep|
 	    srep.atoms.each do |atom|
 	      atom.dilate($dilate_ratio)
 	    end
@@ -496,7 +496,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
        button("s-reps info") {
           window :title => "s-rep info", :width => 402, :height => 375 do
             # si = sreps info
-	    si = SrepInfo.new(self)
+	          si = SrepInfo.new(self)
           end  
        }
 
