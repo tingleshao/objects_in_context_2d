@@ -311,7 +311,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
              if distance_to_next_base == 0 # <= reached another base point
                $step_go_so_far  = 0
                $current_base_index = $current_base_index +1    
-               distance_to_next_base = ( indices[base_index+1] - indices[base_index] ) - $step_go_so_far 
+               distance_to_next_base = indices[base_index+1] - indices[base_index]
                spoke_index = $current_base_index
              end
           
