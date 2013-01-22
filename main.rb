@@ -287,7 +287,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
           end
         }
         button("Load") {
-         window :title => "choose file", :width => 402, :height => 375 do
+         window :title => "choose file", :width => 250, :height => 100 do
            flv = FileLoaderView.new(self) 
          end
         }
