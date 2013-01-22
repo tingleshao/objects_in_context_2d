@@ -292,6 +292,16 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
          end
         }
         button("Interpolate Spokes") {
+     # make this correct!! 
+
+     # the k is the change of the swings .
+    # ... which can be approximated by the change of the swings of 3 base points .....
+    # i guesss...
+   # need to look at my report!
+   # 
+#
+#
+
          $sreps.each_with_index do |srep, srep_index| 
            $a_big_number.times do
              # interpolate one side
