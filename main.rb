@@ -316,35 +316,49 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
              end
           
              curr_index = indices[base_index] + $step_go_so_far  + 1 
-            
+            # this is wrong... .
              d1t = 0.01 * $step_go_so_far 
              d2t = distance_to_next_base * 0.01 
 
              # calculate parameters
              # read all points, rs, logrkm1s from the file
              file = File.open($points_file_path + srep_index.to_s, 'r')
+            # xt/ yt: interpolatd x and y locus
              xt = file.gets.split(' ').collect{|x| x.to_f}
 	           yt = file.gets.split(' ').collect{|y| y.to_f}
              file = File.open($radius_file_path + srep_index.to_s, 'r')
+          # rt: interpolated radius r
     	       rt = file.gets.split(' ').collect{|r| r.to_f}
+          # logrk: interpolated logrk <= needs to be fixed.
+  #
+############################
+########################
+##########################
              file = File.open($logrk_file_path + srep_index.to_s, 'r')
              logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
-
+#################
+###################
+#################
+# here it uses the large difference to produce v, which is not good.
              if curr_index < xt.length-1
                v1t = [xt[curr_index] - xt[indices[base_index]], yt[curr_index] - yt[indices[base_index]]]
+            # it checks whether it reaches the next base index
                if curr_index == indices[base_index+1]
                  v2t = [xt[indices[base_index+1]+1] - xt[curr_index], yt[indices[base_index+1]+1] - yt[curr_index]]
                else
                  v2t = [xt[indices[base_index+1]] - xt[curr_index], yt[indices[base_index+1]] - yt[curr_index]]
                end
+
     #           puts "v1t: " + v1t.to_s
+            # yes it normalizes the size of v vector
                size_v1t = v1t[0]**2 + v1t[1]**2
                norm_v1t = v1t.collect{|v| v / size_v1t} 
- 
                size_v2t = v2t[0]**2 + v2t[1]**2
      #          puts "size_v2t: " + size_v2t.to_s
                norm_v2t = v2t.collect{|v| v / size_v2t} 
           
+
+# these k's are calculated using the stored value of log(1-rk)
                k1t = ( 1 + ( -1 * Math.exp(logrkm1[indices[base_index]]   ) ) ) / rt[indices[base_index]] 
                k2t = ( 1 + ( -1 * Math.exp(logrkm1[indices[base_index+1]] ) ) ) / rt[indices[base_index+1]] 
             
@@ -369,6 +383,9 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
                spoke_end_y = spoke_begin_y - ui[1]*rt[spoke_index]
                $sreps[srep_index].interpolated_spokes_end  <<  [spoke_end_x,spoke_end_y,-1,[],'regular']
              else
+
+
+
                # add spoke interpolation for end disks
                # get atom for end disks
                end_atom_one = srep.atoms[0]
@@ -381,6 +398,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
                  atom_spoke_dir_zero = atom.spoke_direction[2]
                  x_diff_1 = atom_spoke_dir_zero[0] - atom_spoke_dir_plus1[0]
                  x_diff_2 = atom_spoke_dir_zero[0] - atom_spoke_dir_minus1[0]
+
                  y_diff_1 = atom_spoke_dir_zero[1] - atom_spoke_dir_plus1[1]
                  y_diff_2 = atom_spoke_dir_zero[1] - atom_spoke_dir_minus1[1]
                  x_step_size_1 = x_diff_1.to_f / 15
@@ -442,6 +460,169 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
             # si = sreps info
 	          si = SrepInfo.new(self)
           end  
+       }
+      button("Interpolate Spokes 2") {
+     # make this correct!! 
+
+     # the k is the change of the swings .
+    # ... which can be approximated by the change of the swings of 3 base points .....
+    # i guesss...
+   # need to look at my report!
+   # 
+#
+#
+
+         $sreps.each_with_index do |srep, srep_index| 
+           $a_big_number.times do
+             # interpolate one side
+             indices = srep.base_index
+             base_index = $current_base_index
+             distance_to_next_base = ( indices[base_index+1] - indices[base_index] ) - $step_go_so_far 
+             if distance_to_next_base == 0 # <= reached another base point
+               $step_go_so_far  = 0
+               $current_base_index = $current_base_index +1    
+               distance_to_next_base = indices[base_index+1] - indices[base_index]
+               spoke_index = $current_base_index
+             end
+          
+             curr_index = indices[base_index] + $step_go_so_far  + 1 
+            # this is wrong... .
+             d1t = 0.01 * $step_go_so_far 
+             d2t = distance_to_next_base * 0.01 
+
+             # calculate parameters
+             # read all points, rs, logrkm1s from the file
+             file = File.open($points_file_path + srep_index.to_s, 'r')
+            # xt/ yt: interpolatd x and y locus
+             xt = file.gets.split(' ').collect{|x| x.to_f}
+	           yt = file.gets.split(' ').collect{|y| y.to_f}
+             file = File.open($radius_file_path + srep_index.to_s, 'r')
+          # rt: interpolated radius r
+    	       rt = file.gets.split(' ').collect{|r| r.to_f}
+          # logrk: interpolated logrk <= needs to be fixed.
+  #
+############################
+########################
+##########################
+             file = File.open($logrk_file_path + srep_index.to_s, 'r')
+             logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
+#################
+###################
+#################
+# here it uses the large difference to produce v, which is not good.
+             if curr_index < xt.length-1
+               v1t = [xt[curr_index] - xt[indices[base_index]], yt[curr_index] - yt[indices[base_index]]]
+            # it checks whether it reaches the next base index
+               if curr_index == indices[base_index+1]
+                 v2t = [xt[indices[base_index+1]+1] - xt[curr_index], yt[indices[base_index+1]+1] - yt[curr_index]]
+               else
+                 v2t = [xt[indices[base_index+1]] - xt[curr_index], yt[indices[base_index+1]] - yt[curr_index]]
+               end
+
+    #           puts "v1t: " + v1t.to_s
+            # yes it normalizes the size of v vector
+               size_v1t = v1t[0]**2 + v1t[1]**2
+               norm_v1t = v1t.collect{|v| v / size_v1t} 
+               size_v2t = v2t[0]**2 + v2t[1]**2
+     #          puts "size_v2t: " + size_v2t.to_s
+               norm_v2t = v2t.collect{|v| v / size_v2t} 
+          
+
+# these k's are calculated using the stored value of log(1-rk)
+               k1t = ( 1 + ( -1 * Math.exp(logrkm1[indices[base_index]]   ) ) ) / rt[indices[base_index]] 
+               k2t = ( 1 + ( -1 * Math.exp(logrkm1[indices[base_index+1]] ) ) ) / rt[indices[base_index+1]] 
+            
+               u1t = srep.atoms[base_index].spoke_direction[0]
+               u2t = srep.atoms[base_index+1].spoke_direction[0]
+               ui = interpolateSpokeAtPos(u1t, norm_v1t, k1t, d1t, u2t, norm_v2t, k2t, d2t)
+      #        puts "ui: " + ui.to_s
+               srep.interpolated_spokes_begin << [xt[curr_index],yt[curr_index],-1]    
+      #        puts "rt: " + rt[curr_index-1].to_s
+               srep.interpolated_spokes_end  <<  [xt[curr_index]+ui[0]*rt[curr_index],yt[curr_index]-ui[1]*rt[curr_index],-1,[],'regular']
+               # interpolate another side
+               u1t = $sreps[srep_index].atoms[base_index].spoke_direction[1]
+               u2t = $sreps[srep_index].atoms[base_index+1].spoke_direction[1]
+               ui = interpolateSpokeAtPos(u1t, norm_v1t, k1t, d1t, u2t, norm_v2t, k2t, d2t)
+       #       puts "ui: " + ui.to_s
+               spoke_index = indices[base_index]+$step_go_so_far+1
+               spoke_begin_x = xt[spoke_index]
+               spoke_begin_y = yt[spoke_index ]
+               $sreps[srep_index].interpolated_spokes_begin << [spoke_begin_x,spoke_begin_y,-1,[],'regular']    
+     #          puts "rt: " + rt[indices[base_index]+$step_go_so_far].to_s
+               spoke_end_x = spoke_begin_x + ui[0]*rt[spoke_index]
+               spoke_end_y = spoke_begin_y - ui[1]*rt[spoke_index]
+               $sreps[srep_index].interpolated_spokes_end  <<  [spoke_end_x,spoke_end_y,-1,[],'regular']
+             else
+
+
+
+               # add spoke interpolation for end disks
+               # get atom for end disks
+               end_atom_one = srep.atoms[0]
+               end_atom_two = srep.atoms[-1]
+               end_atoms = [end_atom_one, end_atom_two]
+               # get upper and lower and middle spokes
+               end_atoms.each_with_index do |atom, i|
+                 atom_spoke_dir_plus1 = atom.spoke_direction[0]
+                 atom_spoke_dir_minus1 = atom.spoke_direction[1]
+                 atom_spoke_dir_zero = atom.spoke_direction[2]
+                 x_diff_1 = atom_spoke_dir_zero[0] - atom_spoke_dir_plus1[0]
+                 x_diff_2 = atom_spoke_dir_zero[0] - atom_spoke_dir_minus1[0]
+
+                 y_diff_1 = atom_spoke_dir_zero[1] - atom_spoke_dir_plus1[1]
+                 y_diff_2 = atom_spoke_dir_zero[1] - atom_spoke_dir_minus1[1]
+                 x_step_size_1 = x_diff_1.to_f / 15
+                 y_step_size_1 = y_diff_1.to_f / 15
+                 x_step_size_2 = x_diff_2.to_f / 15
+                 y_step_size_2 = y_diff_2.to_f / 15
+                 previous_x = atom_spoke_dir_plus1[0] 
+                 previous_y = atom_spoke_dir_plus1[1] 
+                 $end_disk_spoke_number.times do 
+                   new_spoke_dir_x = previous_x + x_step_size_1
+                   new_spoke_dir_y = previous_y + y_step_size_1
+                   # normalize 
+                   length_new_spoke = Math.sqrt(new_spoke_dir_x**2 + new_spoke_dir_y**2)
+                   new_spoke_dir_x = new_spoke_dir_x / length_new_spoke
+                   new_spoke_dir_y = new_spoke_dir_y / length_new_spoke
+                   previous_x = new_spoke_dir_x
+                   previous_y = new_spoke_dir_y
+                   # calculate interpolated spoke end
+                   new_spoke_vector_x = atom.spoke_length[0]*new_spoke_dir_x
+                   new_spoke_vector_y = atom.spoke_length[0]*new_spoke_dir_y
+                   new_spoke_end = [atom.x + new_spoke_vector_x, atom.y - new_spoke_vector_y,-1,[],'end']
+                   $sreps[srep_index].interpolated_spokes_begin << [atom.x, atom.y]
+                   $sreps[srep_index].interpolated_spokes_end << new_spoke_end
+                 end
+                 previous_x = atom_spoke_dir_minus1[0]
+                 previous_y = atom_spoke_dir_minus1[1]
+                 $end_disk_spoke_number.times do 
+                   new_spoke_dir_x = previous_x + x_step_size_2
+                   new_spoke_dir_y = previous_y + y_step_size_2
+                   # normalize 
+                   length_new_spoke = Math.sqrt(new_spoke_dir_x**2 + new_spoke_dir_y**2)
+                   new_spoke_dir_x = new_spoke_dir_x / length_new_spoke
+                   new_spoke_dir_y = new_spoke_dir_y / length_new_spoke
+                   previous_x = new_spoke_dir_x
+                   previous_y = new_spoke_dir_y
+                   # calculate interpolated spoke end
+                   new_spoke_vector_x = atom.spoke_length[0]*new_spoke_dir_x
+                   new_spoke_vector_y = atom.spoke_length[0]*new_spoke_dir_y
+                   new_spoke_end = [atom.x + new_spoke_vector_x, atom.y - new_spoke_vector_y,-1,[],'end']
+                   $sreps[srep_index].interpolated_spokes_begin << [atom.x, atom.y]
+                   $sreps[srep_index].interpolated_spokes_end << new_spoke_end
+                   $sreps[srep_index].interpolate_finished = true
+                 end
+               end
+               $info = "interpolation finished"
+             end
+             $step_go_so_far = $step_go_so_far + 1
+     #        puts "count: "+ $step_go_so_far.to_s
+             
+             refresh @points, $sreps, @shifts
+           end
+           $step_go_so_far = 1
+           $current_base_index = 0
+         end
        }
 
      end
