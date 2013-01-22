@@ -11,9 +11,9 @@ load 'module/atom.rb'
 load 'lib/color.rb'
 load 'view/srep_info.rb'
 
-$points_file_path = "data/interpolated_points_"
-$radius_file_path = "data/interpolated_rs_"
-$logrk_file_path = 'data/interpolated_logrkm1s_'
+$points_file_path = "data2/interpolated_points_"
+$radius_file_path = "data2/interpolated_rs_"
+$logrk_file_path = 'data2/interpolated_logrkm1s_'
 $pi = Math::PI
 
 def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep_index)
@@ -225,6 +225,11 @@ def interpolateKappa(rt, kt, step_size, index)
   return ilogrkm1s
 end
 
+def computeBaseKappa2(xt,yt,endxt,endyt,h,rt)
+  #  this is the correct version of base kappa computation
+end
+
+
 def computeBaseKappa(xt,yt, indices, h, rt)
   # this function computes kappas at base points using the curvature formula
   # also checks whether rk at these base points are smaller than 1
@@ -232,6 +237,8 @@ def computeBaseKappa(xt,yt, indices, h, rt)
   # compute numerical derivatives 
   # for end points the way to compute derivatives are different
   # the index should not contain the first and the last index
+
+  # need to change this so that kappa is computed as swing of spokes 
   dx = []
   dy = []
   ddx = []

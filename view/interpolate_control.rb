@@ -1,3 +1,4 @@
+load 'lib/srep_toolbox.rb'
 
 # a class for the subwindow for choosing the srep to compute interpolation
 class InterpolateControl
@@ -50,7 +51,14 @@ class InterpolateControl
           ff = File.new($radius_file_path+index, 'r')
           rs = ff.gets.strip.split(' ')
           indices= srep.base_index
+  # this is where it calls computeBaseKappa
+##########
+#########
+#####
           foo = computeBaseKappa(xt,yt, indices, h, rr)
+#######
+#####
+          foo2 = computeBaseKappa2(xt,yt,xendt,yendt,h,rr)
           kappa = foo[0]
           rt = srep.atoms.collect{|atom| atom.spoke_length[0]} 
           interpolateKappa(rt, kappa, step_size, index)

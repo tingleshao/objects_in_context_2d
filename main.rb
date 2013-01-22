@@ -15,7 +15,7 @@ load 'view/interpolate_control.rb'
 load 'view/srep_info.rb'
 load 'view/file_loader_view.rb'
 
-
+# change the path will effect all these things 
 $points_file_path = "data/interpolated_points_"
 $radius_file_path = "data/interpolated_rs_"
 $logrk_file_path = 'data/interpolated_logrkm1s_'
