@@ -225,8 +225,14 @@ def interpolateKappa(rt, kt, step_size, index)
   return ilogrkm1s
 end
 
-def computeBaseKappa2(xt,yt,endxt,endyt,h,rt)
+def computeBaseKappa2(ub,vb, rt,base_index)
   #  this is the correct version of base kappa computation
+  # steps:
+  #      1. use ub, compute swing of u: du on base points
+  #      2. use vb, compute du proj on v
+  #      3. divided by length of v get the kappa k on base points 
+  
+  
 end
 
 
