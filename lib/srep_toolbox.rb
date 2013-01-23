@@ -237,9 +237,26 @@ def computeBaseKappa2(ub,vb, rt, base_index)
   (1..ub.size-1).each do |i|
     du << [ub[i][0] - ub[i-1][0], ub[i][1] - ub[i-1][1]]
   end
-  # now we have du 
-  
-  
+  # compute the average between adjacent du's
+  avgDu = []
+  (1..ub.size-2).each do |i|
+    avgDu << [(du[i][0] + du[i-1][0]) / 2, (du[i][1] + du[i-1][1]) / 2] 
+  end 
+  # now we have du
+  k = []
+  # first k and last k are from du
+  k << vector_project(du[0], vb[0])[1]
+  avgDu.each_with_index do |one_du,i| 
+    k << vector_project(one_du, vb[i+1])[1]
+  end 
+  k << vector_project(du[-1], vb[-1])[1]
+  # now we have k
+  ### 
+  #  may check the whether k's length is the same as number of base points 
+  ###
+  puts "are they the same? " + (k.size == ub.size).to_s
+  # just need that scalar 
+  return k 
 end
 
 

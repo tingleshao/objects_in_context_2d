@@ -13,7 +13,7 @@ def vector_project(a,b)
   # compute projection a on direction of b
   scalar = dot(a,b) / dot(b,b)
   projection = [scalar * b[0], scalar * b[1]]
-  return projection 
+  return [projection, scalar] 
 end
 
 def dot(a,b)
