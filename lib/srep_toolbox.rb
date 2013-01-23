@@ -10,6 +10,7 @@ load 'module/srep.rb'
 load 'module/atom.rb'
 load 'lib/color.rb'
 load 'view/srep_info.rb'
+load 'lib/math_toolbox.rb'
 
 $points_file_path = "data2/interpolated_points_"
 $radius_file_path = "data2/interpolated_rs_"
@@ -225,12 +226,18 @@ def interpolateKappa(rt, kt, step_size, index)
   return ilogrkm1s
 end
 
-def computeBaseKappa2(ub,vb, rt,base_index)
+def computeBaseKappa2(ub,vb, rt, base_index)
   #  this is the correct version of base kappa computation
   # steps:
   #      1. use ub, compute swing of u: du on base points
   #      2. use vb, compute du proj on v
   #      3. divided by length of v get the kappa k on base points 
+  number_of_base_points = ub.size
+  du = []
+  (1..ub.size-1).each do |i|
+    du << [ub[i][0] - ub[i-1][0], ub[i][1] - ub[i-1][1]]
+  end
+  # now we have du 
   
   
 end
