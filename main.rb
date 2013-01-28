@@ -303,7 +303,20 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 #
 
          $sreps.each_with_index do |srep, srep_index| 
+                  file1 = File.open($points_file_path + srep_index.to_s, 'r')
+         #  puts "file: " +  file1.to_s
+          test = "here!!!!!!!!!!!!!!!1"
+                xt = file1.gets.split(' ').collect{|x| x.to_f}
+	           yt = file1.gets.split(' ').collect{|y| y.to_f}
+             file2 = File.open($radius_file_path + srep_index.to_s, 'r')
+           	       rt = file2.gets.split(' ').collect{|r| r.to_f}
+             file3 = File.open($logrk_file_path + srep_index.to_s, 'r')
+             logrkm1 = file3.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
+
            $a_big_number.times do
+   puts test 
+           puts "file: " +  file1.to_s
+
              # interpolate one side
              indices = srep.base_index
              base_index = $current_base_index
@@ -322,20 +335,20 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 
              # calculate parameters
              # read all points, rs, logrkm1s from the file
-             file = File.open($points_file_path + srep_index.to_s, 'r')
+      #       file = File.open($points_file_path + srep_index.to_s, 'r')
             # xt/ yt: interpolatd x and y locus
-             xt = file.gets.split(' ').collect{|x| x.to_f}
-	           yt = file.gets.split(' ').collect{|y| y.to_f}
-             file = File.open($radius_file_path + srep_index.to_s, 'r')
+        #     xt = file1.gets.split(' ').collect{|x| x.to_f}
+	      #     yt = file1.gets.split(' ').collect{|y| y.to_f}
+        #     file2 = File.open($radius_file_path + srep_index.to_s, 'r')
           # rt: interpolated radius r
-    	       rt = file.gets.split(' ').collect{|r| r.to_f}
+    	#       rt = file2.gets.split(' ').collect{|r| r.to_f}
           # logrk: interpolated logrk <= needs to be fixed.
   #
 ############################
 ########################
 ##########################
-             file = File.open($logrk_file_path + srep_index.to_s, 'r')
-             logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
+      #       file3 = File.open($logrk_file_path + srep_index.to_s, 'r')
+       #      logrkm1 = file3.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
 #################
 ###################
 #################
@@ -466,33 +479,53 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 
      # the k is the change of the swings .
     # ... which can be approximated by the change of the swings of 3 base points .....
-    # i guesss...
-   # need to look at my report!
    # 
 #
-#
+# global variables: :(
+#  $step_go_so_far = 0
+#  @shifts = [300,300,300]
+#  $current_base_index = 0	
+#  $info = ""
+#  $dilateCount = 0
+#  $linkingPts = []
+#  $show_linking_structure = false
 
+#### #########
+# do it for each srep
          $sreps.each_with_index do |srep, srep_index| 
+   # do many times .... ( a big number may refer to the number of spokes between each two base points? ) 
            $a_big_number.times do
              # interpolate one side
+    #  retrieve the list for base indices 
+   # it tells which index is base index in the long list... ( well)  
              indices = srep.base_index
+            # initially it is zero 
              base_index = $current_base_index
+
              distance_to_next_base = ( indices[base_index+1] - indices[base_index] ) - $step_go_so_far 
+           
+             # no it is needed.
              if distance_to_next_base == 0 # <= reached another base point
                $step_go_so_far  = 0
+           # update current_base_index
                $current_base_index = $current_base_index +1    
                distance_to_next_base = indices[base_index+1] - indices[base_index]
+          # Why here is no checking for base index out of bound? 
                spoke_index = $current_base_index
              end
           
+          #after here we have the curr_index
              curr_index = indices[base_index] + $step_go_so_far  + 1 
-            # this is wrong... .
+
+            # this should be modified in next version 
              d1t = 0.01 * $step_go_so_far 
              d2t = distance_to_next_base * 0.01 
 
              # calculate parameters
+             # every iteration it reads a file so it is slow....
              # read all points, rs, logrkm1s from the file
              file = File.open($points_file_path + srep_index.to_s, 'r')
+
             # xt/ yt: interpolatd x and y locus
              xt = file.gets.split(' ').collect{|x| x.to_f}
 	           yt = file.gets.split(' ').collect{|y| y.to_f}
