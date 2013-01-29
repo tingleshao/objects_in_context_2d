@@ -565,9 +565,13 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
             
           # now we have v and k 
          # ----------------------------------------------------------
-
+            
+            # get u's <---- base spoke direction (two u's )
                u1t = srep.atoms[base_index].spoke_direction[0]
                u2t = srep.atoms[base_index+1].spoke_direction[0]
+        
+         # ------------------------------------------------
+            # call a method to interpolate 
                ui = interpolateSpokeAtPos(u1t, norm_v1t, k1t, d1t, u2t, norm_v2t, k2t, d2t)
       #        puts "ui: " + ui.to_s
                srep.interpolated_spokes_begin << [xt[curr_index],yt[curr_index],-1]    
@@ -587,7 +591,6 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
                spoke_end_y = spoke_begin_y - ui[1]*rt[spoke_index]
                $sreps[srep_index].interpolated_spokes_end  <<  [spoke_end_x,spoke_end_y,-1,[],'regular']
              else
-
 
 
                # add spoke interpolation for end disks
