@@ -630,6 +630,8 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
                    $sreps[srep_index].interpolated_spokes_begin << [atom.x, atom.y]
                    $sreps[srep_index].interpolated_spokes_end << new_spoke_end
                  end
+                
+                 # another end  
                  previous_x = atom_spoke_dir_minus1[0]
                  previous_y = atom_spoke_dir_minus1[1]
                  $end_disk_spoke_number.times do 
@@ -647,8 +649,11 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
                    new_spoke_end = [atom.x + new_spoke_vector_x, atom.y - new_spoke_vector_y,-1,[],'end']
                    $sreps[srep_index].interpolated_spokes_begin << [atom.x, atom.y]
                    $sreps[srep_index].interpolated_spokes_end << new_spoke_end
+
+#         ---------------------------- all finished 
                    $sreps[srep_index].interpolate_finished = true
                  end
+
                end
                $info = "interpolation finished"
              end
@@ -663,25 +668,47 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
        }
 
      end
-     # code for the check list @list = ['Medial Curve', 'Interpolated
-     Spokes', 'Extended Spokes', 'Extended Disks', 'Linking
-     Structure'] stack do @list.map! do |name| flow { @c = check; para
-     name } [@c, name] end if $sreps[0].show_curve @list[0][0].checked
-     = true end if $sreps[0].show_interpolated_spokes
-     @list[1][0].checked = true end if $sreps[0].show_extend_spokes
-     @list[2][0].checked = true end if $sreps[0].show_extend_disk
-     @list[3][0].checked = true end if $show_linking_structure
-     @list[4][0].checked = true end button "Refresh" do $sreps.each do
-     |srep| srep.show_curve = @list[0][0].checked?
-     srep.show_interpolated_spokes = @list[1][0].checked?
-     srep.show_extend_spokes = @list[2][0].checked?
-     srep.show_extend_disk = @list[3][0].checked?  end
-     $show_linking_structure = @list[4][0].checked?  if
-     @list[4][0].checked?  $sreps.each do |srep|
-     srep.extend_interpolated_spokes_end.each_with_index do
-     |spoke_end, i| if spoke_end[2] != -1 $linkingPts <<
-     [spoke_end[0], spoke_end[1]] end end end end refresh @points,
-     $sreps, @shifts if @list[4][0].checked?
+     # code for the check list 
+     @list = ['Medial Curve', 'Interpolated Spokes', 'Extended Spokes', 'Extended Disks', 'Linking Structure']
+     stack do
+       @list.map! do |name|
+         flow { @c = check; para name }
+         [@c, name]
+       end
+       if $sreps[0].show_curve 
+         @list[0][0].checked = true
+       end
+       if $sreps[0].show_interpolated_spokes
+         @list[1][0].checked = true
+       end
+       if $sreps[0].show_extend_spokes 
+         @list[2][0].checked = true
+       end
+       if $sreps[0].show_extend_disk 
+         @list[3][0].checked = true
+       end
+       if $show_linking_structure
+         @list[4][0].checked = true
+       end
+       button "Refresh" do
+         $sreps.each do |srep| 
+           srep.show_curve = @list[0][0].checked?
+           srep.show_interpolated_spokes = @list[1][0].checked?
+           srep.show_extend_spokes = @list[2][0].checked?
+           srep.show_extend_disk = @list[3][0].checked?
+         end
+         $show_linking_structure = @list[4][0].checked?
+         if @list[4][0].checked?
+           $sreps.each do |srep|
+             srep.extend_interpolated_spokes_end.each_with_index do |spoke_end, i|
+                if spoke_end[2] != -1 
+                   $linkingPts << [spoke_end[0], spoke_end[1]]  
+                end
+             end
+           end
+         end
+         refresh @points, $sreps, @shifts
+         if @list[4][0].checked?
        #    linkLinkingStructurePoints($sreps, self, 300) 
          end         
        end
