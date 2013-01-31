@@ -335,21 +335,31 @@ def interpolateSpokeAtPos(u1t, v1t, k1t, d1t, u2t, v2t, k2t, d2t)
   #   u(t+dt) = (1+a(t)*dt)u(t) - k(t)v(t)dt
   # 
   # d1t and d2t are all positive
-   puts "uvk: " + u1t.to_s + " " + v1t.to_s + " " + k1t.to_s
-   a1 = computeAUsingUVK(u1t,v1t,k1t)
+ # puts "uvk: " + u1t.to_s + " " + v1t.to_s + " " + k1t.to_s
+  a1 = computeAUsingUVK(u1t,v1t,k1t)
   a2 = computeAUsingUVK(u2t,v2t,k2t)
   utp1dt0 = (1+a1*d1t) * u1t[0] -  k1t * v1t[0] * d1t
   utp1dt1 = (1+a1*d1t) * u1t[1] -  k1t * v1t[1] * d1t
   utp2dt0 = (1-a2*d2t) * u2t[0] +  k2t * v2t[0] * d2t
   utp2dt1 = (1-a2*d2t) * u2t[1] +  k2t * v2t[1] * d2t
-  puts "uvkd: " + u2t.to_s + " " + v2t.to_s + " " + k2t.to_s + " " + d2t.to_s
-  puts "aaaa: " + utp1dt0.to_s 
-  puts "bbbb: " + utp2dt0.to_s
-  puts "d1t: "+ d1t.to_s
-  puts "d2t: "+ d2t.to_s
+ # puts "uvkd: " + u2t.to_s + " " + v2t.to_s + " " + k2t.to_s + " " + d2t.to_s
+ # puts "aaaa: " + utp1dt0.to_s 
+ # puts "bbbb: " + utp2dt0.to_s
+ # puts "d1t: "+ d1t.to_s
+ # puts "d2t: "+ d2t.to_s
   return [(utp1dt0*d2t+utp2dt0*d1t)/(d1t+d2t), (utp1dt1*d2t+utp2dt1*d1t)/(d1t+d2t)]
 end
 
+def interpolateSpokeAtPos2(ut,vt,kt,dt)
+# this is the interpolate spoke function for the second button
+#    u(t+dt) = (1+a(t)*dt)u(t) - k(t)v(t)dt
+  at = computeAUsingUVK(ut,vt,kt)
+  utdtx = (1+at*dt) * ut[0] - kt * vt[0] * dt
+  utdty = (1+at*dt) * ut[1] - kt * vt[1] * dt
+  
+  return [utdtx, utdty]
+
+end
 
 def computeAUsingUVK(ut,vt,kt)
   a = kt * ( ut[0] * vt[0] + ut[1] * vt[1] )
