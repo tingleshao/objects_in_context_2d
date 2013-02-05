@@ -19,6 +19,9 @@ load 'view/file_loader_view.rb'
 $points_file_path = "data/interpolated_points_"
 $radius_file_path = "data/interpolated_rs_"
 $logrk_file_path = 'data/interpolated_logrkm1s_'
+$logrk_file_path2 = "data2/interpolated_points_"
+$radius_file_path2 = "data2/interpolated_rs_"
+$points_file_path2 = "data2/interpolated_points_"
 $dilate_ratio = 1.05
 $a_big_number = 100
 $end_disk_spoke_number = 20
