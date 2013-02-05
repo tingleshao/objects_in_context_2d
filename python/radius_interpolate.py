@@ -35,7 +35,7 @@ out = interpolate.splev(unew,tck)
 print out
 
 print "index: " + index
-f = open('data/interpolated_rs_'+index,'w')
+f = open('data2/interpolated_rs_'+index,'w')
 writeRadius(out[0], out[1],f)
 
 plt.figure()

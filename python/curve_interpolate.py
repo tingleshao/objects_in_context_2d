@@ -47,7 +47,7 @@ out = interpolate.splev(unew,tck)
 print out
 
 print "index: " + str(index)
-f = open('data/interpolated_points_'+index,'w')
+f = open('data2/interpolated_points_'+index,'w')
 writePts(out[0],out[1] ,f)
 
 

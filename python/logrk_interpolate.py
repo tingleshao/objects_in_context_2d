@@ -32,7 +32,7 @@ out = interpolate.splev(unew,tck)
 print out
 
 print "index: " + index
-f = open('data/interpolated_logrkm1s_'+str(index),'w')
+f = open('data2/interpolated_logrkm1s_'+str(index),'w')
 writelogrk(out[1],f)
 
 plt.figure()
