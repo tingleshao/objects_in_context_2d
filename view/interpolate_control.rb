@@ -21,7 +21,7 @@ class InterpolateControl
         end
       }
       @app.button("Interpolate") {
-      # interpolate radius
+        # interpolate radius
           index = @index.text
           srep =  $sreps[index.to_i]
           xt = srep.atoms.collect{|atom| atom.x}
@@ -30,6 +30,9 @@ class InterpolateControl
           step_size = 0.01
           rs = interpolateRadius(xt,yt,rt,step_size,index)
           rr = rs.strip.split(' ').collect{|r| r.to_f} 
+
+         
+            
           # interpolate kappa
           # read interpolated file
           step_size = 0.01
@@ -51,6 +54,8 @@ class InterpolateControl
           ff = File.new($radius_file_path2+index, 'r')
           rs = ff.gets.strip.split(' ')
           indices= srep.base_index
+         puts "indices: " +  indices.to_s 
+          
   # this is where it calls computeBaseKappa
 ##########
 #########
@@ -58,7 +63,36 @@ class InterpolateControl
           foo = computeBaseKappa(xt,yt, indices, h, rr)
 #######
 #####   what is xendt and yendt?
-      #    foo2 = computeBaseKappa2(xt,yt,xendt,yendt,h,rr)
+#          def computeBaseKappa2(ub,vb)
+           # need ub: base point spokes 
+           # need vb: base point v's 
+       ub = []
+       vb = []
+       srep.atoms.each_with_index do |a, i|
+         ub << a.spoke_direction[0]  # fill up u_base 
+         curve = srep.skeletal_curve
+         curve_x = curve[0] 
+         curve_y = curve[1]
+         current_point_index = indices[i]
+         if i != indices.size - 1 
+           v = [curve_x[current_point_index+1] - curve_x[current_point_index], curve_y[current_point_index+1] - curve_y[current_point_index] ]   
+         else 
+            v = [curve_x[current_point_index] - curve_x[current_point_index-1], curve_y[current_point_index] - curve_y[current_point_index-1 ] ]   
+         end  
+          # need to normalize v
+           norm_v = Math.sqrt(v[0]**2 + v[1] **2) 
+          v = v.collect{|x| x / norm_v }
+          vb << v 
+       end
+         puts "U: " + ub.to_s
+         puts "V: " + vb.to_s
+         foo2 = computeBaseKappa2(ub,vb)
+          puts "result for base kappa2: " + foo2.to_s 
+         # now we have the values foo2 which is the corrected k? 
+        # check if it is correct
+         puts "#########################3compare two kappas: #####################"
+         puts "kappa1: " + foo[0].to_s
+         puts "kappa2: " + foo2.to_s
           kappa = foo[0]
           rt = srep.atoms.collect{|atom| atom.spoke_length[0]} 
           interpolateKappa(rt, kappa, step_size, index)

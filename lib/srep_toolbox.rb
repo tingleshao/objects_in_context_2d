@@ -228,8 +228,8 @@ end
 
 # %%%%%%%%%%%%%%%%%%%%% need to work on this %%%%%%%%%%%%%%%%%
 # %%%%%%%%%%%%%%%%
-def computeBaseKappa2(ub,vb, rt, base_index)
-  #  this is the correct version of base kappa computation
+def computeBaseKappa2(ub,vb)
+  # this is the correct version of base kappa computation
   # steps:
   #      1. use ub, compute swing of u: du on base points
   #      2. use vb, compute du proj on v
