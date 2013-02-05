@@ -19,6 +19,9 @@ load 'view/file_loader_view.rb'
 $points_file_path = "data/interpolated_points_"
 $radius_file_path = "data/interpolated_rs_"
 $logrk_file_path = 'data/interpolated_logrkm1s_'
+$logrk_file_path2 = "data2/interpolated_points_"
+$radius_file_path2 = "data2/interpolated_rs_"
+$points_file_path2 = "data2/interpolated_points_"
 $dilate_ratio = 1.05
 $a_big_number = 100
 $end_disk_spoke_number = 20
@@ -286,6 +289,8 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 	          ip = InterpolateControl.new(self) # change dp to ip
           end
         }
+
+       
         button("Load") {
          window :title => "choose file", :width => 250, :height => 100 do
            flv = FileLoaderView.new(self) 
@@ -572,15 +577,18 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
         
          # ------------------------------------------------
             # call a method to interpolate 
-               ui = interpolateSpokeAtPos(u1t, norm_v1t, k1t, d1t, u2t, norm_v2t, k2t, d2t)
+               ui = interpolateSpokeAtPos2(u1t, norm_v1t, k1t, d1t)
       #        puts "ui: " + ui.to_s
                srep.interpolated_spokes_begin << [xt[curr_index],yt[curr_index],-1]    
       #        puts "rt: " + rt[curr_index-1].to_s
                srep.interpolated_spokes_end  <<  [xt[curr_index]+ui[0]*rt[curr_index],yt[curr_index]-ui[1]*rt[curr_index],-1,[],'regular']
+
+
                # interpolate another side
+
                u1t = $sreps[srep_index].atoms[base_index].spoke_direction[1]
                u2t = $sreps[srep_index].atoms[base_index+1].spoke_direction[1]
-               ui = interpolateSpokeAtPos(u1t, norm_v1t, k1t, d1t, u2t, norm_v2t, k2t, d2t)
+               ui = interpolateSpokeAtPos2(u1t, norm_v1t, k1t, d1t)
        #       puts "ui: " + ui.to_s
                spoke_index = indices[base_index]+$step_go_so_far+1
                spoke_begin_x = xt[spoke_index]
@@ -653,15 +661,21 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 #         ---------------------------- all finished 
                    $sreps[srep_index].interpolate_finished = true
                  end
-
+            # this is the end of a loop for one pair of spokes          
                end
+   
                $info = "interpolation finished"
-             end
+          end
+
              $step_go_so_far = $step_go_so_far + 1
      #        puts "count: "+ $step_go_so_far.to_s
              
              refresh @points, $sreps, @shifts
            end
+
+           # one srep finitshed. ... 
+            # reset step_go_so_far  and current_base_index
+  
            $step_go_so_far = 1
            $current_base_index = 0
          end

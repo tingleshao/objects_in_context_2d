@@ -16,7 +16,7 @@ class InterpolateControl
       	if checkIndexEmpty()
           @msg.text = "empty index!"
         else
-          file_name = $radius_file_path + @index.text
+          file_name = $radius_file_path2 + @index.text
           @msg.text = "file exists: "+  File::exists?(file_name).to_s
         end
       }
@@ -35,7 +35,7 @@ class InterpolateControl
           step_size = 0.01
           # rt and kt are the r's and k's on the base points 
           # calculate kappa at base positions using the curvature formula
-          f = File.new($points_file_path+ index, 'r')   
+          f = File.new($points_file_path2+ index, 'r')   
           xs = f.gets.strip.split(' ')
           ys = f.gets.strip.split(' ')
           xt = []
@@ -48,7 +48,7 @@ class InterpolateControl
           end
           h = step_size
           f.close
-          ff = File.new($radius_file_path+index, 'r')
+          ff = File.new($radius_file_path2+index, 'r')
           rs = ff.gets.strip.split(' ')
           indices= srep.base_index
   # this is where it calls computeBaseKappa
