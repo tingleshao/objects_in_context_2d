@@ -57,9 +57,9 @@ class InterpolateControl
 #####
           foo = computeBaseKappa(xt,yt, indices, h, rr)
 #######
-#####
-          foo2 = computeBaseKappa2(xt,yt,xendt,yendt,h,rr)
-          kappa = foo2[0]
+#####   what is xendt and yendt?
+      #    foo2 = computeBaseKappa2(xt,yt,xendt,yendt,h,rr)
+          kappa = foo[0]
           rt = srep.atoms.collect{|atom| atom.spoke_length[0]} 
           interpolateKappa(rt, kappa, step_size, index)
      }
