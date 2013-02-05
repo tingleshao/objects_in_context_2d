@@ -328,6 +328,12 @@ def computeBaseKappa(xt,yt, indices, h, rt)
   return kappa, kr 
 end
 
+def extrapolateKappa()
+ # this function extrapolates kappa ...
+
+end
+
+
 def interpolateSpokeAtPos(u1t, v1t, k1t, d1t, u2t, v2t, k2t, d2t)
   # we know the 
   # this function interpolates the spole at 1st base points to the right..
