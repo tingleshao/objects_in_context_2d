@@ -12,9 +12,9 @@ load 'lib/color.rb'
 load 'view/srep_info.rb'
 load 'lib/math_toolbox.rb'
 
-$points_file_path = "data2/interpolated_points_"
-$radius_file_path = "data2/interpolated_rs_"
-$logrk_file_path = 'data2/interpolated_logrkm1s_'
+$points_file_path2 = "data2/interpolated_points_"
+$radius_file_path2 = "data2/interpolated_rs_"
+$logrk_file_path2 = 'data2/interpolated_logrkm1s_'
 $pi = Math::PI
 
 def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep_index)
@@ -226,6 +226,8 @@ def interpolateKappa(rt, kt, step_size, index)
   return ilogrkm1s
 end
 
+# %%%%%%%%%%%%%%%%%%%%% need to work on this %%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%
 def computeBaseKappa2(ub,vb, rt, base_index)
   #  this is the correct version of base kappa computation
   # steps:
