@@ -514,10 +514,11 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 ##########################
              file = File.open($logrk_file_path2 + srep_index.to_s, 'r')
              logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
+            ui1 = srep.atoms[0].spoke_direction[0]
+            ui2 = srep.atoms[0].spoke_direction[1]
 
            $a_big_number.times do
-            ui1 = []
-            ui2 = []
+          
              # interpolate one side
     #  retrieve the list for base indices 
    # it tells which index is base index in the long list... ( well)  
@@ -533,6 +534,11 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
            # update current_base_index
                $current_base_index = $current_base_index +1    
                distance_to_next_base = indices[base_index+1] - indices[base_index]
+           #   ui1 = []
+           #   ui2 = []
+          #          ui1 = interpolateA
+            #       ui2 = interpolateSpokeAtPos2(ui2, norm_v1t, k1t, d1t)
+
           # Why here is no checking for base index out of bound? 
                spoke_index = $current_base_index
              end
@@ -573,14 +579,11 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
          # ----------------------------------------------------------
             
             # get u's <---- base spoke direction (two u's )
-               if ui1 ==[]
-                 ui1 = srep.atoms[base_index].spoke_direction[0]
-               else
+
          # ------------------------------------------------
             # call a method to interpolate 
                ui = interpolateSpokeAtPos2(ui1, norm_v1t, k1t, d1t)
-             ui1 = ui
-               end
+               ui1 = ui
       #        puts "ui: " + ui.to_s
                srep.interpolated_spokes_begin << [xt[curr_index],yt[curr_index],-1]    
       #        puts "rt: " + rt[curr_index-1].to_s
@@ -588,11 +591,6 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 
 
                # interpolate another side
-                if ui2 == []
-               ui2 = $sreps[srep_index].atoms[base_index].spoke_direction[1] 
-              else
-               ui2 = interpolateSpokeAtPos2(ui2, norm_v1t, k1t, d1t)
-              end
        #       puts "ui: " + ui.to_s
                spoke_index = indices[base_index]+$step_go_so_far+1
                spoke_begin_x = xt[spoke_index]
