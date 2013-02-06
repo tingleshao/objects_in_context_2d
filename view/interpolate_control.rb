@@ -86,16 +86,16 @@ class InterpolateControl
        end
          puts "U: " + ub.to_s
          puts "V: " + vb.to_s
-         foo2 = computeBaseKappa2(ub,vb)
+         foo2 = computeBaseKappa2(ub,vb,indices)
           puts "result for base kappa2: " + foo2.to_s 
          # now we have the values foo2 which is the corrected k? 
         # check if it is correct
          puts "#########################3compare two kappas: #####################"
          puts "kappa1: " + foo[0].to_s
          puts "kappa2: " + foo2.to_s
-          kappa = foo[0]
+          kappa = foo2
           rt = srep.atoms.collect{|atom| atom.spoke_length[0]} 
-          interpolateKappa(rt, kappa, step_size, index)
+          interpolateKappa2(rt, kappa, step_size, index)
      }
      end
      @app.stack :margin => 3 do 

@@ -213,8 +213,11 @@ def interpolateKappa(rt, kt, step_size, index)
 # rt is an array that contains radius 
 # this function produces the k array that has the same length as the r array
   rk = [rt,kt].transpose.map{|x| x.reduce(:*)}
-  puts "inside 1: " + rk.to_s
-  rkm1 = rk.collect{|x| 1-x}
+  puts "#################################################################"
+  puts "rk: " + rk.to_s
+  rkm1 = rk.collect{|x| 1-x}  
+  puts " ###############################################################"
+  puts "rkm1: " + rkm1.to_s
   logrkm1 = rkm1.collect{|x| Math.log(x)}
   logrkm1s = '"[' + logrkm1.join(" ") + ']"'
   step_size_s = step_size.to_s
@@ -226,9 +229,34 @@ def interpolateKappa(rt, kt, step_size, index)
   return ilogrkm1s
 end
 
+def interpolateKappa2(rt,kt,step_size,index)
+ # the boundary should be extrapolated
+  rt = rt[1..-2]
+  rk = [rt,kt].transpose.map{|x| x.reduce(:*)}
+  puts "#################################################################"
+  puts "rk: " + rk.to_s
+  rkm1 = rk.collect{|x| 1-x}  
+  puts " ###############################################################"
+  puts "rkm1: " + rkm1.to_s
+  logrkm1 = rkm1.collect{|x| Math.log(x)}
+  logrkm1_0 = 2* logrkm1[0] - logrkm1[1]
+  logrkm1_last = 2 * logrkm1[-2] - logrkm1[-1]
+  logrkm1.insert(0,logrkm1_0)
+  logrkm1 << logrkm1_last
+  logrkm1s = '"[' + logrkm1.join(" ") + ']"'
+  step_size_s = step_size.to_s
+  
+  system("python python/logrk_interpolate.py " + logrkm1s + ' ' + step_size_s + ' ' + index.to_s)
+  # the 'interpolated_logrkm1s' file contains interpolated log(1-rk)
+  logrkm1_file = File.new($logrk_file_path + index.to_s , "r")
+  ilogrkm1s = logrkm1_file.gets
+  puts "ilogrkm1s: " + ilogrkm1s
+  return ilogrkm1s
+end
+
 # %%%%%%%%%%%%%%%%%%%%% need to work on this %%%%%%%%%%%%%%%%%
 # %%%%%%%%%%%%%%%%
-def computeBaseKappa2(ub,vb)
+def computeBaseKappa2(ub,vb,base_indices)
   # this is the correct version of base kappa computation
   # steps:
   #      1. use ub, compute swing of u: du on base points
@@ -239,19 +267,31 @@ def computeBaseKappa2(ub,vb)
   (1..ub.size-1).each do |i|
     du << [ub[i][0] - ub[i-1][0], ub[i][1] - ub[i-1][1]]
   end
+   # this Du is swing of spokes between two base points. it should be divided by the step size
+  #   to get the estimatd swing of spokes for base points for one step size.
+  # compute distance between base indices (number of step sizes) 
+  indices_distance = []
+  (base_indices.size-1).times do | i |
+    indices_distance << base_indices[i+1] - base_indices[i]
+  end
   # compute the average between adjacent du's
   avgDu = []
-  (1..ub.size-2).each do |i|
-    avgDu << [(du[i][0] + du[i-1][0]) / 2, (du[i][1] + du[i-1][1]) / 2] 
+  (1..ub.size-2).each_with_index do |i, ind|
+    avgDu << [(du[i][0] + du[i-1][0]) / (2*indices_distance[ind+1]), (du[i][1] + du[i-1][1]) / (2*indices_distance[ind+1])]
   end 
+ 
+
   # now we have du
   k = []
   # first k and last k are from du
-  k << vector_project(du[0], vb[0])[1]
+ # k << vector_project(du[0], vb[0])[1]/indices_distance[0]
   avgDu.each_with_index do |one_du,i| 
     k << vector_project(one_du, vb[i+1])[1]
   end 
-  k << vector_project(du[-1], vb[-1])[1]
+#  k_0 = k[0] - (k[1] - k[0])
+ # k_last = k[-2] - ( k [-1] - k[-2])
+ 
+ # k << vector_project(du[-1], vb[-1])[1]/indices_distance[-1]
   # now we have k
   ### 
   #  may check the whether k's length is the same as number of base points 
@@ -362,11 +402,9 @@ def interpolateSpokeAtPos2(ut,vt,kt,dt)
 # this is the interpolate spoke function for the second button
 #    u(t+dt) = (1+a(t)*dt)u(t) - k(t)v(t)dt
   at = computeAUsingUVK(ut,vt,kt)
-  utdtx = (1+at*dt) * ut[0] - kt * vt[0] * dt
-  utdty = (1+at*dt) * ut[1] - kt * vt[1] * dt
-  
+  utdtx = (1+at*100*dt) * ut[0] - kt * vt[0] * 100*dt
+  utdty = (1+at*100*dt) * ut[1] - kt * vt[1] * 100*dt
   return [utdtx, utdty]
-
 end
 
 def computeAUsingUVK(ut,vt,kt)

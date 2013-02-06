@@ -19,7 +19,7 @@ load 'view/file_loader_view.rb'
 $points_file_path = "data/interpolated_points_"
 $radius_file_path = "data/interpolated_rs_"
 $logrk_file_path = 'data/interpolated_logrkm1s_'
-$logrk_file_path2 = "data2/interpolated_points_"
+$logrk_file_path2 = "data2/interpolated_logrkm1s_"
 $radius_file_path2 = "data2/interpolated_rs_"
 $points_file_path2 = "data2/interpolated_points_"
 $dilate_ratio = 1.05
@@ -499,12 +499,12 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 # do it for each srep
          $sreps.each_with_index do |srep, srep_index| 
    # do many times .... ( a big number may refer to the number of spokes between each two base points? ) 
-            file = File.open($points_file_path + srep_index.to_s, 'r')
+            file = File.open($points_file_path2 + srep_index.to_s, 'r')
 
             # xt/ yt: interpolatd x and y locus
              xt = file.gets.split(' ').collect{|x| x.to_f}
 	           yt = file.gets.split(' ').collect{|y| y.to_f}
-             file = File.open($radius_file_path + srep_index.to_s, 'r')
+             file = File.open($radius_file_path2 + srep_index.to_s, 'r')
           # rt: interpolated radius r
     	       rt = file.gets.split(' ').collect{|r| r.to_f}
           # logrk: interpolated logrk <= needs to be fixed.
@@ -512,7 +512,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 ############################
 ########################
 ##########################
-             file = File.open($logrk_file_path + srep_index.to_s, 'r')
+             file = File.open($logrk_file_path2 + srep_index.to_s, 'r')
              logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
 
            $a_big_number.times do
@@ -565,7 +565,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
           
 
 # these k's are calculated using the stored value of log(1-rk)
-               k1t = ( 1 + ( -1 * Math.exp(logrkm1[indices[base_index]]   ) ) ) / rt[indices[base_index]] 
+               k1t = ( 1 + ( -1 * Math.exp(logrkm1[curr_index]   ) ) ) / rt[curr_index] 
                k2t = ( 1 + ( -1 * Math.exp(logrkm1[indices[base_index+1]] ) ) ) / rt[indices[base_index+1]] 
             
           # now we have v and k 
@@ -752,7 +752,7 @@ def initialConfig
   $show_linking_structure = false
 
   points0 = [[110,100],[160,75],[210,50],[260,60],[310,80]]
-  l0 = [[35,35,35],[40,40],[50,50],[40,40],[35,35,35]]
+  l0 = [[35,35,35],[40,40],[30,30],[40,40],[35,35,35]]
   u0 = [[[-1,3],[-0.1,-4],[-9,1]],[[-1,4],[1.1,-3]],[[-1,4],[0.2,-6]],[[1,9],[0.05,-8]],[[1,2],[1,-5],[6,1]]]
   srep0 = generate2DDiscreteSrep(points0,l0,u0,0.01,0)
   srep0.orientation = [0,1]
