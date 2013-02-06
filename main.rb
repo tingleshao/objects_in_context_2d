@@ -516,6 +516,8 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
              logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
 
            $a_big_number.times do
+            ui1 = []
+            ui2 = []
              # interpolate one side
     #  retrieve the list for base indices 
    # it tells which index is base index in the long list... ( well)  
@@ -566,37 +568,39 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 
 # these k's are calculated using the stored value of log(1-rk)
                k1t = ( 1 + ( -1 * Math.exp(logrkm1[curr_index]   ) ) ) / rt[curr_index] 
-               k2t = ( 1 + ( -1 * Math.exp(logrkm1[indices[base_index+1]] ) ) ) / rt[indices[base_index+1]] 
             
           # now we have v and k 
          # ----------------------------------------------------------
             
             # get u's <---- base spoke direction (two u's )
-               u1t = srep.atoms[base_index].spoke_direction[0]
-               u2t = srep.atoms[base_index+1].spoke_direction[0]
-        
+               if ui1 ==[]
+                 ui1 = srep.atoms[base_index].spoke_direction[0]
+               else
          # ------------------------------------------------
             # call a method to interpolate 
-               ui = interpolateSpokeAtPos2(u1t, norm_v1t, k1t, d1t)
+               ui = interpolateSpokeAtPos2(ui1, norm_v1t, k1t, d1t)
+             ui1 = ui
+               end
       #        puts "ui: " + ui.to_s
                srep.interpolated_spokes_begin << [xt[curr_index],yt[curr_index],-1]    
       #        puts "rt: " + rt[curr_index-1].to_s
-               srep.interpolated_spokes_end  <<  [xt[curr_index]+ui[0]*rt[curr_index],yt[curr_index]-ui[1]*rt[curr_index],-1,[],'regular']
+               srep.interpolated_spokes_end  <<  [xt[curr_index]+ui1[0]*rt[curr_index],yt[curr_index]-ui1[1]*rt[curr_index],-1,[],'regular']
 
 
                # interpolate another side
-
-               u1t = $sreps[srep_index].atoms[base_index].spoke_direction[1]
-               u2t = $sreps[srep_index].atoms[base_index+1].spoke_direction[1]
-               ui = interpolateSpokeAtPos2(u1t, norm_v1t, k1t, d1t)
+                if ui2 == []
+               ui2 = $sreps[srep_index].atoms[base_index].spoke_direction[1] 
+              else
+               ui2 = interpolateSpokeAtPos2(ui2, norm_v1t, k1t, d1t)
+              end
        #       puts "ui: " + ui.to_s
                spoke_index = indices[base_index]+$step_go_so_far+1
                spoke_begin_x = xt[spoke_index]
                spoke_begin_y = yt[spoke_index ]
                $sreps[srep_index].interpolated_spokes_begin << [spoke_begin_x,spoke_begin_y,-1,[],'regular']    
      #          puts "rt: " + rt[indices[base_index]+$step_go_so_far].to_s
-               spoke_end_x = spoke_begin_x + ui[0]*rt[spoke_index]
-               spoke_end_y = spoke_begin_y - ui[1]*rt[spoke_index]
+               spoke_end_x = spoke_begin_x + ui2[0]*rt[spoke_index]
+               spoke_end_y = spoke_begin_y - ui2[1]*rt[spoke_index]
                $sreps[srep_index].interpolated_spokes_end  <<  [spoke_end_x,spoke_end_y,-1,[],'regular']
              else
 

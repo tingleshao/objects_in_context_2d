@@ -402,8 +402,11 @@ def interpolateSpokeAtPos2(ut,vt,kt,dt)
 # this is the interpolate spoke function for the second button
 #    u(t+dt) = (1+a(t)*dt)u(t) - k(t)v(t)dt
   at = computeAUsingUVK(ut,vt,kt)
+ 
   utdtx = (1+at*100*dt) * ut[0] - kt * vt[0] * 100*dt
   utdty = (1+at*100*dt) * ut[1] - kt * vt[1] * 100*dt
+ puts ut
+  puts [utdtx, utdty]
   return [utdtx, utdty]
 end
 
