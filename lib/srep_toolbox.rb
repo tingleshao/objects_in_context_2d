@@ -403,9 +403,9 @@ def interpolateSpokeAtPos2(ut,vt,kt,dt)
 #    u(t+dt) = (1+a(t)*dt)u(t) - k(t)v(t)dt
   at = computeAUsingUVK(ut,vt,kt)
  
-  utdtx = (1+at*dt) * ut[0] - kt * vt[0] *100*dt
-  utdty = (1+at*dt) * ut[1] - kt * vt[1] *100*dt
- puts "ut: "+ ut.to_s
+  utdtx = (1+at*dt) * ut[0] - kt * vt[0] * dt
+  utdty = (1+at*dt) * ut[1] - kt * vt[1] * dt
+  puts "ut: "+ ut.to_s
   puts "newut: " + [utdtx, utdty].to_s
   return [utdtx, utdty]
 end

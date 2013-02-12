@@ -498,78 +498,88 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 #### #########
 # do it for each srep
          $sreps.each_with_index do |srep, srep_index| 
+            puts "flip:" + $flip.to_s
+            $flip = 0
+          
+         if $flip == 0
    # do many times .... ( a big number may refer to the number of spokes between each two base points? ) 
             file = File.open($points_file_path2 + srep_index.to_s, 'r')
 
             # xt/ yt: interpolatd x and y locus
-             xt = file.gets.split(' ').collect{|x| x.to_f}
-	           yt = file.gets.split(' ').collect{|y| y.to_f}
+            $xt = file.gets.split(' ').collect{|x| x.to_f}
+	          $yt = file.gets.split(' ').collect{|y| y.to_f}
              file = File.open($radius_file_path2 + srep_index.to_s, 'r')
           # rt: interpolated radius r
-    	       rt = file.gets.split(' ').collect{|r| r.to_f}
+    	       $rt = file.gets.split(' ').collect{|r| r.to_f}
           # logrk: interpolated logrk <= needs to be fixed.
   #
 ############################
 ########################
 ##########################
-             file = File.open($logrk_file_path2 + srep_index.to_s, 'r')
-             logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
-            ui1 = srep.atoms[0].spoke_direction[0]
-            ui2 = srep.atoms[0].spoke_direction[1]
-
-           $a_big_number.times do
-          
+            file = File.open($logrk_file_path + srep_index.to_s, 'r')
+            $logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
+            $ui1 = srep.atoms[0].spoke_direction[0]
+            $ui2 = srep.atoms[0].spoke_direction[1]
+           $flip = 1 
+        #     $a_big_number.times do
+    else      
              # interpolate one side
     #  retrieve the list for base indices 
    # it tells which index is base index in the long list... ( well)  
-             indices = srep.base_index
+               indices = srep.base_index
             # initially it is zero 
-             base_index = $current_base_index
+               base_index = $current_base_index
 
-             distance_to_next_base = ( indices[base_index+1] - indices[base_index] ) - $step_go_so_far 
+               distance_to_next_base = ( indices[base_index+1] - indices[base_index] ) - $step_go_so_far 
            
              # no it is needed.
              if distance_to_next_base == 0 # <= reached another base point
+       puts "############################################################"
+       puts "############################################################"
+       puts "at base end!"
+       puts "############################################################"
+       puts "############################################################"
                $step_go_so_far  = 0
            # update current_base_index
-               $current_base_index = $current_base_index +1    
+               $current_base_index = $current_base_index + 1    
+               ui1 = srep.atoms[$current_base_index].spoke_direction[0]
+               ui2 = srep.atoms[$current_base_index].spoke_direction[1]
                distance_to_next_base = indices[base_index+1] - indices[base_index]
            #   ui1 = []
            #   ui2 = []
-          #          ui1 = interpolateA
-            #       ui2 = interpolateSpokeAtPos2(ui2, norm_v1t, k1t, d1t)
-
-          # Why here is no checking for base index out of bound? 
+           #   ui1 = interpolateA
+           #   ui2 = interpolateSpokeAtPos2(ui2, norm_v1t, k1t, d1t)
+           
+           #  Why here is no checking for base index out of bound? 
                spoke_index = $current_base_index
              end
           
-          # -->>>>>> after here we have the curr_index
+           # -->>>>>> after here we have the curr_index
              curr_index = indices[base_index] + $step_go_so_far  + 1 
 
-            # this should be modified in next version 
-             d1t = 0.01 * $step_go_so_far 
-             d2t = distance_to_next_base * 0.01 
+           # this should be modified in next version 
+             d1t = 1.0
 
-           
-# here it uses the large difference to produce v, which is not good.
+           # here it uses the large difference to produce v, which is not good.
            # the case of interpolating non-end spokes
              if curr_index < xt.length-1
+              if curr_index != base_index[-1]
               # calculate v1 
-               v1t = [xt[curr_index] - xt[indices[base_index]], yt[curr_index] - yt[indices[base_index]]]
+               v1t = [xt[curr_index+1] - xt[curr_index], yt[curr_index+1] - yt[curr_index]]
             #  calculate v2
-               if curr_index == indices[base_index+1]
-                 v2t = [xt[indices[base_index+1]+1] - xt[curr_index], yt[indices[base_index+1]+1] - yt[curr_index]]
-               else
-                 v2t = [xt[indices[base_index+1]] - xt[curr_index], yt[indices[base_index+1]] - yt[curr_index]]
-               end
+          #     if curr_index == indices[base_index+1]
+           #      v2t = [xt[indices[base_index+1]+1] - xt[curr_index], yt[indices[base_index+1]+1] - yt[curr_index]]
+         #      else
+          #       v2t = [xt[indices[base_index+1]] - xt[curr_index], yt[indices[base_index+1]] - yt[curr_index]]
+              end
 
     #           puts "v1t: " + v1t.to_s
             # normalize the size of v vector
-               size_v1t = v1t[0]**2 + v1t[1]**2
+               size_v1t = Math.sqrt(v1t[0]**2 + v1t[1]**2)
                norm_v1t = v1t.collect{|v| v / size_v1t} 
-               size_v2t = v2t[0]**2 + v2t[1]**2
+       #        size_v2t = v2t[0]**2 + v2t[1]**2
      #          puts "size_v2t: " + size_v2t.to_s
-               norm_v2t = v2t.collect{|v| v / size_v2t} 
+      #         norm_v2t = v2t.collect{|v| v / size_v2t} 
           
 
 # these k's are calculated using the stored value of log(1-rk)
@@ -584,22 +594,25 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
             # call a method to interpolate 
                ui = interpolateSpokeAtPos2(ui1, norm_v1t, k1t, d1t)
                ui1 = ui
+               ui2 = interpolateSpokeAtPos2(ui2,norm_v1t,k1t,d1t)
+
       #        puts "ui: " + ui.to_s
                srep.interpolated_spokes_begin << [xt[curr_index],yt[curr_index],-1]    
       #        puts "rt: " + rt[curr_index-1].to_s
                srep.interpolated_spokes_end  <<  [xt[curr_index]+ui1[0]*rt[curr_index],yt[curr_index]-ui1[1]*rt[curr_index],-1,[],'regular']
-
-
+               
                # interpolate another side
        #       puts "ui: " + ui.to_s
                spoke_index = indices[base_index]+$step_go_so_far+1
                spoke_begin_x = xt[spoke_index]
-               spoke_begin_y = yt[spoke_index ]
+               spoke_begin_y = yt[spoke_index]
                $sreps[srep_index].interpolated_spokes_begin << [spoke_begin_x,spoke_begin_y,-1,[],'regular']    
      #          puts "rt: " + rt[indices[base_index]+$step_go_so_far].to_s
                spoke_end_x = spoke_begin_x + ui2[0]*rt[spoke_index]
                spoke_end_y = spoke_begin_y - ui2[1]*rt[spoke_index]
                $sreps[srep_index].interpolated_spokes_end  <<  [spoke_end_x,spoke_end_y,-1,[],'regular']
+
+               refresh @points, $sreps, @shifts
              else
 
 
@@ -662,9 +675,13 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 
 #         ---------------------------- all finished 
                    $sreps[srep_index].interpolate_finished = true
+
+               refresh @points, $sreps, @shifts
                  end
-            # this is the end of a loop for one pair of spokes          
-               end
+            # this is the end of a loop for one pair of spokes    
+
+               refresh @points, $sreps, @shifts      
+               end 
    
                $info = "interpolation finished"
           end
@@ -672,7 +689,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
              $step_go_so_far = $step_go_so_far + 1
      #        puts "count: "+ $step_go_so_far.to_s
              
-             refresh @points, $sreps, @shifts
+            
            end
 
            # one srep finitshed. ... 
@@ -680,7 +697,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
   
            $step_go_so_far = 1
            $current_base_index = 0
-         end
+        end
        }
 
      end
@@ -752,7 +769,7 @@ def initialConfig
   $dilateCount = 0
   $linkingPts = []
   $show_linking_structure = false
-
+  $flip = 0
   points0 = [[110,100],[160,75],[210,50],[260,60],[310,80]]
   l0 = [[35,35,35],[40,40],[30,30],[40,40],[35,35,35]]
   u0 = [[[-1,3],[-0.1,-4],[-9,1]],[[-1,4],[1.1,-3]],[[-1,4],[0.2,-6]],[[1,9],[0.05,-8]],[[1,2],[1,-5],[6,1]]]
