@@ -507,13 +507,13 @@ curr_index = 0
   #
             file = File.open($logrk_file_path2 + srep_index.to_s, 'r')
             $logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
-            $ui1 = srep.atoms[0].spoke_direction[0]
-            $ui2 = srep.atoms[0].spoke_direction[1]
-               srep.interpolated_spokes_begin <<  [$xt[curr_index],$yt[curr_index]]
-               srep.interpolated_spokes_end  <<  [$xt[curr_index]+$ui1[0]*$rt[curr_index],$yt[curr_index]-$ui1[1]*$rt[curr_index],-1,[],'regular']
-           curr_index = 1
-               srep.interpolated_spokes_begin <<  [$xt[curr_index],$yt[curr_index]]
-               srep.interpolated_spokes_end  <<  [$xt[curr_index]+$ui2[0]*$rt[curr_index],$yt[curr_index]-$ui2[1]*$rt[curr_index],-1,[],'regular']
+      #      $ui1 = srep.atoms[0].spoke_direction[0]
+      #      $ui2 = srep.atoms[0].spoke_direction[1]
+      #         srep.interpolated_spokes_begin <<  [$xt[curr_index],$yt[curr_index]]
+       #        srep.interpolated_spokes_end  <<  [$xt[curr_index]+$ui1[0]*$rt[curr_index],$yt[curr_index]-$ui1[1]*$rt[curr_index],-1,[],'regular']
+       #    curr_index = 1
+       #        srep.interpolated_spokes_begin <<  [$xt[curr_index],$yt[curr_index]]
+       #        srep.interpolated_spokes_end  <<  [$xt[curr_index]+$ui2[0]*$rt[curr_index],$yt[curr_index]-$ui2[1]*$rt[curr_index],-1,[],'regular']
             $indices = srep.base_index
    #         $flip = 1 
         #     $a_big_number.times do
@@ -546,7 +546,11 @@ curr_index = 0
           
            # -->>>>>> after here we have the curr_index
              curr_index = $indices[base_index] + $step_go_so_far  + 1 
-
+	if curr_index == 1
+         $ui1 = srep.atoms[0].spoke_direction[0]
+         $ui2 = srep.atoms[0].spoke_direction[1]
+  
+        end
              d1t = 1.0
 
            # here it uses the large difference to produce v, which is not good.
@@ -554,9 +558,8 @@ curr_index = 0
 #             if curr_index < $xt.length-1
               if curr_index != base_index[-1]
               # calculate v1 
-              puts "update v1t"
                v1t = [$xt[curr_index+1] - $xt[curr_index], $yt[curr_index+1] - $yt[curr_index]]
-               puts "v1t: " + v1t.to_s
+
               end
 
             # normalize the size of v vector
@@ -566,10 +569,12 @@ curr_index = 0
                k1t = ( 1 + ( -1 * Math.exp($logrkm1[curr_index]   ) ) ) / $rt[curr_index] 
             
             # call a method to interpolate 
+              puts "u1before update" + $ui1.to_s
                $ui1 = interpolateSpokeAtPos2($ui1, norm_v1t, k1t, d1t)
-
+              puts "u1after update" + $ui1.to_s
+              puts "u2before update" + $ui2.to_s
                $ui2 = interpolateSpokeAtPos2($ui2,norm_v1t,k1t,d1t)
-
+              puts "u2after update" + $ui2.to_s
       #        puts "ui: " + ui.to_s
                srep.interpolated_spokes_begin << [$xt[curr_index],$yt[curr_index],-1]    
       #        puts "rt: " + rt[curr_index-1].to_s
