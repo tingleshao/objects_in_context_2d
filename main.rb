@@ -487,11 +487,13 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 
 
       button("Interpolate Spokes 2") {
-
-         $sreps.each_with_index do |srep, srep_index| 
+srep = $sreps[0]
+srep_index = 0
+curr_index = 0
+   #      $sreps.each_with_index do |srep, srep_index| 
          #   puts "flip:" + $flip.to_s
-          
-         if $flip == 0
+      
+ #        if $flip == 0
    # do many times .... ( a big number may refer to the number of spokes between each two base points? ) 
             file = File.open($points_file_path + srep_index.to_s, 'r')
 
@@ -507,10 +509,16 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
             $logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
             $ui1 = srep.atoms[0].spoke_direction[0]
             $ui2 = srep.atoms[0].spoke_direction[1]
+               srep.interpolated_spokes_begin <<  [$xt[curr_index],$yt[curr_index]]
+               srep.interpolated_spokes_end  <<  [$xt[curr_index]+$ui1[0]*$rt[curr_index],$yt[curr_index]-$ui1[1]*$rt[curr_index],-1,[],'regular']
+           curr_index = 1
+               srep.interpolated_spokes_begin <<  [$xt[curr_index],$yt[curr_index]]
+               srep.interpolated_spokes_end  <<  [$xt[curr_index]+$ui2[0]*$rt[curr_index],$yt[curr_index]-$ui2[1]*$rt[curr_index],-1,[],'regular']
             $indices = srep.base_index
-           $flip = 1 
+   #         $flip = 1 
         #     $a_big_number.times do
-         else   
+#         else  
+
           puts "ddl\n"   
           puts "flip: " + $flip.to_s
             # initially it is zero 
@@ -531,8 +539,8 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 			       $ui1 = srep.atoms[$current_base_index].spoke_direction[0]
 			       $ui2 = srep.atoms[$current_base_index].spoke_direction[1]
 			       distance_to_next_base = $indices[base_index+1] - $indices[base_index]
-			    
 			   #  Why here is no checking for base index out of bound? 
+                               base_index = $current_base_index
 			       spoke_index = $current_base_index
 			     end
           
@@ -545,9 +553,10 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
            # the case of interpolating non-end spokes
 #             if curr_index < $xt.length-1
               if curr_index != base_index[-1]
-             puts "calculate v1"
               # calculate v1 
+              puts "update v1t"
                v1t = [$xt[curr_index+1] - $xt[curr_index], $yt[curr_index+1] - $yt[curr_index]]
+               puts "v1t: " + v1t.to_s
               end
 
             # normalize the size of v vector
@@ -557,15 +566,16 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
                k1t = ( 1 + ( -1 * Math.exp($logrkm1[curr_index]   ) ) ) / $rt[curr_index] 
             
             # call a method to interpolate 
-               ui = interpolateSpokeAtPos2($ui1, norm_v1t, k1t, d1t)
-               $ui1 = ui
+               $ui1 = interpolateSpokeAtPos2($ui1, norm_v1t, k1t, d1t)
+
                $ui2 = interpolateSpokeAtPos2($ui2,norm_v1t,k1t,d1t)
 
       #        puts "ui: " + ui.to_s
                srep.interpolated_spokes_begin << [$xt[curr_index],$yt[curr_index],-1]    
       #        puts "rt: " + rt[curr_index-1].to_s
                srep.interpolated_spokes_end  <<  [$xt[curr_index]+$ui1[0]*$rt[curr_index],$yt[curr_index]-$ui1[1]*$rt[curr_index],-1,[],'regular']
-               
+               puts $ui1
+	       puts $ui2
                # interpolate another side
        #       puts "ui: " + ui.to_s
                spoke_index = $indices[base_index]+$step_go_so_far+1
@@ -578,8 +588,8 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
         #       puts "ddl" +  $sreps[srep_index].interpolated_spokes_end.to_s
                refresh @points, $sreps, @shifts
                $step_go_so_far = $step_go_so_far + 1              
-           end
-        end
+       #    end
+    #    end
        }
  #            else
 =begin
