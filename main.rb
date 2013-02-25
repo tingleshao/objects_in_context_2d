@@ -502,24 +502,21 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
           
          if $flip == 0
    # do many times .... ( a big number may refer to the number of spokes between each two base points? ) 
-            file = File.open($points_file_path2 + srep_index.to_s, 'r')
+            file = File.open($points_file_path + srep_index.to_s, 'r')
 
             # xt/ yt: interpolatd x and y locus
             $xt = file.gets.split(' ').collect{|x| x.to_f}
-	          $yt = file.gets.split(' ').collect{|y| y.to_f}
+	    $yt = file.gets.split(' ').collect{|y| y.to_f}
              file = File.open($radius_file_path2 + srep_index.to_s, 'r')
           # rt: interpolated radius r
     	       $rt = file.gets.split(' ').collect{|r| r.to_f}
           # logrk: interpolated logrk <= needs to be fixed.
   #
-############################
-########################
-##########################
             file = File.open($logrk_file_path + srep_index.to_s, 'r')
             $logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
             $ui1 = srep.atoms[0].spoke_direction[0]
             $ui2 = srep.atoms[0].spoke_direction[1]
-              $indices = srep.base_index
+            $indices = srep.base_index
            $flip = 1 
         #     $a_big_number.times do
          else   
