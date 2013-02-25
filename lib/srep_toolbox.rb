@@ -405,8 +405,8 @@ def interpolateSpokeAtPos2(ut,vt,kt,dt)
  
   utdtx = (1+at*dt) * ut[0] - kt * vt[0] * dt
   utdty = (1+at*dt) * ut[1] - kt * vt[1] * dt
-  puts "ut: "+ ut.to_s
-  puts "newut: " + [utdtx, utdty].to_s
+ # puts "ut: "+ ut.to_s
+ # puts "newut: " + [utdtx, utdty].to_s
   return [utdtx, utdty]
 end
 
