@@ -248,10 +248,35 @@ def interpolateKappa2(rt,kt,step_size,index)
   
   system("python python/logrk_interpolate.py " + logrkm1s + ' ' + step_size_s + ' ' + index.to_s)
   # the 'interpolated_logrkm1s' file contains interpolated log(1-rk)
-  logrkm1_file = File.new($logrk_file_path + index.to_s , "r")
+  logrkm1_file = File.new($logrk_file_path2 + index.to_s , "r")
   ilogrkm1s = logrkm1_file.gets
   puts "ilogrkm1s: " + ilogrkm1s
   return ilogrkm1s
+end
+
+def interpolateKappa3(rt,kt,step_size,index)
+# linear interpolate and extrapolate kappa
+  rt = rt[1..-2]
+  rk = [rt,kt].transpose.map{|x| x.reduce(:*)}
+  puts " ------- >o< ------"
+  oneMinusRK = rk.collect{|x| 1 - x}
+  puts " ------- >o< ------"
+  puts "one minus rk: " + oneMinusRK.to_s
+  log1minusRK = oneMinusRK.collect{|x| Math.log(x)}
+  log1minusRK_0 = 2 * log1minusRK[0] - log1minusRK[1]
+  log1minusRK_last = 2 * log1minusRK[-2] - log1minusRK[-1]
+  log1minusRK.insert(0,log1minusRK_0)
+  log1minusRK << log1minusRK_last
+  log1minusRKstr = '"[' + log1minusRK.join(" ") + ']"'
+  step_size_str = step_size.to_s
+  
+  system("python python/logrk_interpolate_linear.py " + log1minusRKstr + ' ' + step_size_s + ' ' + index.to_s)
+  # the 'interpolated_logrkm1s' file contains interpolated log(1-rk)
+  log1minusRK_file = File.new($logrk_file_path3 + index.to_s , "r")
+  ilog1minusRKs = log1minusRK_file.gets
+  puts "ilogrkm1s: " + ilog1minusRKs
+  return ilog1minusRKs
+
 end
 
 # %%%%%%%%%%%%%%%%%%%%% need to work on this %%%%%%%%%%%%%%%%%
