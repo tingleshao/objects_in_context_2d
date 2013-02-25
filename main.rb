@@ -479,24 +479,14 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 	          si = SrepInfo.new(self)
           end  
        }
+
+#              ---------------------------------------------------
+#                EDIT
+
+
+
+
       button("Interpolate Spokes 2") {
-     # make this correct!! 
-
-     # the k is the change of the swings .
-    # ... which can be approximated by the change of the swings of 3 base points .....
-   # 
-#
-# global variables: :(
-#  $step_go_so_far = 0
-#  @shifts = [300,300,300]
-#  $current_base_index = 0	
-#  $info = ""
-#  $dilateCount = 0
-#  $linkingPts = []
-#  $show_linking_structure = false
-
-#### #########
-# do it for each srep
          $sreps.each_with_index do |srep, srep_index| 
             puts "flip:" + $flip.to_s
           
@@ -520,16 +510,12 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
            $flip = 1 
         #     $a_big_number.times do
          else   
-          puts "ddl"   
-             # interpolate one side
-    #  retrieve the list for base indices 
-   # it tells which index is base index in the long list... ( well)  
-            
+          puts "ddl\n"   
             # initially it is zero 
                base_index = $current_base_index
 
                distance_to_next_base = ( $indices[base_index+1] - $indices[base_index] ) - $step_go_so_far 
-           
+               puts "dis to next base: " + distance_to_next_base.to_s
              # no it is needed.
              if distance_to_next_base == 0 # <= reached another base point
        puts "############################################################"
@@ -543,11 +529,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
                $ui1 = srep.atoms[$current_base_index].spoke_direction[0]
                $ui2 = srep.atoms[$current_base_index].spoke_direction[1]
                distance_to_next_base = $indices[base_index+1] - $indices[base_index]
-           #   ui1 = []
-           #   ui2 = []
-           #   ui1 = interpolateA
-           #   ui2 = interpolateSpokeAtPos2(ui2, norm_v1t, k1t, d1t)
-           
+            
            #  Why here is no checking for base index out of bound? 
                spoke_index = $current_base_index
              end
@@ -564,31 +546,14 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
               if curr_index != base_index[-1]
               # calculate v1 
                v1t = [$xt[curr_index+1] - $xt[curr_index], $yt[curr_index+1] - $yt[curr_index]]
-            #  calculate v2
-          #     if curr_index == indices[base_index+1]
-           #      v2t = [xt[indices[base_index+1]+1] - xt[curr_index], yt[indices[base_index+1]+1] - yt[curr_index]]
-         #      else
-          #       v2t = [xt[indices[base_index+1]] - xt[curr_index], yt[indices[base_index+1]] - yt[curr_index]]
               end
 
-    #           puts "v1t: " + v1t.to_s
             # normalize the size of v vector
                size_v1t = Math.sqrt(v1t[0]**2 + v1t[1]**2)
                norm_v1t = v1t.collect{|v| v / size_v1t} 
-       #        size_v2t = v2t[0]**2 + v2t[1]**2
-     #          puts "size_v2t: " + size_v2t.to_s
-      #         norm_v2t = v2t.collect{|v| v / size_v2t} 
-          
-
-# these k's are calculated using the stored value of log(1-rk)
+     
                k1t = ( 1 + ( -1 * Math.exp($logrkm1[curr_index]   ) ) ) / $rt[curr_index] 
             
-          # now we have v and k 
-         # ----------------------------------------------------------
-            
-            # get u's <---- base spoke direction (two u's )
-
-         # ------------------------------------------------
             # call a method to interpolate 
                ui = interpolateSpokeAtPos2($ui1, norm_v1t, k1t, d1t)
                $ui1 = ui
@@ -684,17 +649,8 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
                $info = "interpolation finished"
           end
 
-             $step_go_so_far = $step_go_so_far + 1
-     #        puts "count: "+ $step_go_so_far.to_s
-             
-            
+             $step_go_so_far = $step_go_so_far + 1              
            end
-
-           # one srep finitshed. ... 
-            # reset step_go_so_far  and current_base_index
-          
-   #        $step_go_so_far = 1
-   #        $current_base_index = 0
         end
        }
 
