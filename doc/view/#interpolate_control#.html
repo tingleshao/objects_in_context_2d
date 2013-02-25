@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>#interpolate_control# - RDoc Documentation</title>
+
+<link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/darkfish.js"></script>
+
+
+<body class="file">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="../index.html">Home</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="../data/interpolated_logrkm1s_0.html">interpolated_logrkm1s_0</a>
+  
+    <li class="file"><a href="../data/interpolated_logrkm1s_1.html">interpolated_logrkm1s_1</a>
+  
+    <li class="file"><a href="../data/interpolated_logrkm1s_2.html">interpolated_logrkm1s_2</a>
+  
+    <li class="file"><a href="../data/interpolated_points.html">interpolated_points</a>
+  
+    <li class="file"><a href="../data/interpolated_points_0.html">interpolated_points_0</a>
+  
+    <li class="file"><a href="../data/interpolated_points_1.html">interpolated_points_1</a>
+  
+    <li class="file"><a href="../data/interpolated_points_2.html">interpolated_points_2</a>
+  
+    <li class="file"><a href="../data/interpolated_rs_0.html">interpolated_rs_0</a>
+  
+    <li class="file"><a href="../data/interpolated_rs_1.html">interpolated_rs_1</a>
+  
+    <li class="file"><a href="../data/interpolated_rs_2.html">interpolated_rs_2</a>
+  
+    <li class="file"><a href="../data/interpolated_rs_hi.html">interpolated_rs_hi</a>
+  
+    <li class="file"><a href="../data2/interpolated_logrkm1s_0.html">interpolated_logrkm1s_0</a>
+  
+    <li class="file"><a href="../data2/interpolated_logrkm1s_1.html">interpolated_logrkm1s_1</a>
+  
+    <li class="file"><a href="../data2/interpolated_logrkm1s_2.html">interpolated_logrkm1s_2</a>
+  
+    <li class="file"><a href="../data2/interpolated_points_0.html">interpolated_points_0</a>
+  
+    <li class="file"><a href="../data2/interpolated_points_1.html">interpolated_points_1</a>
+  
+    <li class="file"><a href="../data2/interpolated_points_2.html">interpolated_points_2</a>
+  
+    <li class="file"><a href="../data2/interpolated_rs_0.html">interpolated_rs_0</a>
+  
+    <li class="file"><a href="../data2/interpolated_rs_1.html">interpolated_rs_1</a>
+  
+    <li class="file"><a href="../data2/interpolated_rs_2.html">interpolated_rs_2</a>
+  
+    <li class="file"><a href="../view/#interpolate_control#.html">#interpolate_control#</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../Atom.html">Atom</a>
+  
+    <li><a href="../Color.html">Color</a>
+  
+    <li><a href="../DrawPad.html">DrawPad</a>
+  
+    <li><a href="../Field.html">Field</a>
+  
+    <li><a href="../FileLoaderView.html">FileLoaderView</a>
+  
+    <li><a href="../InterpolateControl.html">InterpolateControl</a>
+  
+    <li><a href="../Object.html">Object</a>
+  
+    <li><a href="../SRep.html">SRep</a>
+  
+    <li><a href="../SrepInfo.html">SrepInfo</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation" class="description">
+  
+<p># a class for the subwindow for choosing the srep to compute interpolation
+class <a href="../InterpolateControl.html">InterpolateControl</a></p>
+
+<pre class="ruby"><span class="ruby-identifier">attr_accessor</span> :<span class="ruby-identifier">app</span>, :<span class="ruby-identifier">index</span>, :<span class="ruby-identifier">msg</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">app</span>)
+  <span class="ruby-ivar">@app</span> = <span class="ruby-identifier">app</span>
+ <span class="ruby-identifier">refresh</span>
+<span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">paint</span>()
+  <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">clear</span>
+  <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">flow</span> :<span class="ruby-identifier">margin</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">3</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">button</span>(<span class="ruby-string">&quot;Check&quot;</span>) {
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">checkIndexEmpty</span>()
+        <span class="ruby-ivar">@msg</span>.<span class="ruby-identifier">text</span> = <span class="ruby-string">&quot;empty index!&quot;</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">file_name</span> = <span class="ruby-identifier">$radius_file_path</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@index</span>.<span class="ruby-identifier">text</span>
+        <span class="ruby-ivar">@msg</span>.<span class="ruby-identifier">text</span> = <span class="ruby-string">&quot;file exists: &quot;</span><span class="ruby-operator">+</span>  <span class="ruby-constant">File</span><span class="ruby-operator">::</span><span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">file_name</span>).<span class="ruby-identifier">to_s</span>
+      <span class="ruby-keyword">end</span>
+    }
+    <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">button</span>(<span class="ruby-string">&quot;Interpolate&quot;</span>) {
+    <span class="ruby-comment"># interpolate radius</span>
+        <span class="ruby-identifier">index</span> = <span class="ruby-ivar">@index</span>.<span class="ruby-identifier">text</span>
+        <span class="ruby-identifier">srep</span> =  <span class="ruby-identifier">$sreps</span>[<span class="ruby-identifier">index</span>.<span class="ruby-identifier">to_i</span>]
+        <span class="ruby-identifier">xt</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">atoms</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">atom</span><span class="ruby-operator">|</span> <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">x</span>}
+        <span class="ruby-identifier">yt</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">atoms</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">atom</span><span class="ruby-operator">|</span> <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">y</span>}
+        <span class="ruby-identifier">rt</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">atoms</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">atom</span><span class="ruby-operator">|</span> <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">spoke_length</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">to_s</span>} 
+        <span class="ruby-identifier">step_size</span> = <span class="ruby-value">0.01</span>
+        <span class="ruby-identifier">rs</span> = <span class="ruby-identifier">interpolateRadius</span>(<span class="ruby-identifier">xt</span>,<span class="ruby-identifier">yt</span>,<span class="ruby-identifier">rt</span>,<span class="ruby-identifier">step_size</span>,<span class="ruby-identifier">index</span>)
+        <span class="ruby-identifier">rr</span> = <span class="ruby-identifier">rs</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">' '</span>).<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">to_f</span>} 
+        <span class="ruby-comment"># interpolate kappa</span>
+        <span class="ruby-comment"># read interpolated file</span>
+        <span class="ruby-identifier">step_size</span> = <span class="ruby-value">0.01</span>
+        <span class="ruby-comment"># rt and kt are the r's and k's on the base points </span>
+        <span class="ruby-comment"># calculate kappa at base positions using the curvature formula</span>
+        <span class="ruby-identifier">f</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">$points_file_path</span><span class="ruby-operator">+</span> <span class="ruby-identifier">index</span>, <span class="ruby-string">'r'</span>)   
+        <span class="ruby-identifier">xs</span> = <span class="ruby-identifier">f</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">' '</span>)
+        <span class="ruby-identifier">ys</span> = <span class="ruby-identifier">f</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">' '</span>)
+        <span class="ruby-identifier">xt</span> = []
+        <span class="ruby-identifier">xs</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">xt</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">to_f</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-identifier">yt</span> = []
+        <span class="ruby-identifier">ys</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">y</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">yt</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">y</span>.<span class="ruby-identifier">to_f</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-identifier">h</span> = <span class="ruby-identifier">step_size</span>
+        <span class="ruby-identifier">f</span>.<span class="ruby-identifier">close</span>
+        <span class="ruby-identifier">ff</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">$radius_file_path</span><span class="ruby-operator">+</span><span class="ruby-identifier">index</span>, <span class="ruby-string">'r'</span>)
+        <span class="ruby-identifier">rs</span> = <span class="ruby-identifier">ff</span>.<span class="ruby-identifier">gets</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">' '</span>)
+        <span class="ruby-identifier">indices</span>= <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">base_index</span>
+        <span class="ruby-identifier">foo</span> = <span class="ruby-identifier">computeBaseKappa</span>(<span class="ruby-identifier">xt</span>,<span class="ruby-identifier">yt</span>, <span class="ruby-identifier">indices</span>, <span class="ruby-identifier">h</span>, <span class="ruby-identifier">rr</span>)
+        <span class="ruby-identifier">kappa</span> = <span class="ruby-identifier">foo</span>[<span class="ruby-value">0</span>]
+        <span class="ruby-identifier">rt</span> = <span class="ruby-identifier">srep</span>.<span class="ruby-identifier">atoms</span>.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">atom</span><span class="ruby-operator">|</span> <span class="ruby-identifier">atom</span>.<span class="ruby-identifier">spoke_length</span>[<span class="ruby-value">0</span>]} 
+        <span class="ruby-identifier">interpolateKappa</span>(<span class="ruby-identifier">rt</span>, <span class="ruby-identifier">kappa</span>, <span class="ruby-identifier">step_size</span>, <span class="ruby-identifier">index</span>)
+   }
+   <span class="ruby-keyword">end</span>
+   <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">stack</span> :<span class="ruby-identifier">margin</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">3</span> <span class="ruby-keyword">do</span> 
+     <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">para</span> <span class="ruby-string">&quot;enter the index of the srep&quot;</span>
+     <span class="ruby-ivar">@index</span> = <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">edit_line</span> :<span class="ruby-identifier">width</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">50</span>
+     <span class="ruby-ivar">@msg</span> = <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">para</span> <span class="ruby-string">&quot;&quot;</span>
+   <span class="ruby-keyword">end</span>
+   <span class="ruby-ivar">@app</span>.<span class="ruby-identifier">nofill</span>
+ <span class="ruby-keyword">end</span>
+
+ <span class="ruby-keyword">def</span> <span class="ruby-identifier">refresh</span>
+   <span class="ruby-identifier">paint</span>
+ <span class="ruby-keyword">end</span>
+
+ <span class="ruby-keyword">def</span> <span class="ruby-identifier">checkIndexEmpty</span>()
+   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@index</span>.<span class="ruby-identifier">text</span>.<span class="ruby-identifier">strip</span>() <span class="ruby-operator">==</span> <span class="ruby-string">&quot;&quot;</span>
+ <span class="ruby-keyword">end</span>
+</pre>
+
+<p>end</p>
+
+</div>
+
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+
