@@ -32,3 +32,9 @@ def twoDNorm2(v)
   # compute 2D norm
   return Math.sqrt(v[0]**2 + v[1]**2)
 end
+
+def twoDNormalize(v)
+  v_norm = twoDNorm2(v)
+  return v.collect{|e| e / v_norm}
+end
+

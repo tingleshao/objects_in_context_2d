@@ -527,7 +527,8 @@ curr_index = 0
                distance_to_next_base = ( $indices[base_index+1] - $indices[base_index] ) - $step_go_so_far 
                puts "dis to next base: " + distance_to_next_base.to_s
              # no it is needed.
-			     if distance_to_next_base == 0 # <= reached another base point
+    curr_index = $indices[base_index] + $step_go_so_far  + 1 
+			     if distance_to_next_base == 0# <= reached another base point
 		       puts "############################################################"
 		       puts "############################################################"
 		       puts "at base end!"
@@ -545,11 +546,14 @@ curr_index = 0
 			     end
           
            # -->>>>>> after here we have the curr_index
-             curr_index = $indices[base_index] + $step_go_so_far  + 1 
+         
 	if curr_index == 1
          $ui1 = srep.atoms[0].spoke_direction[0]
          $ui2 = srep.atoms[0].spoke_direction[1]
-  
+       			       distance_to_next_base = $indices[base_index+1] - $indices[base_index]
+
+                               base_index = $current_base_index
+			       spoke_index = $current_base_index
         end
              d1t = 1.0
 
@@ -570,7 +574,7 @@ curr_index = 0
             
             # call a method to interpolate 
               puts "u1before update" + $ui1.to_s
-               $ui1 = interpolateSpokeAtPos2($ui1, norm_v1t, k1t, d1t)
+               $ui1 = interpolateSpokeAtPos2($ui1, norm_v1t, -1*k1t, d1t)
               puts "u1after update" + $ui1.to_s
               puts "u2before update" + $ui2.to_s
                $ui2 = interpolateSpokeAtPos2($ui2,norm_v1t,k1t,d1t)

@@ -413,8 +413,11 @@ end
 
 def computeAUsingUVK(ut,vt,kt)
 # make sure kt and vt are all nomalized
-# 
-  a = kt * ( ut[0] * vt[0] + ut[1] * vt[1] )
+  puts "norm of v: " + twoDNorm2(vt).to_s
+  ut = twoDNormalize(ut)
+  puts "norm of u: " + twoDNorm2(ut).to_s
+  a = kt * dot(ut,vt)	
+  print "a: " + a.to_s + "\n"
   return a
 end
 
