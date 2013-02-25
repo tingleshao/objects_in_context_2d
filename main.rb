@@ -505,7 +505,7 @@ curr_index = 0
     	       $rt = file.gets.split(' ').collect{|r| r.to_f}
           # logrk: interpolated logrk <= needs to be fixed.
   #
-            file = File.open($logrk_file_path2 + srep_index.to_s, 'r')
+            file = File.open($logrk_file_path + srep_index.to_s, 'r')
             $logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
       #      $ui1 = srep.atoms[0].spoke_direction[0]
       #      $ui2 = srep.atoms[0].spoke_direction[1]
@@ -519,8 +519,8 @@ curr_index = 0
         #     $a_big_number.times do
 #         else  
 
-          puts "ddl\n"   
-          puts "flip: " + $flip.to_s
+          puts "--------------- >_< ---------------"   
+     #     puts "flip: " + $flip.to_s
             # initially it is zero 
                base_index = $current_base_index
 
@@ -528,7 +528,7 @@ curr_index = 0
                puts "dis to next base: " + distance_to_next_base.to_s
              # no it is needed.
     curr_index = $indices[base_index] + $step_go_so_far  + 1 
-			     if distance_to_next_base == 0# <= reached another base point
+			     if distance_to_next_base == 0 # <= reached another base point
 		       puts "############################################################"
 		       puts "############################################################"
 		       puts "at base end!"
@@ -555,7 +555,7 @@ curr_index = 0
                                base_index = $current_base_index
 			       spoke_index = $current_base_index
         end
-             d1t = 1.0
+       
 
            # here it uses the large difference to produce v, which is not good.
            # the case of interpolating non-end spokes
@@ -565,9 +565,10 @@ curr_index = 0
                v1t = [$xt[curr_index+1] - $xt[curr_index], $yt[curr_index+1] - $yt[curr_index]]
 
               end
-
             # normalize the size of v vector
                size_v1t = Math.sqrt(v1t[0]**2 + v1t[1]**2)
+
+      d1t = size_v1t
                norm_v1t = v1t.collect{|v| v / size_v1t} 
      
                k1t = ( 1 + ( -1 * Math.exp($logrkm1[curr_index]   ) ) ) / $rt[curr_index] 
@@ -583,17 +584,17 @@ curr_index = 0
                srep.interpolated_spokes_begin << [$xt[curr_index],$yt[curr_index],-1]    
       #        puts "rt: " + rt[curr_index-1].to_s
                srep.interpolated_spokes_end  <<  [$xt[curr_index]+$ui1[0]*$rt[curr_index],$yt[curr_index]-$ui1[1]*$rt[curr_index],-1,[],'regular']
-               puts $ui1
-	       puts $ui2
+      #         puts $ui1
+	#       puts $ui2
                # interpolate another side
        #       puts "ui: " + ui.to_s
                spoke_index = $indices[base_index]+$step_go_so_far+1
                spoke_begin_x = $xt[spoke_index]
                spoke_begin_y = $yt[spoke_index]
-               $sreps[srep_index].interpolated_spokes_begin << [spoke_begin_x,spoke_begin_y,-1,[],'regular']    
+        #       $sreps[srep_index].interpolated_spokes_begin << [spoke_begin_x,spoke_begin_y,-1,[],'regular']    
                spoke_end_x = spoke_begin_x + $ui2[0]*$rt[spoke_index]
                spoke_end_y = spoke_begin_y - $ui2[1]*$rt[spoke_index]
-               $sreps[srep_index].interpolated_spokes_end  <<  [spoke_end_x,spoke_end_y,-1,[],'regular']
+       #        $sreps[srep_index].interpolated_spokes_end  <<  [spoke_end_x,spoke_end_y,-1,[],'regular']
         #       puts "ddl" +  $sreps[srep_index].interpolated_spokes_end.to_s
                refresh @points, $sreps, @shifts
                $step_go_so_far = $step_go_so_far + 1              
