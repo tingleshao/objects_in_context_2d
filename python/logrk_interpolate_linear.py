@@ -17,31 +17,28 @@ step_size = float(sys.argv[2])
 index = sys.argv[3]
 rkk = rks.strip('[]').split(' ')
 rk = []
-base_index = sys.argv[4]
-
-print "index:  " + str(index)
-print "step_size: " + str(step_size)
-print "base_index: " + str(base_index)
-
+base_index_s = sys.argv[4]
 
 # convert string into array
-for foo in rkk:
-	rk.append(float(foo))
+for ele in rkk:
+	rk.append(float(ele))
 
-print "rk: " +  str(rk)
+base_index = []
+base_index_lst = base_index_s.strip("[]").split(', ')
+for ele in base_index_lst:
+	base_index.append(int(ele))
 
-t = np.linspace(0,1,100)
-x = t
-print "x: " + str(t)
+x = base_index
+t = np.linspace(1,100,100)
+print t
 f = interp1d(x,rk)
-print f
 
 print "index: " + index
 file_handle = open('data3/interpolated_logrkm1s_'+str(index),'w')
-writelogrk(f,file_handle)
-
+writelogrk(f(t),file_handle)
+print "f(t): " + str(f(t))
 plt.figure()
-plt.plot(x,f,'x')
+plt.plot(x,rk,'x',t,f(t),'-')
 plt.axis('equal')
 #
 plt.show()

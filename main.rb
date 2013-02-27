@@ -20,6 +20,7 @@ $points_file_path = "data/interpolated_points_"
 $radius_file_path = "data/interpolated_rs_"
 $logrk_file_path = 'data/interpolated_logrkm1s_'
 $logrk_file_path2 = "data2/interpolated_logrkm1s_"
+$logrk_file_path3 = "data3/interpolated_logrkm1s_"
 $radius_file_path2 = "data2/interpolated_rs_"
 $points_file_path2 = "data2/interpolated_points_"
 $dilate_ratio = 1.05
@@ -505,7 +506,7 @@ curr_index = 0
     	       $rt = file.gets.split(' ').collect{|r| r.to_f}
           # logrk: interpolated logrk <= needs to be fixed.
   #
-            file = File.open($logrk_file_path2 + srep_index.to_s, 'r')
+            file = File.open($logrk_file_path3 + srep_index.to_s, 'r')
             $logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
       #      $ui1 = srep.atoms[0].spoke_direction[0]
       #      $ui2 = srep.atoms[0].spoke_direction[1]
@@ -575,7 +576,7 @@ curr_index = 0
             
             # call a method to interpolate 
               puts "u1before update" + $ui1.to_s
-               $ui1 = interpolateSpokeAtPos2($ui1, norm_v1t, -1*k1t, d1t)
+           #    $ui1 = interpolateSpokeAtPos2($ui1, norm_v1t, -1*k1t, d1t)
               puts "u1after update" + $ui1.to_s
               puts "u2before update" + $ui2.to_s
                $ui2 = interpolateSpokeAtPos2($ui2,norm_v1t,k1t,d1t)
@@ -584,6 +585,7 @@ curr_index = 0
                srep.interpolated_spokes_begin << [$xt[curr_index],$yt[curr_index],-1]    
       #        puts "rt: " + rt[curr_index-1].to_s
                srep.interpolated_spokes_end  <<  [$xt[curr_index]+$ui1[0]*$rt[curr_index],$yt[curr_index]-$ui1[1]*$rt[curr_index],-1,[],'regular']
+ # srep.interpolated_spokes_end  <<  [$xt[curr_index]+$ui1[0],$yt[curr_index]-$ui1[1],-1,[],'regular']
       #         puts $ui1
 	#       puts $ui2
                # interpolate another side
