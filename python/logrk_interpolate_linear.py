@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 from scipy import interpolate
 import sys
@@ -16,27 +17,31 @@ step_size = float(sys.argv[2])
 index = sys.argv[3]
 rkk = rks.strip('[]').split(' ')
 rk = []
+base_index = sys.argv[4]
 
-# convert string to array
+print "index:  " + str(index)
+print "step_size: " + str(step_size)
+print "base_index: " + str(base_index)
+
+
+# convert string into array
 for foo in rkk:
 	rk.append(float(foo))
 
 print "rk: " +  str(rk)
 
-t = np.arange(0.0,1.25,(1.25-0.0)/len(rk))
+t = np.linspace(0,1,100)
 x = t
-print "x: " + str(x)
-tck,u = interpolate.splprep([x,rk],s=0)
-unew = np.arange(0.0,1.0+step_size,step_size)
-out = interpolate.splev(unew,tck)
-print out
+print "x: " + str(t)
+f = interp1d(x,rk)
+print f
 
 print "index: " + index
-f = open('data2/interpolated_logrkm1s_'+str(index),'w')
-writelogrk(out[1],f)
+file_handle = open('data3/interpolated_logrkm1s_'+str(index),'w')
+writelogrk(f,file_handle)
 
 plt.figure()
-plt.plot(x,rk,'x',out[0],out[1])
+plt.plot(x,f,'x')
 plt.axis('equal')
 #
 plt.show()

@@ -505,7 +505,7 @@ curr_index = 0
     	       $rt = file.gets.split(' ').collect{|r| r.to_f}
           # logrk: interpolated logrk <= needs to be fixed.
   #
-            file = File.open($logrk_file_path + srep_index.to_s, 'r')
+            file = File.open($logrk_file_path2 + srep_index.to_s, 'r')
             $logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
       #      $ui1 = srep.atoms[0].spoke_direction[0]
       #      $ui2 = srep.atoms[0].spoke_direction[1]

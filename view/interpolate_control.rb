@@ -95,7 +95,7 @@ class InterpolateControl
          puts "kappa2: " + foo2.to_s
           kappa = foo2
           rt = srep.atoms.collect{|atom| atom.spoke_length[0]} 
-          interpolateKappa2(rt, kappa, step_size, index)
+          interpolateKappa3(rt, kappa, step_size, index,indices)
      }
      end
      @app.stack :margin => 3 do 
