@@ -63,9 +63,6 @@ class InterpolateControl
           foo = computeBaseKappa(xt,yt, indices, h, rr)
 #######
 #####   what is xendt and yendt?
-#          def computeBaseKappa2(ub,vb)
-           # need ub: base point spokes 
-           # need vb: base point v's 
        ub = []
        vb = []
        srep.atoms.each_with_index do |a, i|
@@ -87,7 +84,6 @@ class InterpolateControl
          puts "U: " + ub.to_s
          puts "V: " + vb.to_s
          foo2 = computeBaseKappa2(ub,vb,indices)
-          puts "result for base kappa2: " + foo2.to_s 
          # now we have the values foo2 which is the corrected k? 
         # check if it is correct
          puts "#########################3compare two kappas: #####################"

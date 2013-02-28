@@ -576,7 +576,7 @@ curr_index = 0
             
             # call a method to interpolate 
               puts "u1before update" + $ui1.to_s
-           #    $ui1 = interpolateSpokeAtPos2($ui1, norm_v1t, -1*k1t, d1t)
+               $ui1 = interpolateSpokeAtPos2($ui1, norm_v1t, -1*k1t, d1t)
               puts "u1after update" + $ui1.to_s
               puts "u2before update" + $ui2.to_s
                $ui2 = interpolateSpokeAtPos2($ui2,norm_v1t,k1t,d1t)

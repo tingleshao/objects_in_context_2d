@@ -231,7 +231,6 @@ end
 
 def interpolateKappa2(rt,kt,step_size,index)
  # the boundary should be extrapolated
-  rt = rt[1..-2]
   rk = [rt,kt].transpose.map{|x| x.reduce(:*)}
   puts "#################################################################"
   puts "rk: " + rk.to_s
@@ -256,17 +255,21 @@ end
 
 def interpolateKappa3(rt,kt,step_size,index,base_index)
 # linear interpolate and extrapolate kappa
-  rt = rt[1..-2]
   rk = [rt,kt].transpose.map{|x| x.reduce(:*)}
   puts " ------- >o< ------"
   oneMinusRK = rk.collect{|x| 1 - x}
+  oneMinusRK.each_with_index do |x,i|
+	if x < 0
+		oneMinusRK[i] = 0.1
+        end
+  end
   puts " ------- >o< ------"
   puts "one minus rk: " + oneMinusRK.to_s
   log1minusRK = oneMinusRK.collect{|x| Math.log(x)}
-  log1minusRK_0 = 2 * log1minusRK[0] - log1minusRK[1]
-  log1minusRK_last = 2 * log1minusRK[-2] - log1minusRK[-1]
-  log1minusRK.insert(0,log1minusRK_0)
-  log1minusRK << log1minusRK_last
+ # log1minusRK_0 = 2 * log1minusRK[0] - log1minusRK[1]
+  #log1minusRK_last = 2 * log1minusRK[-2] - log1minusRK[-1]
+  #log1minusRK.insert(0,log1minusRK_0)
+  #log1minusRK << log1minusRK_last
   log1minusRKstr = '"[' + log1minusRK.join(" ") + ']"'
   step_size_str = step_size.to_s
   puts "in ruby: " + base_index.to_s.strip()
@@ -282,8 +285,8 @@ end
 
 # %%%%%%%%%%%%%%%%%%%%% need to work on this %%%%%%%%%%%%%%%%%
 # %%%%%%%%%%%%%%%%
-def computeBaseKappa2(ub,vb,base_indices)
-  # this is the correct version of base kappa computation
+def computeBaseKappa1(ub,vb,base_indices)
+  # this should be the correct version of base kappa computation
   # steps:
   #      1. use ub, compute swing of u: du on base points
   #      2. use vb, compute du proj on v
@@ -293,6 +296,7 @@ def computeBaseKappa2(ub,vb,base_indices)
   (1..ub.size-1).each do |i|
     du << [ub[i][0] - ub[i-1][0], ub[i][1] - ub[i-1][1]]
   end
+   
    # this Du is swing of spokes between two base points. it should be divided by the step size
   #   to get the estimatd swing of spokes for base points for one step size.
   # compute distance between base indices (number of step sizes) 
@@ -305,24 +309,64 @@ def computeBaseKappa2(ub,vb,base_indices)
   (1..ub.size-2).each_with_index do |i, ind|
     avgDu << [(du[i][0] + du[i-1][0]) / (2*indices_distance[ind+1]), (du[i][1] + du[i-1][1]) / (2*indices_distance[ind+1])]
   end 
+  # handle boundary case
+  du_normalize_0 = [ du[0][0] / (indices_distance[0]), du[0][1] / (indices_distance[0]) ] 
+  avgDu.insert(0,du_normalize_0) 
+  du_normalize_last = [du[-1][0] / (indices_distance[-1]), du[-1][1]/ (indices_distance[-1])]
+  avgDu << du[-1] 
  
 
   # now we have du
   k = []
   # first k and last k are from du
- # k << vector_project(du[0], vb[0])[1]/indices_distance[0]
+  puts "avgDU: " + avgDu.to_s
+  puts "vb: " + vb.to_s
   avgDu.each_with_index do |one_du,i| 
-    k << vector_project(one_du, vb[i+1])[1]
+    k << vector_project(one_du, vb[i])[1]
   end 
-#  k_0 = k[0] - (k[1] - k[0])
- # k_last = k[-2] - ( k [-1] - k[-2])
+  # just need that scalar 
+  return k 
+end
+
+def computeBaseKappa2(ub,vb,base_indices)
+  # this should be the correct version of base kappa computation
+  # steps:
+  #      1. use ub, compute swing of u: du on base points
+  #      2. use vb, compute du proj on v
+  #      3. divided by length of v get the kappa k on base points 
+  number_of_base_points = ub.size
+  du = []
+  (1..ub.size-1).each do |i|
+    du << [ub[i][0] - ub[i-1][0], ub[i][1] - ub[i-1][1]]
+  end
+   
+   # this Du is swing of spokes between two base points. it should be divided by the step size
+  #   to get the estimatd swing of spokes for base points for one step size.
+  # compute distance between base indices (number of step sizes) 
+  indices_distance = []
+  (base_indices.size-1).times do | i |
+    indices_distance << base_indices[i+1] - base_indices[i]
+  end
+  # compute the average between adjacent du's
+  avgDu = []
+  (1..ub.size-2).each_with_index do |i, ind|
+    avgDu << [4*(du[i][0] + du[i-1][0]) / (2*indices_distance[ind+1]), 4*(du[i][1] + du[i-1][1]) / (2*indices_distance[ind+1])]
+  end 
+  # handle boundary case
+  du_normalize_0 = [ 5 * du[0][0] / (indices_distance[0]),  5 * du[0][1] / (indices_distance[0]) ] 
+  avgDu.insert(0,du_normalize_0) 
+  du_normalize_last = [2* du[-1][0] / (indices_distance[-1]),2 * du[-1][1]/ (indices_distance[-1])]
+  avgDu << du[-1] 
  
- # k << vector_project(du[-1], vb[-1])[1]/indices_distance[-1]
-  # now we have k
-  ### 
-  #  may check the whether k's length is the same as number of base points 
-  ###
-  puts "are they the same? " + (k.size == ub.size).to_s
+
+  # now we have du
+  k = []
+  # first k and last k are from du
+  puts "avgDU: " + avgDu.to_s
+  puts "vb: " + vb.to_s
+  avgDu.each_with_index do |one_du,i| 
+    k << vector_project(one_du, vb[i])[1]
+  end 
   # just need that scalar 
   return k 
 end
