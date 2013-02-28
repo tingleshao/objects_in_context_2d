@@ -8,7 +8,7 @@
 # Author: Chong Shao (cshao@cs.unc.edu)
 # ----------------------------------------------------------------
 
-
+require 'nokogiri'
 load 'lib/srep_toolbox.rb'
 load 'lib/color.rb'
 load 'view/interpolate_control.rb'
@@ -255,6 +255,10 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
   def render_field
     clear do
       background rgb(50, 50, 90, 0.7)
+          html_doc = Nokogiri::HTML("<html><body><h1>Mr. Belvedere Fan Club</h1></body></html>")
+     para html_doc
+   #  para " \n\n\n\n"
+	para "hi"
       flow :margin => 6 do
 
        # code for buttons
@@ -728,6 +732,7 @@ curr_index = 0
      stack do @status = para :stroke => black end
      @field.paint
      para $info
+  
    end  
  end
   
