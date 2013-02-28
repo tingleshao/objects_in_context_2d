@@ -263,7 +263,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 
        # code for buttons
       button("Dilate") { 
-	    $sreps.each do |srep|
+	 $sreps.each do |srep|
 	    srep.atoms.each do |atom|
 	      atom.dilate($dilate_ratio)
 	    end
