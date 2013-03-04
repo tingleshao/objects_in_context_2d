@@ -18,13 +18,19 @@ def returnPointsListFromXML(doc,srep_index)
      # get the number of atoms in that srep
      # number of atoms = 
      number_of_atoms = 5
+     atom_lst = []
+     number_of_atoms.times do |i|
+        x = srep_doc.xpath("//points").xpath("//point//x")[i+5*srep_index].content.to_s().strip().to_i()
+        y = srep_doc.xpath("//points").xpath("//point//y")[i+5*srep_index].content.to_s().strip().to_i()
+        atom_lst << [x,y]
+     end
 
-     srep_points_doc = srep_doc.xpath("//points//point")
-     
- doc.xpath("//srep//points")[0].xpath("//point")[0].xpath("//x")[0].content.to_s().strip()=="110")
-     
-     return
+     return atom_lst
 end
+
+
+
+
 =begin
   points0 = [[110,100],[160,75],[210,50],[260,60],[310,80]]
   l0 = [[35,35,35],[40,40],[30,30],[40,40],[35,35,35]]

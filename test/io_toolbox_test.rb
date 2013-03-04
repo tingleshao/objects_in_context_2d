@@ -19,4 +19,8 @@ doc  = readSrepData(0)
 assert_equal(true, doc.xpath("//srep//points")[0].xpath("//point")[0].xpath("//x")[0].content.to_s().strip()=="110")
 
 # test case 4:
-
+puts returnPointsListFromXML(doc,0)
+puts "----"
+puts returnPointsListFromXML(doc,1)
+assert_equal([[110,100],[160,75],[210,50],[260,60],[310,80]], returnPointsListFromXML(doc,0))
+assert_equal([[200,190],[250,190],[300,200],[350,180],[400,160]], returnPointsListFromXML(doc,1))
