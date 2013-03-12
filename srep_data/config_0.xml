@@ -50,7 +50,7 @@
 				</point>
 			</points>
 			<radius>
-				<atom>
+				<disk>
 					<r>
 					35
 					</r>
@@ -60,32 +60,32 @@
 					<r>
 					35
 					</r>
-				</atom>
-				<atom>
+				</disk>
+				<disk>
 					<r>
 					40
 					</r>
 					<r>
 					40
 					</r>
-				</atom>
-				<atom>
+				</disk>
+				<disk>
 					<r>
 					30
 					</r>
 					<r>
 					30
 					</r>
-				</atom>
-				<atom>
+				</disk>
+				<disk>
 					<r>
 					40
 					</r>
 					<r>
 					40
 					</r>
-				</atom>
-				<atom>
+				</disk>
+				<disk>
 					<r>
 					35
 					</r>
@@ -95,7 +95,7 @@
 					<r>
 					35
 					</r>
-				</atom>
+				</disk>
 			</radius>
 			<spoke_dirs>
 				<atom>
@@ -253,7 +253,7 @@
 				</point>
 			</points>
 			<radius>
-				<atom>
+				<disk>
 					<r>
 					35
 					</r>
@@ -263,32 +263,32 @@
 					<r>
 					35
 					</r>
-				</atom>
-				<atom>
+				</disk>
+				<disk>
 					<r>
 					40
 					</r>
 					<r>
 					40
 					</r>
-				</atom>
-				<atom>
+				</disk>
+				<disk>
 					<r>
 					45
 					</r>
 					<r>
 					45
 					</r>
-				</atom>
-				<atom>
+				</disk>
+				<disk>
 					<r>
 					40
 					</r>
 					<r>
 					40
 					</r>
-				</atom>
-				<atom>
+				</disk>
+				<disk>
 					<r>
 					35
 					</r>
@@ -298,7 +298,7 @@
 					<r>
 					35
 					</r>
-				</atom>
+				</disk>
 			</radius>
 			<spoke_dirs>
 				<atom>
@@ -464,7 +464,7 @@
 				</point>
 			</points>
 			<radius>
-				<atom>
+				<disk>
 					<r>
 					35
 					</r>
@@ -474,40 +474,40 @@
 					<r>
 					35
 					</r>
-				</atom>	
-				<atom>
+				</disk>	
+				<disk>
 					<r>
 					35
 					</r>
 					<r>
 					35
 					</r>
-				</atom>	
-				<atom>
+				</disk>	
+				<disk>
 					<r>
 					40
 					</r>
 					<r>
 					40
 					</r>
-				</atom>	
-				<atom>
+				</disk>	
+				<disk>
 					<r>
 					35
 					</r>
 					<r>
 					35
 					</r>
-				</atom>	
-				<atom>
+				</disk>	
+				<disk>
 					<r>
 					40
 					</r>
 					<r>
 					40
 					</r>
-				</atom>	
-				<atom>
+				</disk>	
+				<disk>
 					<r>
 					40
 					</r>
@@ -517,7 +517,7 @@
 					<r>
 					40
 					</r>
-				</atom>	
+				</disk>	
 			</radius>
 			<spoke_dirs>
 				<atom>

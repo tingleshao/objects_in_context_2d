@@ -50,9 +50,7 @@ def returnSpokeDirListFromXML(doc,srep_index)
      srep_docs = doc.xpath("//srep")[srep_index]
      number_of_atoms = doc.xpath("//sreps//srep:number_of_base_points", 'srep' => 'srep'+srep_index.to_s)[0].content().strip().to_i()
      spoke_dir_lst = []
-     x = srep_doc.xpath("//spoke_dirs").xpath("atom")
-     ind = 1
-
+     sps = doc.xpath("//atom:spoke", 'atom' => 'srep'+srep_index.to_s())
      number_of_atoms.times do |i|
           x1 = srep_doc.xpath("//spoke_dirs").xpath("//spoke//x")[i+5*srep_index].content.to_s().strip().to_i()
           x2 = srep_doc.xpath("//spoke_dirs").xpath("//spoke//y")[i+5*srep_index].content.to_s().strip().to_i()  
