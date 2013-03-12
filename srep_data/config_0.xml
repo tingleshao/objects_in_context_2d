@@ -3,7 +3,7 @@
 	3
 	</number_of_sreps>
 	<sreps>
-		<srep>
+		<srep xmlns="srep0">
 			<number_of_base_points>
 			5
 			</number_of_base_points>
@@ -206,7 +206,7 @@
 				</atom>
 			</spoke_dirs>
 		</srep>
-		<srep>
+		<srep xmlns="srep1">
 			<number_of_base_points>
 			5
 			</number_of_base_points>
@@ -409,7 +409,7 @@
 				</atom>
 			</spoke_dirs>
 		</srep>
-		<srep>
+		<srep xmlns="srep2">
 			<number_of_base_points>
 			6
 			</number_of_base_points>

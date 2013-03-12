@@ -11,13 +11,13 @@ def readSrepData(config_index)
 end
 
 
-def returnPointsListFromXML(doc,srep_index)
+def returnAtomsListFromXML(doc,srep_index)
     # this function should return points such as:
     #  [[110,100],[160,75],[210,50],[260,60],[310,80]]
      srep_doc =  doc.xpath("//srep")[srep_index]
      # get the number of atoms in that srep
      # number of atoms = 
-     number_of_atoms = 5
+     number_of_atoms = doc.xpath("//sreps//srep:number_of_base_points", 'srep' => 'srep'+srep_index.to_s)[0].content().strip().to_i()
      atom_lst = []
      number_of_atoms.times do |i|
         x = srep_doc.xpath("//points").xpath("//point//x")[i+5*srep_index].content.to_s().strip().to_i()
@@ -28,8 +28,43 @@ def returnPointsListFromXML(doc,srep_index)
      return atom_lst
 end
 
+def returnSpokeLengthListFromXML(doc,srep_index)
+     srep_docs = doc.xpath("//srep")[srep_index]
+     number_of_atoms = doc.xpath("//sreps//srep:number_of_base_points", 'srep' => 'srep'+srep_index.to_s)[0].content().strip().to_i()
+     spoke_len_lst = []
+     # sinces spoke lengths are all equal, we pick one of them
+     ind = 1
+     number_of_atoms.times do |i|
+        r = srep_doc.xpath("//radius").xpath("//atom//r")[ind + 2 *  i ].content.to_s().strip().to_i()
+        if i == 0 or i == number_of_atoms - 1   
+            spoke_len_lst << [r,r,r]
+	else
+	    spoke_len_lst << [r,r]
+	end
+     end
 
+     return spoke_len_lst
+end
 
+def returnSpokeDirListFromXML(doc,srep_index)
+     srep_docs = doc.xpath("//srep")[srep_index]
+     number_of_atoms = doc.xpath("//sreps//srep:number_of_base_points", 'srep' => 'srep'+srep_index.to_s)[0].content().strip().to_i()
+     spoke_dir_lst = []
+     x = srep_doc.xpath("//spoke_dirs").xpath("atom")
+     ind = 1
+
+     number_of_atoms.times do |i|
+          x1 = srep_doc.xpath("//spoke_dirs").xpath("//spoke//x")[i+5*srep_index].content.to_s().strip().to_i()
+          x2 = srep_doc.xpath("//spoke_dirs").xpath("//spoke//y")[i+5*srep_index].content.to_s().strip().to_i()  
+	end 
+        if i == 0 or i == number_of_atoms - 1
+	    r_3 = r2 = srep_doc.xpath("//raidus").xpath("//atom//r")[i+5*srep_index].content.to_s().strip().to_i()   
+            spoke_dir_lst << [x,y]
+        end
+     end
+
+     return spoke_dir_lst
+end
 
 =begin
   points0 = [[110,100],[160,75],[210,50],[260,60],[310,80]]
