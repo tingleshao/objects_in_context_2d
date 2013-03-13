@@ -12,9 +12,9 @@ end
 
 
 def returnAtomsListFromXML(doc,srep_index)
-    # this function should return points such as:
-    #  [[110,100],[160,75],[210,50],[260,60],[310,80]]
-     srep_doc =  doc.xpath("//srep")[srep_index]
+     doc2 = doc.dup
+     doc2.remove_namespaces!
+     srep_doc =  doc2.xpath("//srep")[srep_index]
      # get the number of atoms in that srep
      # number of atoms = 
      number_of_atoms = doc.xpath("//sreps//srep:number_of_base_points", 'srep' => 'srep'+srep_index.to_s)[0].content().strip().to_i()
@@ -34,15 +34,17 @@ def returnSpokeLengthListFromXML(doc,srep_index)
      spoke_len_lst = []
      # sinces spoke lengths are all equal, we pick one of them
      disks = doc.xpath("//radius:disk", 'radius' => 'srep'+srep_index.to_s())
-     disks.each do |disk|
+     disks.each_with_index do |disk,i|
        spoke_len = parse_disk_content_from_xml(disk.content())
        rad_lst = []
-       rad_lst << spoke_len
+       if i == 0 or i == number_of_atoms-1
+          rad_lst << spoke_len
+       end
        rad_lst << spoke_len
        rad_lst << spoke_len
        spoke_len_lst << rad_lst
      end
-  
+     
      return spoke_len_lst
 end
 
@@ -65,12 +67,12 @@ def returnSpokeDirListFromXML(doc,srep_index)
         ind += 1
         spoke_dir_lst << [atom_i_sp0, atom_i_sp1]
      end
-     atom_-1_sp0 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
+     atom_m1_sp0 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
      ind+=1
-     atom_-2_sp1 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
+     atom_m1_sp1 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
      ind+=1
-     atom_-3_sp2 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
-     spoke_dir_lst << [atom_0_sp0, atom_0_sp1, atom_0_sp2]
+     atom_m1_sp2 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
+     spoke_dir_lst << [atom_m1_sp0, atom_m1_sp1, atom_m1_sp2]
      return spoke_dir_lst
 end
 

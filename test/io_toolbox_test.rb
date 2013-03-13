@@ -16,22 +16,22 @@ doc  = readSrepData(0)
 #puts doc.xpath("//srep//points")[0].xpath("//point")[4]
 
 # test case 3:
-assert_equal(true, doc.xpath("//srep//points")[0].xpath("//point")[0].xpath("//x")[0].content.to_s().strip()=="110")
+#assert_equal(true, doc.xpath("//srep//points")[0].xpath("//point")[0].xpath("//x")[0].content.to_s().strip()=="110")
 
 # test case 4:
-puts returnPointsListFromXML(doc,0)
+puts returnAtomsListFromXML(doc,0)
 puts "----"
-puts returnPointsListFromXML(doc,1)
+puts returnAtomsListFromXML(doc,1)
 assert_equal([[110,100],[160,75],[210,50],[260,60],[310,80]], returnAtomsListFromXML(doc,0))
 assert_equal([[200,190],[250,190],[300,200],[350,180],[400,160]], returnAtomsListFromXML(doc,1))
 
 # test case 5:
-assert_equal([[[-1,3],[-0.1,-4],[-9,1]],[[-1,4],[1.1,-3]],[[-1,4],[0.2,-6]],[[1,9],[0.05,-8]],[[1,2],[1,-5],[6,1]]], 
+assert_equal([[35,35,35],[40,40],[30,30],[40,40],[35,35,35]], 
    returnSpokeLengthListFromXML(doc,0))
 
 
 # test case 6:
-assert_equal()
+#assert_equal()
 
 
 =begin
