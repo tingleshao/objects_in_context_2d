@@ -489,7 +489,9 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 #              ---------------------------------------------------
 #                EDIT
 
+      button("orthogonalization") {
 
+      }
 
 
       button("Interpolate Spokes 2") {
