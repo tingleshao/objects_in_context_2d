@@ -4,7 +4,9 @@ require 'test/unit'
 include Test::Unit::Assertions
 
 load 'lib/io_toolbox.rb'
-
+class TestAdd < Test::Unit::TestCase
+    def test_add
+    	
 # test case 0:
 #puts readSrepData(0)
 
@@ -31,9 +33,14 @@ assert_equal([[35,35,35],[40,40],[30,30],[40,40],[35,35,35]],
 
 
 # test case 6:
-#assert_equal()
+assert_equal([[35,35,35],[35,35],[40,40],[35,35],[40,40],[40,40,40]], 
+   returnSpokeLengthListFromXML(doc,2))
 
-
+# tese case 7:
+assert_equal(, )
+end
+end
+# 
 =begin
   points0 = [[110,100],[160,75],[210,50],[260,60],[310,80]]
   l0 = [[35,35,35],[40,40],[30,30],[40,40],[35,35,35]]
