@@ -46,24 +46,48 @@ def returnSpokeLengthListFromXML(doc,srep_index)
      return spoke_len_lst
 end
 
+
 def returnSpokeDirListFromXML(doc,srep_index)
      srep_docs = doc.xpath("//srep")[srep_index]
      number_of_atoms = doc.xpath("//sreps//srep:number_of_base_points", 'srep' => 'srep'+srep_index.to_s)[0].content().strip().to_i()
      spoke_dir_lst = []
      sps = doc.xpath("//atom:spoke", 'atom' => 'srep'+srep_index.to_s())
-     number_of_atoms.times do |i|
-          x1 = srep_doc.xpath("//spoke_dirs").xpath("//spoke//x")[i+5*srep_index].content.to_s().strip().to_i()
-          x2 = srep_doc.xpath("//spoke_dirs").xpath("//spoke//y")[i+5*srep_index].content.to_s().strip().to_i()  
-	end 
-        if i == 0 or i == number_of_atoms - 1
-	    r_3 = r2 = srep_doc.xpath("//raidus").xpath("//atom//r")[i+5*srep_index].content.to_s().strip().to_i()   
-            spoke_dir_lst << [x,y]
-        end
+     # first atom has three spokes
+     atom_0_sp0 = retrieve_spoke_dir_from_raw_xml_content(sps[0].content())
+     atom_0_sp1 = retrieve_spoke_dir_from_raw_xml_content(sps[1].content())
+     atom_0_sp2 = retrieve_spoke_dir_from_raw_xml_content(sps[2].content())
+     spoke_dir_lst << [atom_0_sp0, atom_0_sp1, atom_0_sp2]
+     ind = 3
+     ((number_of_atoms - 2) * 2).times do |i|
+        atom_i_sp0 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
+        ind += 1
+        atom_i_sp1 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
+        ind += 1
+        spoke_dir_lst << [atom_i_sp0, atom_i_sp1]
      end
-
+     atom_-1_sp0 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
+     ind+=1
+     atom_-2_sp1 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
+     ind+=1
+     atom_-3_sp2 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
+     spoke_dir_lst << [atom_0_sp0, atom_0_sp1, atom_0_sp2]
      return spoke_dir_lst
 end
 
+def retrieve_spoke_dir_from_raw_xml_content(cont)
+     cont_strip = cont.strip()
+     if cont[0] == "-"
+	num1 = cont[0..1].to_i
+     else 
+        num1 = cont[0].to_i
+     end
+     if cont[-2] == "-"
+        num2 = cont[-2..-1].to_i
+     else 
+        num2 = cont[-1].to_i
+     end
+     return [num1, num2]
+end
 =begin
   points0 = [[110,100],[160,75],[210,50],[260,60],[310,80]]
   l0 = [[35,35,35],[40,40],[30,30],[40,40],[35,35,35]]
