@@ -33,16 +33,16 @@ def returnSpokeLengthListFromXML(doc,srep_index)
      number_of_atoms = doc.xpath("//sreps//srep:number_of_base_points", 'srep' => 'srep'+srep_index.to_s)[0].content().strip().to_i()
      spoke_len_lst = []
      # sinces spoke lengths are all equal, we pick one of them
-     ind = 1
-     number_of_atoms.times do |i|
-        r = srep_doc.xpath("//radius").xpath("//atom//r")[ind + 2 *  i ].content.to_s().strip().to_i()
-        if i == 0 or i == number_of_atoms - 1   
-            spoke_len_lst << [r,r,r]
-	else
-	    spoke_len_lst << [r,r]
-	end
+     disks = doc.xpath("//radius:disk", 'radius' => 'srep'+srep_index.to_s())
+     disks.each do |disk|
+       spoke_len = parse_disk_content_from_xml(disk.content())
+       rad_lst = []
+       rad_lst << spoke_len
+       rad_lst << spoke_len
+       rad_lst << spoke_len
+       spoke_len_lst << rad_lst
      end
-
+  
      return spoke_len_lst
 end
 
@@ -88,6 +88,18 @@ def retrieve_spoke_dir_from_raw_xml_content(cont)
      end
      return [num1, num2]
 end
+
+def parse_disk_content_from_xml(cont)
+   cont = cont.strip()
+   if cont[1] == "\n" 
+      return cont[0].to_i
+   elsif cont[2] == "\n"
+      return cont[0..1].to_i
+   else
+      return cont[0..2].to_i
+   end 
+end
+
 =begin
   points0 = [[110,100],[160,75],[210,50],[260,60],[310,80]]
   l0 = [[35,35,35],[40,40],[30,30],[40,40],[35,35,35]]
