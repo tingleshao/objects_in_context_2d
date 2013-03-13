@@ -37,7 +37,7 @@ assert_equal([[35,35,35],[35,35],[40,40],[35,35],[40,40],[40,40,40]],
    returnSpokeLengthListFromXML(doc,2))
 
 # tese case 7:
-assert_equal(, )
+assert_equal([[[-1,3],[-0.1,-4],[-9,1]],[[-1,4],[1.1,-3]],[[-1,4],[0.2,-6]],[[1,9],[0.05,-8]],[[1,2],[1,-5],[6,1]]], returnSpokeDirListFromXML(doc,0))
 end
 end
 # 

@@ -60,7 +60,7 @@ def returnSpokeDirListFromXML(doc,srep_index)
      atom_0_sp2 = retrieve_spoke_dir_from_raw_xml_content(sps[2].content())
      spoke_dir_lst << [atom_0_sp0, atom_0_sp1, atom_0_sp2]
      ind = 3
-     ((number_of_atoms - 2) * 2).times do |i|
+     (number_of_atoms - 2).times do |i|
         atom_i_sp0 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
         ind += 1
         atom_i_sp1 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
@@ -77,18 +77,29 @@ def returnSpokeDirListFromXML(doc,srep_index)
 end
 
 def retrieve_spoke_dir_from_raw_xml_content(cont)
-     cont_strip = cont.strip()
-     if cont[0] == "-"
-	num1 = cont[0..1].to_i
-     else 
-        num1 = cont[0].to_i
+     cont = cont.strip()
+     outer_num1 = 0
+     outer_num2 = 0
+     cont.length.times do |i|
+          if cont[i] == "\n" or cont[i] == "\t"
+              num1 = cont[0..i-1].to_f
+          end 
+          if cont[-i] == "\n" or cont[-i] == "\t"
+              num2 = cont[-i+1..-1].to_f
+          end
+          if not num1.nil? and not num2.nil?
+              outer_num1 = num1
+              outer_num2 = num2
+              break
+          end
      end
-     if cont[-2] == "-"
-        num2 = cont[-2..-1].to_i
-     else 
-        num2 = cont[-1].to_i
+     if outer_num1 % 1 == 0
+	outer_num1 = outer_num1.to_i
      end
-     return [num1, num2]
+     if outer_num2 % 1 == 0
+	outer_num2 = outer_num2.to_i
+     end
+     return [outer_num1, outer_num2]
 end
 
 def parse_disk_content_from_xml(cont)
