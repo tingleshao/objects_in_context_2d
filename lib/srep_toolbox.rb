@@ -562,3 +562,23 @@ def linkLinkingStructurePoints(sreps, app, shift)
   end
 end
 
+
+def orthogonalizeSpokes(srep)
+  interpolated_spokes_begin = srep.interpolated_spokes_begin
+  interpolated_spokes_end = srep.interpolated_spokes_end
+   
+  srep_base_index = srep.base_index
+  
+  # get base spokes 
+  base_atoms = srep.atoms
+  base_spoke_dir_lst = []
+  base_atoms.each do |atom| 
+     base_spoke_dir_lst << atom.spoke_direction
+  end
+  
+end
+
+
+
+
+
