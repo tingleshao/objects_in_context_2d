@@ -563,7 +563,7 @@ def linkLinkingStructurePoints(sreps, app, shift)
 end
 
 
-def orthogonalizeSpokes(srep)
+def computeOrthogonalizedSpokes(srep)
   interpolated_spokes_begin = srep.interpolated_spokes_begin
   interpolated_spokes_end = srep.interpolated_spokes_end
    
@@ -572,10 +572,34 @@ def orthogonalizeSpokes(srep)
   # get base spokes 
   base_atoms = srep.atoms
   base_spoke_dir_lst = []
-  base_atoms.each do |atom| 
-     base_spoke_dir_lst << atom.spoke_direction
+
+  implied_boundary_dirs = []
+  # compute the implied boundary direction 
+  srep_base_index.each_with_index do |index, i| 
+     if index != 0 and index != 100
+        interpolated_spokes_left_begin = interpolated_spokes_begin[index-1]
+        interpolated_spokes_left_end = interpolated_spokes_end[index-1]
+        interpolated_spokes_right_begin = interpolated_spokes_begin[index+1]
+        interpolated_spokes_right_end = interpolated_spokes_end[index+1]
+        # compute the left and right interpolated spokes dir
+        interpolated_spokes_left_dir = [ interpolated_spokes_left_end[0] - interpolated_spokes_left_begin[0], interpolated_spokes_left_end[1] - interpolated_spokes_left_begin[1] ]
+        interpolated_spokes_right_dir = [ interpolated_spokes_right_end[0] - interpolated_spokes_right_begin[0], interpolated_spokes_right_end[1] - interpolated_spokes_right_begin[1] ]
+        # compute implied boundary dir (the dir orthotogonal to the boundary)     
+        implied_boundary_dir = [ interpolated_spokes_left_dir[0] + interpolated_spokes_right_dir[0], interpolated_spokes_left_dir[1] + interpolated_spokes_right_dir[1] ] 
+        # normalize the implied boundary dir
+        implied_boundary_dir = twoDNormalize(implied_boundary_dir)
+        # adjust the base atom dir to the implied boundary dir
+        
+        # update implied boundary dirs
+
+         implied_boundary_dirs << implied_boundary_dir
+       
+     end
   end
-  
+
+  return implied_boundary_dirs 
+   
+   
 end
 
 

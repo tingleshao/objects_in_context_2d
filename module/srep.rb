@@ -4,7 +4,9 @@
 # Author: Chong Shao (cshao@.cs.unc.edu)
 # ----------------------------------------------------------------
 
-
+# spoke directions:
+#   0: upper spokes
+#   1: lower spokes
 class SRep 
   attr_accessor :interpolate_finished, :index, :atoms, :skeletal_curve, :interpolated_spokes_begin, 
      :interpolated_spokes_end, :extend_interpolated_spokes_end, :show_curve, :show_interpolated_spokes, 

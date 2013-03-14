@@ -259,7 +259,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
           html_doc = Nokogiri::HTML("<html><body><h1>Loaded with XML</h1></body></html>")
      para html_doc
    #  para " \n\n\n\n"
-	para "hi"
+	para $info
       flow :margin => 6 do
 
        # code for buttons
@@ -490,14 +490,22 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 #                EDIT
 
       button("orthogonalization") {
-	 
+	 orthogonalized_middle_spokes = computeOrthogonalizedSpokes($sreps[0])
+         3.times do |i|
+            orthogonalized_middle_spokes[i][1] = orthogonalized_middle_spokes[i][1] * -1
+            $sreps[0].atoms[i+1].spoke_direction[1] = orthogonalized_middle_spokes[i]
+         end
+            $info = orthogonalized_middle_spokes.to_s
+            $sreps[0].interpolated_spokes_begin = []
+            $sreps[0].interpolated_spokes_end = []
+          refresh @points, $sreps, @shifts           
       }
 
 
       button("Interpolate Spokes 2") {
-srep = $sreps[0]
-srep_index = 0
-curr_index = 0
+	srep = $sreps[0]
+	srep_index = 0
+	curr_index = 0
    #      $sreps.each_with_index do |srep, srep_index| 
          #   puts "flip:" + $flip.to_s
       
