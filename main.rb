@@ -492,8 +492,8 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
       button("orthogonalization") {
 	 orthogonalized_middle_spokes = computeOrthogonalizedSpokes($sreps[0])
          3.times do |i|
-            orthogonalized_middle_spokes[i][1] = orthogonalized_middle_spokes[i][1] * -1
-            $sreps[0].atoms[i+1].spoke_direction[1] = orthogonalized_middle_spokes[i]
+            orthogonalized_middle_spokes[i][1] = orthogonalized_middle_spokes[i][1]
+            $sreps[0].atoms[i+1].spoke_direction[0] = orthogonalized_middle_spokes[i]
          end
             $info = orthogonalized_middle_spokes.to_s
             $sreps[0].interpolated_spokes_begin = []

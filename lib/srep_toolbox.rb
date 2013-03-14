@@ -581,11 +581,10 @@ def computeOrthogonalizedSpokes(srep)
         interpolated_spokes_left_end = interpolated_spokes_end[index-1]
         interpolated_spokes_right_begin = interpolated_spokes_begin[index+1]
         interpolated_spokes_right_end = interpolated_spokes_end[index+1]
-        # compute the left and right interpolated spokes dir
-        interpolated_spokes_left_dir = [ interpolated_spokes_left_end[0] - interpolated_spokes_left_begin[0], interpolated_spokes_left_end[1] - interpolated_spokes_left_begin[1] ]
-        interpolated_spokes_right_dir = [ interpolated_spokes_right_end[0] - interpolated_spokes_right_begin[0], interpolated_spokes_right_end[1] - interpolated_spokes_right_begin[1] ]
-        # compute implied boundary dir (the dir orthotogonal to the boundary)     
-        implied_boundary_dir = [ interpolated_spokes_left_dir[0] + interpolated_spokes_right_dir[0], interpolated_spokes_left_dir[1] + interpolated_spokes_right_dir[1] ] 
+        # compute implied boundary dir (the dir orthotogonal to the boundary)   
+        implied_boundary_line = [ interpolated_spokes_left_end[0] - interpolated_spokes_right_end[0], interpolated_spokes_left_end[1] - interpolated_spokes_right_end[1]] 
+    
+        implied_boundary_dir = [ -1 *implied_boundary_line[1], -1 * implied_boundary_line[0]] 
         # normalize the implied boundary dir
         implied_boundary_dir = twoDNormalize(implied_boundary_dir)
         # adjust the base atom dir to the implied boundary dir
