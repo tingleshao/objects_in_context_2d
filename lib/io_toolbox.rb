@@ -177,6 +177,9 @@ def saveSrepDataAsXML(file_name,sreps,number_of_sreps)
 		}		
 	   }
 	end	
+	f = file.open(file_name,'w')
+        f.write(builder.to_xml)
+	f.close
 end
 
 

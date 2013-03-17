@@ -504,8 +504,10 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
       button("save") {
          
       }
+
       button("save as") {
-         
+         # currently save as config_1
+         saveSrepDataAsXML('srep_data/config_1.xml',$sreps,3)
       }
      
       button("Interpolate Spokes 2") {
