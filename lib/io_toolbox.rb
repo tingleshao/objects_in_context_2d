@@ -114,14 +114,69 @@ def parse_disk_content_from_xml(cont)
 end
 
 
-def saveSrepDataAsXML(file_name,srep)
-	atom_lst = 
-	spoke_length_lst = 
-	spoke_dir_lst =
-	builder = Nokogiri::XML::Builder.new do |data|
-
-	end
+def saveSrepDataAsXML(file_name,sreps,number_of_sreps)
 	
+	atoms_lst.each_with_index do |atom, ind|
+	    atom_xy_lst << [atom.x, atom.y]
+	    spoke_length_lst << atom.spoke_length
+	    spoke_dir_lst << atom.spoke_direction
+	end
+	builder = Nokogiri::XML::Builder.new do |data|
+	   xml.data {
+	        xml.number_of_sreps  number_of_sreps.to_s
+	        xml.sreps {
+		     	number_of_sreps.times do |i| {
+			   srep = sreps[i]
+                           atoms_lst = srep.atoms
+			   atom_xy_lst = []
+			   spoke_length_lst = []
+		       	   spoke_dir_lst = []
+			   xml.srep{
+			       xml.number_of_base_points  len(srep.atoms).to_s
+                               xml.points {
+                                   atoms_lst.length.times do |i| {
+				       	   xml.point {
+						xml.x atom_xy_lst[i][0]
+						xml.y atom_xy_lst[i][1]
+		                           }
+			           }
+			       }
+                               xml.radius {
+                                   atoms_lst.length.times do |i| {
+                                           xml.disk {
+                                               xml.r spoke_length_lst[i]
+                                               xml.r spoke_length_lst[i]
+                                               if i ==0 or i==atoms_lst.length - 1
+                                                  xml.r spoke_length_lst[i]
+                                               end
+                                           }
+                                   }
+                               }
+                               xml.spoke_dirs {
+                                    atoms_lst.length.times do |i| {
+                                             xml.atom {
+                                                xml.spoke {
+                                                   xml.x spoke_dir_lst[i][0][0]
+                                                   xml.y spoke_dir_lst[i][0][1]
+                                                }
+                                                xml.spoke {
+                                                   xml.x spoke_dir_lst[i][1][0]
+                                                   xml.y spoke_dir_lst[i][1][1]
+                                                }
+                                                if i == 0 or i == atoms_lst.length - 1
+                                                   xml.spoke {
+                                                     xml.x spoke_dir_lst[i][2][0]
+					             xml.y spoke_dir_lst[i][2][1]
+                                                   }
+                                                end
+                                             }
+                                    }
+                               }
+			   }			
+			}		
+		}		
+	   }
+	end	
 end
 
 
