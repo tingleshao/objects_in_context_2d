@@ -113,6 +113,19 @@ def parse_disk_content_from_xml(cont)
    end 
 end
 
+
+def saveSrepDataAsXML(file_name,srep)
+	atom_lst = 
+	spoke_length_lst = 
+	spoke_dir_lst =
+	builder = Nokogiri::XML::Builder.new do |data|
+
+	end
+	
+end
+
+
+
 =begin
   points0 = [[110,100],[160,75],[210,50],[260,60],[310,80]]
   l0 = [[35,35,35],[40,40],[30,30],[40,40],[35,35,35]]
