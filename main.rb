@@ -501,7 +501,13 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
           refresh @points, $sreps, @shifts           
       }
 
-
+      button("save") {
+         
+      }
+      button("save as") {
+         
+      }
+     
       button("Interpolate Spokes 2") {
 	srep = $sreps[0]
 	srep_index = 0
