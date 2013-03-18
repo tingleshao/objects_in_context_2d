@@ -80,14 +80,22 @@ def retrieve_spoke_dir_from_raw_xml_content(cont)
      cont = cont.strip()
      outer_num1 = 0
      outer_num2 = 0
+     count = 0
      cont.length.times do |i|
+          count +=1
           if cont[i] == "\n" or cont[i] == "\t"
               num1 = cont[0..i-1].to_f
           end 
           if cont[-i] == "\n" or cont[-i] == "\t"
               num2 = cont[-i+1..-1].to_f
           end
+          if count == 8
+              num1 = cont[0..8].to_f
+              num2 = cont[-8..-1].to_f
+          end
           if not num1.nil? and not num2.nil?
+       #       puts "num1: " + num1.to_s
+	#      puts "num2: " + num2.to_s
               outer_num1 = num1
               outer_num2 = num2
               break
@@ -148,7 +156,7 @@ def saveSrepDataAsXML(file_name,sreps,number_of_sreps)
                                                xml.r spoke_length_lst[j][0].to_i
                                                xml.r spoke_length_lst[j][0].to_i
                                                if j ==0 or j==atoms_lst.length - 1
-                                                  xml.r spoke_length_lst[i][0].to_i
+                                                  xml.r spoke_length_lst[j][0].to_i
                                                end
                                            }
                                    end

@@ -93,10 +93,12 @@ def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep
   # get the upper spokes directions 
     srep.atoms.each_with_index do |atom, i| 
       u1 = atom.spoke_direction[1]  
+      puts "u1: " + u1.to_s
       size_norm_v=  Math.sqrt(v[i][0] **2 + v[i][1] **2)
       norm_v = [v[i][0] / size_norm_v ,  v[i][1] / size_norm_v ]
       u1_proj_on_v = norm_v.collect{|e| e* (u1[0] * norm_v[0] + u1[1] * norm_v[1])} 
       size_proj = Math.sqrt(u1_proj_on_v[0] **2 + u1_proj_on_v[1] **2 )
+      puts "size_proj: " + size_proj.to_s
       norm_proj = [u1_proj_on_v[0] / size_proj, u1_proj_on_v[1] / size_proj]
       puts "norm_v: " + norm_v.to_s
       puts "norm_proj: " + norm_proj.to_s

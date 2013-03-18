@@ -776,7 +776,7 @@ def initialConfig
 
   # read srep data from xml
   
-  doc  = readSrepData(0)
+  doc  = readSrepData(1)
   points0 = returnAtomsListFromXML(doc,0)
   l0 = returnSpokeLengthListFromXML(doc,0)
   u0 = returnSpokeDirListFromXML(doc,0)
