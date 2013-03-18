@@ -498,6 +498,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
             $info = orthogonalized_middle_spokes.to_s
             $sreps[0].interpolated_spokes_begin = []
             $sreps[0].interpolated_spokes_end = []
+	    $sreps[0].extend_interpolated_spokes_end = []
           refresh @points, $sreps, @shifts           
       }
 
@@ -750,7 +751,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 
      stack do @status = para :stroke => black end
      @field.paint
-     para $info
+     #para $info
   
    end  
  end
