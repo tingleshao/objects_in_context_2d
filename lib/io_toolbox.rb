@@ -56,8 +56,11 @@ def returnSpokeDirListFromXML(doc,srep_index)
      sps = doc.xpath("//atom:spoke", 'atom' => 'srep'+srep_index.to_s())
      # first atom has three spokes
      atom_0_sp0 = retrieve_spoke_dir_from_raw_xml_content(sps[0].content())
+     puts "atom_0_sp0: " + atom_0_sp0.to_s
      atom_0_sp1 = retrieve_spoke_dir_from_raw_xml_content(sps[1].content())
+     puts "atom_0_sp1: " + atom_0_sp1.to_s
      atom_0_sp2 = retrieve_spoke_dir_from_raw_xml_content(sps[2].content())
+     puts "atom_0_sp2: " + atom_0_sp2.to_s
      spoke_dir_lst << [atom_0_sp0, atom_0_sp1, atom_0_sp2]
      ind = 3
      (number_of_atoms - 2).times do |i|
@@ -89,13 +92,17 @@ def retrieve_spoke_dir_from_raw_xml_content(cont)
           if cont[-i] == "\n" or cont[-i] == "\t"
               num2 = cont[-i+1..-1].to_f
           end
-          if count == 8
-              num1 = cont[0..8].to_f
-              num2 = cont[-8..-1].to_f
+          if count == 23
+              num1 = cont[0..15].to_f
+	      if cont[-24] == "-"
+                 num2 = cont[-16..-1].to_f
+              else
+                 num2 = cont[-15..-1].to_f
+              end
           end
           if not num1.nil? and not num2.nil?
-       #       puts "num1: " + num1.to_s
-	#      puts "num2: " + num2.to_s
+              puts "num1: " + num1.to_s
+	      puts "num2: " + num2.to_s
               outer_num1 = num1
               outer_num2 = num2
               break
@@ -165,17 +172,17 @@ def saveSrepDataAsXML(file_name,sreps,number_of_sreps)
                                     atoms_lst.length.times do |j| 
                                              xml.atom {
                                                 xml.spoke {
-                                                   xml.x spoke_dir_lst[j][0][0]
-                                                   xml.y spoke_dir_lst[j][0][1]
+                                                   xml.x ("\t"+ spoke_dir_lst[j][0][0].to_s()[0..15] +"\t")
+                                                   xml.y ("\t"+ spoke_dir_lst[j][0][1].to_s()[0..15] +"\t")
                                                 }
                                                 xml.spoke {
-                                                   xml.x spoke_dir_lst[j][1][0]
-                                                   xml.y spoke_dir_lst[j][1][1]
+                                                   xml.x ("\t"+ spoke_dir_lst[j][1][0].to_s()[0..15] +"\t")
+                                                   xml.y ("\t"+ spoke_dir_lst[j][1][1].to_s()[0..15] +"\t")
                                                 }
                                                 if j == 0 or j == atoms_lst.length - 1
                                                    xml.spoke {
-                                                     xml.x spoke_dir_lst[j][2][0]
-					             xml.y spoke_dir_lst[j][2][1]
+                                                     xml.x ("\t"+ spoke_dir_lst[j][2][0].to_s()[0..15] +"\t")
+					             xml.y ("\t"+ spoke_dir_lst[j][2][1].to_s()[0..15] +"\t")
                                                    }
                                                 end
                                              }

@@ -316,7 +316,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
          $sreps.each_with_index do |srep, srep_index| 
                   file1 = File.open($points_file_path + srep_index.to_s, 'r')
          #  puts "file: " +  file1.to_s
-          test = "here!!!!!!!!!!!!!!!1"
+          test = "here!!!!!!!!!!!!!!!"
                 xt = file1.gets.split(' ').collect{|x| x.to_f}
 	           yt = file1.gets.split(' ').collect{|y| y.to_f}
              file2 = File.open($radius_file_path + srep_index.to_s, 'r')
@@ -515,17 +515,10 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 	srep = $sreps[0]
 	srep_index = 0
 	curr_index = 0
-   #      $sreps.each_with_index do |srep, srep_index| 
-         #   puts "flip:" + $flip.to_s
-      
- #        if $flip == 0
-   # do many times .... ( a big number may refer to the number of spokes between each two base points? ) 
-            file = File.open($points_file_path + srep_index.to_s, 'r')
-
-            # xt/ yt: interpolatd x and y locus
-            $xt = file.gets.split(' ').collect{|x| x.to_f}
-	    $yt = file.gets.split(' ').collect{|y| y.to_f}
-             file = File.open($radius_file_path2 + srep_index.to_s, 'r')
+        file = File.open($points_file_path + srep_index.to_s, 'r')
+        $xt = file.gets.split(' ').collect{|x| x.to_f}
+	$yt = file.gets.split(' ').collect{|y| y.to_f}
+        file = File.open($radius_file_path2 + srep_index.to_s, 'r')
           # rt: interpolated radius r
     	       $rt = file.gets.split(' ').collect{|r| r.to_f}
           # logrk: interpolated logrk <= needs to be fixed.
@@ -556,7 +549,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 			     if distance_to_next_base == 0 # <= reached another base point
 		       puts "############################################################"
 		       puts "############################################################"
-		       puts "at base end!"
+		       puts "                         at base end!"
 		       puts "############################################################"
 		       puts "############################################################"
 			       $step_go_so_far  = 0
@@ -776,12 +769,12 @@ def initialConfig
 
   # read srep data from xml
   
-  doc  = readSrepData(1)
+  doc  = readSrepData(0)
   points0 = returnAtomsListFromXML(doc,0)
   l0 = returnSpokeLengthListFromXML(doc,0)
   u0 = returnSpokeDirListFromXML(doc,0)
  
- # points0 = [[110,100],[160,75],[210,50],[260,60],[310,80]]
+ # points0 = [[110,100],[160,5],[210,50],[260,60],[310,80]]
  # l0 = [[35,35,35],[40,40],[30,30],[40,40],[35,35,35]]
  # u0 = [[[-1,3],[-0.1,-4],[-9,1]],[[-1,4],[1.1,-3]],[[-1,4],[0.2,-6]],[[1,9],[0.05,-8]],[[1,2],[1,-5],[6,1]]]
   srep0 = generate2DDiscreteSrep(points0,l0,u0,0.01,0)
