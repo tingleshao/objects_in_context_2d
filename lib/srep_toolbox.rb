@@ -92,18 +92,13 @@ def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep
   # make sure the upper and lower spokes have the same angle
   # get the upper spokes directions 
     srep.atoms.each_with_index do |atom, i| 
-      u1 = atom.spoke_direction[1]  
+      u1 = atom.spoke_direction[0]  
       puts "u1: " + u1.to_s
       size_norm_v=  Math.sqrt(v[i][0] **2 + v[i][1] **2)
       norm_v = [v[i][0] / size_norm_v ,  v[i][1] / size_norm_v ]
       u1_proj_on_v = norm_v.collect{|e| e* (u1[0] * norm_v[0] + u1[1] * norm_v[1])} 
       size_proj = Math.sqrt(u1_proj_on_v[0] **2 + u1_proj_on_v[1] **2 )
-      puts "size_proj: " + size_proj.to_s
       norm_proj = [u1_proj_on_v[0] / size_proj, u1_proj_on_v[1] / size_proj]
-      puts "norm_v: " + norm_v.to_s
-      puts "norm_proj: " + norm_proj.to_s
-
-      puts "u1_proj_on_v: " + u1_proj_on_v.to_s
       u1_prep_to_v = [u1[0] - u1_proj_on_v[0], u1[1] - u1_proj_on_v[1]]
       u0 = [1 * u1_proj_on_v[0] - u1_prep_to_v[0], 1  *  u1_proj_on_v[1] - u1_prep_to_v[1]]
       # normalize u0
@@ -114,7 +109,7 @@ def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep
       diff = [u0[0]-u1[0],u0[1]-u1[1]]
       prod = diff[0] * norm_v[0] + diff[1]*norm_v[1]
       puts "prod: "+ prod.to_s
-      atom.spoke_direction[0] = u0
+      atom.spoke_direction[1] = u0
     end
 
     # for the end spokes, set their direction to the v 
@@ -480,9 +475,7 @@ def interpolateSpokeAtPos2(ut,vt,kt,dt)
   puts "at: " + at.to_s
   utdtx = (1+at*dt) * ut[0] - kt * vt[0] * dt
   utdty = (1+at*dt) * ut[1] - kt * vt[1] * dt
-u = twoDNormalize([utdtx, utdty])
- # puts "ut: "+ ut.to_s
- # puts "newut: " + [utdtx, utdty].to_s
+  u = twoDNormalize([utdtx, utdty])
   return u
 end
 

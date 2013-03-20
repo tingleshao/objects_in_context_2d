@@ -505,18 +505,19 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 	srep = $sreps[0]
 	srep_index = 0
 	curr_index = 0
-        file = File.open($points_file_path + srep_index.to_s, 'r')
-        $xt = file.gets.split(' ').collect{|x| x.to_f}
-	$yt = file.gets.split(' ').collect{|y| y.to_f}
-        file = File.open($radius_file_path2 + srep_index.to_s, 'r')
-          # rt: interpolated radius r
-    	$rt = file.gets.split(' ').collect{|r| r.to_f}
-          # logrk: interpolated logrk 
-        file = File.open($logrk_file_path3 + srep_index.to_s, 'r')
-        $logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
-        $indices = srep.base_index
-
-        puts "read all data needed >_<"   
+	if not $xt 
+		file = File.open($points_file_path + srep_index.to_s, 'r')
+		$xt = file.gets.split(' ').collect{|x| x.to_f}
+		$yt = file.gets.split(' ').collect{|y| y.to_f}
+		file = File.open($radius_file_path2 + srep_index.to_s, 'r')
+		  # rt: interpolated radius r
+	    	$rt = file.gets.split(' ').collect{|r| r.to_f}
+		  # logrk: interpolated logrk 
+		file = File.open($logrk_file_path3 + srep_index.to_s, 'r')
+		$logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
+		$indices = srep.base_index
+      	        puts "read all data needed >_<"   
+        end
         # initially it is zero 
         base_index = $current_base_index
 
@@ -526,7 +527,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
         if distance_to_next_base == 0 # <= reached another base point
                 puts "############################################################"
 		puts "############################################################"
-		puts "                         at base end!"
+		puts "                         at base end!                       "
 		puts "############################################################"
 		puts "############################################################"
 		$step_go_so_far  = 0
@@ -557,40 +558,34 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
                v1t = [$xt[curr_index+1] - $xt[curr_index], $yt[curr_index+1] - $yt[curr_index]]
 	end
             # normalize the size of v vector
-               size_v1t = Math.sqrt(v1t[0]**2 + v1t[1]**2)
-               d1t = size_v1t
-               norm_v1t = v1t.collect{|v| v / size_v1t} 
+        size_v1t = Math.sqrt(v1t[0]**2 + v1t[1]**2)
+        d1t = size_v1t
+        norm_v1t = v1t.collect{|v| v / size_v1t} 
      
-               k1t = ( 1 + ( -1 * Math.exp($logrkm1[curr_index] ) ) ) / $rt[curr_index] 
+        k1t = ( 1 + ( -1 * Math.exp($logrkm1[curr_index] ) ) ) / $rt[curr_index] 
             
-            # call a method to interpolate 
-              puts "u1before update" + $ui1.to_s
-              $ui1 = interpolateSpokeAtPos2($ui1, norm_v1t, -1*k1t, d1t)
-              puts "u1after update" + $ui1.to_s
-              puts "u2before update" + $ui2.to_s
-              $ui2 = interpolateSpokeAtPos2($ui2,norm_v1t,k1t,d1t)
-              puts "u2after update" + $ui2.to_s
+        # call a method to interpolate 
+        puts "u1before update" + $ui1.to_s
+        $ui1 = interpolateSpokeAtPos2($ui1, norm_v1t, -1 * k1t, d1t)
+        puts "u1after update" + $ui1.to_s
+        puts "u2before update" + $ui2.to_s
+        $ui2 = interpolateSpokeAtPos2($ui2, norm_v1t, k1t, d1t)
+        puts "u2after update" + $ui2.to_s
       #        puts "ui: " + ui.to_s
-               srep.interpolated_spokes_begin << [$xt[curr_index],$yt[curr_index],-1]    
+        srep.interpolated_spokes_begin << [$xt[curr_index],$yt[curr_index],-1]    
       #        puts "rt: " + rt[curr_index-1].to_s
-               srep.interpolated_spokes_end  <<  [$xt[curr_index]+$ui1[0]*$rt[curr_index],$yt[curr_index]-$ui1[1]*$rt[curr_index],-1,[],'regular']
+        srep.interpolated_spokes_end  <<  [$xt[curr_index]+$ui1[0]*$rt[curr_index],$yt[curr_index]-$ui1[1]*$rt[curr_index],-1,[],'regular']
  # srep.interpolated_spokes_end  <<  [$xt[curr_index]+$ui1[0],$yt[curr_index]-$ui1[1],-1,[],'regular']
-      #         puts $ui1
-	#       puts $ui2
-               # interpolate another side
-       #       puts "ui: " + ui.to_s
-               spoke_index = $indices[base_index]+$step_go_so_far+1
-               spoke_begin_x = $xt[spoke_index]
-               spoke_begin_y = $yt[spoke_index]
-        #       $sreps[srep_index].interpolated_spokes_begin << [spoke_begin_x,spoke_begin_y,-1,[],'regular']    
-               spoke_end_x = spoke_begin_x + $ui2[0]*$rt[spoke_index]
-               spoke_end_y = spoke_begin_y - $ui2[1]*$rt[spoke_index]
-       #        $sreps[srep_index].interpolated_spokes_end  <<  [spoke_end_x,spoke_end_y,-1,[],'regular']
+        spoke_index = $indices[base_index]+$step_go_so_far+1
+        spoke_begin_x = $xt[spoke_index]
+        spoke_begin_y = $yt[spoke_index]
+        $sreps[srep_index].interpolated_spokes_begin << [spoke_begin_x,spoke_begin_y,-1,[],'regular']    
+        spoke_end_x = spoke_begin_x + $ui2[0]*$rt[spoke_index]
+        spoke_end_y = spoke_begin_y - $ui2[1]*$rt[spoke_index]
+        $sreps[srep_index].interpolated_spokes_end  <<  [spoke_end_x,spoke_end_y,-1,[],'regular']
         #       puts "ddl" +  $sreps[srep_index].interpolated_spokes_end.to_s
-               refresh @points, $sreps, @shifts
-               $step_go_so_far = $step_go_so_far + 1              
-       #    end
-    #    end
+        refresh @points, $sreps, @shifts
+        $step_go_so_far = $step_go_so_far + 1              
        }
  #            else
 =begin
@@ -741,7 +736,7 @@ def initialConfig
 
   # read srep data from xml
   
-  doc  = readSrepData(0)
+  doc  = readSrepData(1)
   points0 = returnAtomsListFromXML(doc,0)
   l0 = returnSpokeLengthListFromXML(doc,0)
   u0 = returnSpokeDirListFromXML(doc,0)
