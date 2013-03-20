@@ -310,8 +310,6 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
     # i guesss...
    # need to look at my report!
    # 
-#
-#
 
          $sreps.each_with_index do |srep, srep_index| 
                   file1 = File.open($points_file_path + srep_index.to_s, 'r')
@@ -354,15 +352,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
           # rt: interpolated radius r
     	#       rt = file2.gets.split(' ').collect{|r| r.to_f}
           # logrk: interpolated logrk <= needs to be fixed.
-  #
-############################
-########################
-##########################
-      #       file3 = File.open($logrk_file_path + srep_index.to_s, 'r')
-       #      logrkm1 = file3.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
-#################
-###################
-#################
+
 # here it uses the large difference to produce v, which is not good.
              if curr_index < xt.length-1
                v1t = [xt[curr_index] - xt[indices[base_index]], yt[curr_index] - yt[indices[base_index]]]
@@ -520,83 +510,65 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 	$yt = file.gets.split(' ').collect{|y| y.to_f}
         file = File.open($radius_file_path2 + srep_index.to_s, 'r')
           # rt: interpolated radius r
-    	       $rt = file.gets.split(' ').collect{|r| r.to_f}
-          # logrk: interpolated logrk <= needs to be fixed.
-  #
-            file = File.open($logrk_file_path3 + srep_index.to_s, 'r')
-            $logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
-      #      $ui1 = srep.atoms[0].spoke_direction[0]
-      #      $ui2 = srep.atoms[0].spoke_direction[1]
-      #         srep.interpolated_spokes_begin <<  [$xt[curr_index],$yt[curr_index]]
-       #        srep.interpolated_spokes_end  <<  [$xt[curr_index]+$ui1[0]*$rt[curr_index],$yt[curr_index]-$ui1[1]*$rt[curr_index],-1,[],'regular']
-       #    curr_index = 1
-       #        srep.interpolated_spokes_begin <<  [$xt[curr_index],$yt[curr_index]]
-       #        srep.interpolated_spokes_end  <<  [$xt[curr_index]+$ui2[0]*$rt[curr_index],$yt[curr_index]-$ui2[1]*$rt[curr_index],-1,[],'regular']
-            $indices = srep.base_index
-   #         $flip = 1 
-        #     $a_big_number.times do
-#         else  
+    	$rt = file.gets.split(' ').collect{|r| r.to_f}
+          # logrk: interpolated logrk 
+        file = File.open($logrk_file_path3 + srep_index.to_s, 'r')
+        $logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
+        $indices = srep.base_index
 
-          puts "--------------- >_< ---------------"   
-     #     puts "flip: " + $flip.to_s
-            # initially it is zero 
-               base_index = $current_base_index
+        puts "read all data needed >_<"   
+        # initially it is zero 
+        base_index = $current_base_index
 
-               distance_to_next_base = ( $indices[base_index+1] - $indices[base_index] ) - $step_go_so_far 
-               puts "dis to next base: " + distance_to_next_base.to_s
-             # no it is needed.
-    curr_index = $indices[base_index] + $step_go_so_far  + 1 
-			     if distance_to_next_base == 0 # <= reached another base point
-		       puts "############################################################"
-		       puts "############################################################"
-		       puts "                         at base end!"
-		       puts "############################################################"
-		       puts "############################################################"
-			       $step_go_so_far  = 0
-			   # update current_base_index
-			       $current_base_index = $current_base_index + 1    
-			       $ui1 = srep.atoms[$current_base_index].spoke_direction[0]
-			       $ui2 = srep.atoms[$current_base_index].spoke_direction[1]
-			       distance_to_next_base = $indices[base_index+1] - $indices[base_index]
-			   #  Why here is no checking for base index out of bound? 
-                               base_index = $current_base_index
-			       spoke_index = $current_base_index
-			     end
+        distance_to_next_base = ( $indices[base_index+1] - $indices[base_index] ) - $step_go_so_far 
+        puts "dis to next base: " + distance_to_next_base.to_s
+        curr_index = $indices[base_index] + $step_go_so_far  + 1 
+        if distance_to_next_base == 0 # <= reached another base point
+                puts "############################################################"
+		puts "############################################################"
+		puts "                         at base end!"
+		puts "############################################################"
+		puts "############################################################"
+		$step_go_so_far  = 0
+		# update current_base_index
+		$current_base_index = $current_base_index + 1    
+		$ui1 = srep.atoms[$current_base_index].spoke_direction[0]
+		$ui2 = srep.atoms[$current_base_index].spoke_direction[1]
+		distance_to_next_base = $indices[base_index+1] - $indices[base_index]
+		#  Why here is no checking for base index out of bound? 
+                base_index = $current_base_index
+		spoke_index = $current_base_index
+	end
           
-           # -->>>>>> after here we have the curr_index
+        # -->>>>>> after here we have the curr_index
          
+        # initialization
 	if curr_index == 1
-         $ui1 = srep.atoms[0].spoke_direction[0]
-         $ui2 = srep.atoms[0].spoke_direction[1]
-       			       distance_to_next_base = $indices[base_index+1] - $indices[base_index]
+                $ui1 = srep.atoms[0].spoke_direction[0]
+                $ui2 = srep.atoms[0].spoke_direction[1]
+       		distance_to_next_base = $indices[base_index+1] - $indices[base_index]
 
-                               base_index = $current_base_index
-			       spoke_index = $current_base_index
+                base_index = $current_base_index
+		spoke_index = $current_base_index
         end
-       
-
-           # here it uses the large difference to produce v, which is not good.
-           # the case of interpolating non-end spokes
-#             if curr_index < $xt.length-1
-              if curr_index != base_index[-1]
+        # avoid index out of bound when computing v
+        if curr_index != base_index[-1]
               # calculate v1 
                v1t = [$xt[curr_index+1] - $xt[curr_index], $yt[curr_index+1] - $yt[curr_index]]
-
-              end
+	end
             # normalize the size of v vector
                size_v1t = Math.sqrt(v1t[0]**2 + v1t[1]**2)
-
-      d1t = size_v1t
+               d1t = size_v1t
                norm_v1t = v1t.collect{|v| v / size_v1t} 
      
-               k1t = ( 1 + ( -1 * Math.exp($logrkm1[curr_index]   ) ) ) / $rt[curr_index] 
+               k1t = ( 1 + ( -1 * Math.exp($logrkm1[curr_index] ) ) ) / $rt[curr_index] 
             
             # call a method to interpolate 
               puts "u1before update" + $ui1.to_s
-               $ui1 = interpolateSpokeAtPos2($ui1, norm_v1t, -1*k1t, d1t)
+              $ui1 = interpolateSpokeAtPos2($ui1, norm_v1t, -1*k1t, d1t)
               puts "u1after update" + $ui1.to_s
               puts "u2before update" + $ui2.to_s
-               $ui2 = interpolateSpokeAtPos2($ui2,norm_v1t,k1t,d1t)
+              $ui2 = interpolateSpokeAtPos2($ui2,norm_v1t,k1t,d1t)
               puts "u2after update" + $ui2.to_s
       #        puts "ui: " + ui.to_s
                srep.interpolated_spokes_begin << [$xt[curr_index],$yt[curr_index],-1]    
