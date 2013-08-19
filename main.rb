@@ -255,9 +255,9 @@ end
 Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
   def render_field
     clear do 
-      background rgb(50, 50, 90, 0.7)
-          html_doc = Nokogiri::HTML("<html><body><h1>Loaded with XML</h1></body></html>")
-     para html_doc
+      background rgb(192, 192, 192, 0.7)
+   #       html_doc = Nokogiri::HTML("<html><body><h1>Loaded with XML</h1></body></html>")
+   #  para html_doc
    #  para " \n\n\n\n"
 	para $info
       flow :margin => 6 do
