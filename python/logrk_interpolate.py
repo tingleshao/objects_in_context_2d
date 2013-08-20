@@ -14,6 +14,7 @@ def writelogrk(logrk,f):
 rks = sys.argv[1]
 step_size = float(sys.argv[2])
 index = sys.argv[3]
+mosrepindex = sys.argv[4]
 rkk = rks.strip('[]').split(' ')
 rk = []
 
@@ -32,7 +33,7 @@ out = interpolate.splev(unew,tck)
 print out
 
 print "index: " + index
-f = open('data2/interpolated_logrkm1s_'+str(index),'w')
+f = open('data/mosrep'+mosrepindex+'/interpolated_logrkm1s_'+str(index),'w')
 writelogrk(out[1],f)
 
 plt.figure()

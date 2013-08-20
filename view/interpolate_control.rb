@@ -16,7 +16,7 @@ class InterpolateControl
       	if checkIndexEmpty()
           @msg.text = "empty index!"
         else
-          file_name = $radius_file_path2 + @index.text
+          file_name = $radius_file_path + @index.text
           @msg.text = "file exists: "+  File::exists?(file_name).to_s
         end
       }
