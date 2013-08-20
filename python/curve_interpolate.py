@@ -22,6 +22,7 @@ xs = sys.argv[1]
 ys = sys.argv[2]
 step_size = float(sys.argv[3])
 index = sys.argv[4]
+mosrepindex = sys.argv[5]
 xx = xs.strip('[]').split(' ')
 yy = ys.strip('[]').split(' ')
 x = []
@@ -47,7 +48,7 @@ out = interpolate.splev(unew,tck)
 print out
 
 print "index: " + str(index)
-f = open('data2/interpolated_points_'+index,'w')
+f = open('data/mosrep'+mosrepindex+'/interpolated_points_'+index,'w')
 writePts(out[0],out[1] ,f)
 
 

@@ -172,10 +172,11 @@ def interpolateSkeletalCurveGamma(xt,yt,step_size,index)
   ys = '"[' + yt.join(" ") + ']"'
   step_size_s = step_size.to_s
   index = index.to_s
-  system("python python/curve_interpolate.py " + xs + ' ' + ys + ' ' + step_size_s + ' ' + index.to_s)
+  system("python python/curve_interpolate.py " + xs + ' ' + ys + ' ' + step_size_s + ' ' + index.to_s + ' ' + $mosrepindex.to_s)
   # the 'interpolated_points_[index]' file contains interpolated points
+  # the interpolated file is stored by the python program.
 
-  curve_file = File.new($points_file_path+index.to_s, "r")
+  curve_file = File.new($points_file_path + index, "r")
   ixs = curve_file.gets.strip.split(' ').collect{|x| x.to_f}
   iys = curve_file.gets.strip.split(' ').collect{|x| x.to_f}
   return ixs, iys

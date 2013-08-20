@@ -16,10 +16,12 @@ load 'view/srep_info.rb'
 load 'view/file_loader_view.rb'
 load 'lib/io_toolbox.rb'
 
+$mosrepindex = 2
+
 # change the path will effect all these things 
-$points_file_path = "data/interpolated_points_"
-$radius_file_path = "data/interpolated_rs_"
-$logrk_file_path = 'data/interpolated_logrkm1s_'
+$points_file_path = "data/mosrep"+$mosrepindex.to_s+"/interpolated_points_"
+$radius_file_path = "data/mosrep"+$mosrepindex.to_s+"/interpolated_rs_"
+$logrk_file_path = "data/mosrep"+$mosrepindex.to_s+"/interpolated_logrkm1s_"
 $logrk_file_path2 = "data2/interpolated_logrkm1s_"
 $logrk_file_path3 = "data3/interpolated_logrkm1s_"
 $radius_file_path2 = "data2/interpolated_rs_"
@@ -232,7 +234,7 @@ class Field
   def checkSrepIntersection
    (0..$sreps.length-1).each do |j|
     (0..$sreps.length-1).each do |i|
-      if i != j
+       if i != j
         $sreps[j].checkIntersection($sreps[i])
        end
     end
@@ -255,7 +257,7 @@ end
 Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
   def render_field
     clear do 
-      background rgb(192, 192, 192, 0.7)
+      background rgb(192, 192, 192, 0.7)   # light gray
    #       html_doc = Nokogiri::HTML("<html><body><h1>Loaded with XML</h1></body></html>")
    #  para html_doc
    #  para " \n\n\n\n"
@@ -323,7 +325,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
              logrkm1 = file3.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
 
            $a_big_number.times do
-   puts test 
+  # puts test 
            puts "file: " +  file1.to_s
 
              # interpolate one side
@@ -736,7 +738,7 @@ def initialConfig
 
   # read srep data from xml
   
-  doc  = readSrepData(1)
+  doc  = readSrepData($mosrepindex)
   points0 = returnAtomsListFromXML(doc,0)
   l0 = returnSpokeLengthListFromXML(doc,0)
   u0 = returnSpokeDirListFromXML(doc,0)

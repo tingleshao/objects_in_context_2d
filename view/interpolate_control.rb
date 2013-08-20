@@ -38,7 +38,7 @@ class InterpolateControl
           step_size = 0.01
           # rt and kt are the r's and k's on the base points 
           # calculate kappa at base positions using the curvature formula
-          f = File.new($points_file_path2+ index, 'r')   
+          f = File.new($points_file_path+ $mosrepindex.to_s, 'r')   
           xs = f.gets.strip.split(' ')
           ys = f.gets.strip.split(' ')
           xt = []
