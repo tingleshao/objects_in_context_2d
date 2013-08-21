@@ -16,16 +16,16 @@ load 'view/srep_info.rb'
 load 'view/file_loader_view.rb'
 load 'lib/io_toolbox.rb'
 
-$mosrepindex = 1
+$mosrepindex = 2
 
 # change the path will effect all these things 
 $points_file_path = "data/mosrep"+$mosrepindex.to_s+"/interpolated_points_"
 $radius_file_path = "data/mosrep"+$mosrepindex.to_s+"/interpolated_rs_"
 $logrk_file_path = "data/mosrep"+$mosrepindex.to_s+"/interpolated_logrkm1s_"
-$logrk_file_path2 = "data2/interpolated_logrkm1s_"
-$logrk_file_path3 = "data3/interpolated_logrkm1s_"
-$radius_file_path2 = "data2/interpolated_rs_"
-$points_file_path2 = "data2/interpolated_points_"
+#$logrk_file_path2 = "data2/interpolated_logrkm1s_"
+#$logrk_file_path3 = "data3/interpolated_logrkm1s_"
+#$radius_file_path2 = "data2/interpolated_rs_"
+#$points_file_path2 = "data2/interpolated_points_"
 $dilate_ratio = 1.05
 $a_big_number = 100
 $end_disk_spoke_number = 20
@@ -323,10 +323,10 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
            	       rt = file2.gets.split(' ').collect{|r| r.to_f}
              file3 = File.open($logrk_file_path + srep_index.to_s, 'r')
              logrkm1 = file3.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
-
+             puts "logrkm1 length: " + logrkm1.length.to_s
            $a_big_number.times do
   # puts test 
-           puts "file: " +  file1.to_s
+        #   puts "file: " +  file1.to_s
 
              # interpolate one side
              indices = srep.base_index
@@ -375,9 +375,14 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
           
 
 # these k's are calculated using the stored value of log(1-rk)
+	       puts "curr logrkm1: " + logrkm1[indices[base_index]].to_s
+               puts "additional logrkm1: " + logrkm1[indices[base_index+1]].to_s
                k1t = ( 1 + ( -1 * Math.exp(logrkm1[indices[base_index]]   ) ) ) / rt[indices[base_index]] 
-               k2t = ( 1 + ( -1 * Math.exp(logrkm1[indices[base_index+1]] ) ) ) / rt[indices[base_index+1]] 
-            
+               if logrkm1[indices[base_index+1]] 
+                  k2t = ( 1 + ( -1 * Math.exp(logrkm1[indices[base_index+1]] ) ) ) / rt[indices[base_index+1]] 
+               else
+                  k2t = ( 1 + ( -1 * Math.exp(logrkm1[-1] ) ) ) / rt[indices[-1]] 
+               end
                u1t = srep.atoms[base_index].spoke_direction[0]
                u2t = srep.atoms[base_index+1].spoke_direction[0]
                ui = interpolateSpokeAtPos(u1t, norm_v1t, k1t, d1t, u2t, norm_v2t, k2t, d2t)
