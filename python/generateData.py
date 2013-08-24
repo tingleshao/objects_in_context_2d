@@ -25,3 +25,4 @@ print "hello"
 
 num_of_data = int(sys.argv[1])
 gaussian_variance = float(sys.argv[2])
+# hi
