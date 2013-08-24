@@ -17,4 +17,11 @@ print "hello"
 
 # note that the variance for two major modes of variations are hard coded into the code
 # this may be changed later
+# things that are also hard coded: 
+# - the main configuration, 3 s(m)reps, number of pts: 5, 5, 4 respectively 
+# - radius currently does not vary. 
+# - right now only output plain text, may change into xml later 
 
+
+num_of_data = int(sys.argv[1])
+gaussian_variance = float(sys.argv[2])
