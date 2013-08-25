@@ -25,4 +25,7 @@ print "hello"
 
 num_of_data = int(sys.argv[1])
 gaussian_variance = float(sys.argv[2])
-# hi
+
+srep1_pts = [[90,100],[150,75],[210,50],[270,60],[330,80]]
+srep2_pts = [[200,190],[250,190],[300,200],[350,180],[400,160]]
+srep3_pts = [[-10,140],[40,170],[75,185],[110,195]]
