@@ -25,11 +25,32 @@ print "hello"
 
 num_of_data = int(sys.argv[1])
 gaussian_variance = float(sys.argv[2])
+major_var_1 = float(sys.argv[3])
+major_var_2 = float(sys.argv[4])
+
 # gaussian seed
 s = np.random.normal(0,gaussian_variance,28)
 srep1_pts = [[90+s[0],100+s[1]],[150+s[2],75+s[3]],[210+s[4],50+s[5]],[270+s[6],60+s[7]],[330+s[8],80+s[9]]]
 srep2_pts = [[200+s[10],190+s[11]],[250+s[12],190+s[13]],[300+s[14],200+s[15]],[350+s[16],180+s[17]],[400+s[18],160+s[19]]]
-srep3_pts = [[-10+s[20],140+s[21]],[40+s[22],170+s[23]],[75+s[24],185+s[25]],[110+s[26],195+s[27]]
+srep3_pts = [[-10+s[20],140+s[21]],[40+s[22],170+s[23]],[75+s[24],185+s[25]],[110+s[26],195+s[27]]]
+
+print srep1_pts
+print srep2_pts
+print srep3_pts
+
+# add two major modes of variations 
+# first: stretching srep1
+s1 = np.random.normal(1,major_var_1,1)
+# having this number, we can multiply the original length by its size
+# TODO
+
+
+# second: srep2 leftside up / down
+s2 = np.random.normal(0,major_var_2,1)
+# having this number, we can multiply the original level of up / down by its size 
+# TODO
+
+# convert them into xml...
 
 
 
