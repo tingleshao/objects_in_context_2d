@@ -74,6 +74,8 @@ class SRep
               atom.color = other_srep.color
               other_atom.linking_index = @index
               other_atom.color = @color
+              atom.linking_atom_index = j
+              other_atom.linking_atom_index = i
            end
          end
       end

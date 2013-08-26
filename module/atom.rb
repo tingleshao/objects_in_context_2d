@@ -9,7 +9,7 @@ class Atom
 # this is the Atom class. It represents a discrete atom in the s-rep
 
 # instance variables 
-  attr_accessor :spoke_length, :expand_spoke_length, :spoke_direction, :type, :x, :y, :color, :linking_index
+  attr_accessor :spoke_length, :expand_spoke_length, :spoke_direction, :type, :x, :y, :color, :linking_index, :linking_atom_index
 	
   # initializer
   def initialize(spoke_length, spoke_direction, type, x, y, cc)

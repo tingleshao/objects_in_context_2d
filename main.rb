@@ -514,7 +514,12 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
          link_save.close
          # save mapping information
          mapping_save = File.open($saved_mapping_data_path, 'w')
-         #TODO
+         mapping_info = []
+         @sreps.each do |srep|
+              mapping_info << srep.atoms
+         end
+         mapping_save.write(mapping_info.to_s)
+         mapping_save.close 
       }
 
       button("save as") {
