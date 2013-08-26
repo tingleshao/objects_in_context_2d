@@ -26,6 +26,9 @@ $logrk_file_path = "data/mosrep"+$mosrepindex.to_s+"/interpolated_logrkm1s_"
 #$logrk_file_path3 = "data3/interpolated_logrkm1s_"
 #$radius_file_path2 = "data2/interpolated_rs_"
 #$points_file_path2 = "data2/interpolated_points_"
+$saved_linking_data_path = "data/saved_data/linking_structure_" + $mosrepindex.to_s
+$saved_mapping_data_path = "data/saved_data/mapping_information_" + $mosrepindex.to_s 
+
 $dilate_ratio = 1.05
 $a_big_number = 100
 $end_disk_spoke_number = 20
@@ -500,7 +503,18 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
       }
 
       button("save") {
-         
+         # save all the linking infomation with assocaited mosrep index as file name postfix
+	 # things to save:
+         #      linking structure index 
+         #      mapping: medial curve pts color, where it links to 
+         # save as txt
+         # save linking 
+         link_save = File.open($saved_linking_data_path,'w')
+         link_save.write($linkingPts.to_s)
+         link_save.close
+         # save mapping information
+         mapping_save = File.open($saved_mapping_data_path, 'w')
+         #TODO
       }
 
       button("save as") {
@@ -523,7 +537,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 		file = File.open($logrk_file_path3 + srep_index.to_s, 'r')
 		$logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
 		$indices = srep.base_index
-      	        puts "read all data needed >_<"   
+      	        puts "read all data needed >"   
         end
         # initially it is zero 
         base_index = $current_base_index
