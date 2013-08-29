@@ -42,13 +42,32 @@ print srep3_pts
 # first: stretching srep1
 s1 = np.random.normal(1,major_var_1,1)
 # having this number, we can multiply the original length by its size
-# TODO
+# steps:
+#      1. minus center
+#      2. times ratio
+#      3. add by center
+# 
+# step1
+s1_mean = (90 + 150 + 210 + 270 + 330) / 5
+srep1_centered_pts = []
+for pt in srep1_pts:
+	srep1_centrered_pts.append([pt[0]-s1_mean, pt[1]])
 
+# step2
+for pt in srep1_centered_pts:
+	pt[0] = pt[0] * s1
+
+# step3
+for pt in srep1_centered_pts:
+	pt[0] = pt[0] + s1_mean
 
 # second: srep2 leftside up / down
 s2 = np.random.normal(0,major_var_2,1)
 # having this number, we can multiply the original level of up / down by its size 
-# TODO
+# steps:
+# 	1. ... 
+#	2. 
+# 	3.
 
 # convert them into xml...
 

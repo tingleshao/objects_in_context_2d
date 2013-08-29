@@ -16,7 +16,7 @@ load 'view/srep_info.rb'
 load 'view/file_loader_view.rb'
 load 'lib/io_toolbox.rb'
 
-$mosrepindex = 7
+$mosrepindex = 8
 
 # change the path will effect all these things 
 $points_file_path = "data/mosrep"+$mosrepindex.to_s+"/interpolated_points_"
@@ -501,27 +501,35 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 	    $sreps[0].extend_interpolated_spokes_end = []
           refresh @points, $sreps, @shifts           
       }
-
-      button("save") {
+#
+ #     button("save") {
          # save all the linking infomation with assocaited mosrep index as file name postfix
 	 # things to save:
          #      linking structure index 
          #      mapping: medial curve pts color, where it links to 
          # save as txt
          # save linking 
-         link_save = File.open($saved_linking_data_path,'w')
-         link_save.write($linkingPts.to_s)
-         link_save.close
+  #       link_save = File.open($saved_linking_data_path,'w')
+   #      link_save.write($linkingPts.to_s)
+    #     link_save.close
          # save mapping information
-         mapping_save = File.open($saved_mapping_data_path, 'w')
-         mapping_info = []
-         @sreps.each do |srep|
-              mapping_info << srep.atoms
-         end
-         mapping_save.write(mapping_info.to_s)
-         mapping_save.close 
-      }
+     #    mapping_save = File.open($saved_mapping_data_path, 'w')
+      #   mapping_info = $sreps[0].get_linking_info # TODO: fix this get_linking_info method
+       #  mapping_save.write(mapping_info.to_s)
+        # mapping_save.close 
+      #}
 
+  #    button("save2") {
+	 # according to the notes, this save2 button will save the follows:
+         # 1. array for all the interpolated spokes for the reference obj, parameterized by a 
+         #     number from 0 to 1 ( currently it has 100 spokes? )
+         # 2. index for the neighbor ( 0 if not intersected ) <- how about self-linking?
+         # 3. array for linking length   
+         # 4. a link position array, indicates which spoke on that object this spoke links to 
+         # actually  I realized that all the information are already stored in atom for srep0
+         # so I am done
+  #    }
+  
       button("save as") {
          # currently save as config_1
          saveSrepDataAsXML('srep_data/config_1.xml',$sreps,3)

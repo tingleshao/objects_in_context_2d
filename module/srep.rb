@@ -7,6 +7,7 @@
 # spoke directions:
 #   0: upper spokes
 #   1: lower spokes
+#load 'main.rb'
 class SRep 
   attr_accessor :interpolate_finished, :index, :atoms, :skeletal_curve, :interpolated_spokes_begin, 
      :interpolated_spokes_end, :extend_interpolated_spokes_end, :show_curve, :show_interpolated_spokes, 
@@ -52,6 +53,27 @@ class SRep
     @atoms.each do |at|
        puts at
     end
+  end
+
+  def get_linking_info
+    file_name = $points_file_path + @index.to_s
+    if File::exists?(file_name)
+      gamma_file = File.open(file_name, "r")
+    else
+      alert('file does not exist, interpolate it now')
+      xt = @atoms.collect{|atom| atom.x}
+      yt = @atoms.collect{|atom| atom.y}
+      step_size = 0.01
+      interpolateSkeletalCurveGamma(xt,yt,step_size,srep.index)
+      gamma_file = File.open(file_name, "r")
+    end 
+    xs = gamma_file.gets.split(" ").collect{|x| x.to_f}
+    ys = gamma_file.gets.split(" ").collect{|y| y.to_f}
+   
+    return @interpolated_spokes_begin.to_s + "\n=======\n" +
+           @interpolated_spoke_end.to_s + "\n=======\n" +
+           @extend_interpolated_spokes_end.to_s + "\n=======\n" +  # this may not contain index information .. need to add it 
+           @linking_atom_index.to_s
   end
 
   def getLength
