@@ -36,13 +36,13 @@ def returnSpokeLengthListFromXML(doc,srep_index)
      disks = doc.xpath("//radius:disk", 'radius' => 'srep'+srep_index.to_s())
      disks.each_with_index do |disk,i|
        spoke_len = parse_disk_content_from_xml(disk.content())
-       rad_lst = []
-       if i == 0 or i == number_of_atoms-1
-          rad_lst << spoke_len
-       end
-       rad_lst << spoke_len
-       rad_lst << spoke_len
-       spoke_len_lst << rad_lst
+#       rad_lst = []
+#       if i == 0 or i == number_of_atoms-1
+#        rad_lst << spoke_len
+#       end
+#       rad_lst << spoke_len
+#       rad_lst << spoke_len
+       spoke_len_lst << [spoke_len]
      end
      
      return spoke_len_lst
@@ -55,27 +55,27 @@ def returnSpokeDirListFromXML(doc,srep_index)
      spoke_dir_lst = []
      sps = doc.xpath("//atom:spoke", 'atom' => 'srep'+srep_index.to_s())
      # first atom has three spokes
-     atom_0_sp0 = retrieve_spoke_dir_from_raw_xml_content(sps[0].content())
-     puts "atom_0_sp0: " + atom_0_sp0.to_s
-     atom_0_sp1 = retrieve_spoke_dir_from_raw_xml_content(sps[1].content())
-     puts "atom_0_sp1: " + atom_0_sp1.to_s
-     atom_0_sp2 = retrieve_spoke_dir_from_raw_xml_content(sps[2].content())
-     puts "atom_0_sp2: " + atom_0_sp2.to_s
-     spoke_dir_lst << [atom_0_sp0, atom_0_sp1, atom_0_sp2]
-     ind = 3
-     (number_of_atoms - 2).times do |i|
-        atom_i_sp0 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
-        ind += 1
-        atom_i_sp1 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
-        ind += 1
-        spoke_dir_lst << [atom_i_sp0, atom_i_sp1]
+ #    atom_0_sp0 = retrieve_spoke_dir_from_raw_xml_content(sps[0].content())
+  #   puts "atom_0_sp0: " + atom_0_sp0.to_s
+ #    atom_0_sp1 = retrieve_spoke_dir_from_raw_xml_content(sps[1].content())
+ #    puts "atom_0_sp1: " + atom_0_sp1.to_s
+ #    atom_0_sp2 = retrieve_spoke_dir_from_raw_xml_content(sps[2].content())
+ #    puts "atom_0_sp2: " + atom_0_sp2.to_s
+  #   spoke_dir_lst << [atom_0_sp0, atom_0_sp1, atom_0_sp2]
+  #   ind = 3
+     number_of_atoms.times do |i|
+        atom_i_sp0 = retrieve_spoke_dir_from_raw_xml_content(sps[0].content())
+ #       ind += 1
+ #       atom_i_sp1 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
+  #     ind += 1
+        spoke_dir_lst << [atom_i_sp0]
      end
-     atom_m1_sp0 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
-     ind+=1
-     atom_m1_sp1 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
-     ind+=1
-     atom_m1_sp2 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
-     spoke_dir_lst << [atom_m1_sp0, atom_m1_sp1, atom_m1_sp2]
+   #  atom_m1_sp0 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
+   #  ind+=1
+   #  atom_m1_sp1 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
+   #  ind+=1
+   #  atom_m1_sp2 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
+   #  spoke_dir_lst << [atom_m1_sp0, atom_m1_sp1, atom_m1_sp2]
      return spoke_dir_lst
 end
 

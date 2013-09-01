@@ -84,13 +84,13 @@ class Field
     spoke_end_x_up1 = cx + spoke_length[0] * u_p1[0]
     spoke_end_y_up1 = cy - spoke_length[0] * u_p1[1]
     @app.line(cx, cy, spoke_end_x_up1, spoke_end_y_up1)
-    spoke_end_x_up2 = cx + spoke_length[1] * u_m1[0]
-    spoke_end_y_up2 = cy - spoke_length[1] * u_m1[1]
+    spoke_end_x_up2 = cx + spoke_length[0] * u_m1[0]
+    spoke_end_y_up2 = cy - spoke_length[0] * u_m1[1]
     @app.line(cx, cy, spoke_end_x_up2, spoke_end_y_up2)
     if type == 'end'
     u_0 = spoke_direction[2]
-    spoke_end_x_u0 = cx + spoke_length[2] * u_0[0]
-    spoke_end_y_u0 = cy - spoke_length[2] * u_0[1]
+    spoke_end_x_u0 = cx + spoke_length[0] * u_0[0]
+    spoke_end_y_u0 = cy - spoke_length[0] * u_0[1]
     @app.line(cx, cy, spoke_end_x_u0, spoke_end_y_u0)
     end
   end
@@ -800,6 +800,7 @@ def initialConfig
   
   points1 = returnAtomsListFromXML(doc,1)
   l1 = returnSpokeLengthListFromXML(doc,1)
+#  alert l1
   u1 = returnSpokeDirListFromXML(doc,1)
   #points1 = [[200,190],[250,190],[300,200],[350,180],[400,160]]
   #l1 = [[35,35,35],[40,40],[45,45],[40,40],[35,35,35]]
