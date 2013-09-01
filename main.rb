@@ -16,7 +16,7 @@ load 'view/srep_info.rb'
 load 'view/file_loader_view.rb'
 load 'lib/io_toolbox.rb'
 
-$mosrepindex = 7
+$mosrepindex = 3
 
 # change the path will effect all these things 
 $points_file_path = "data/mosrep"+$mosrepindex.to_s+"/interpolated_points_"
@@ -317,24 +317,26 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
    # 
 
          $sreps.each_with_index do |srep, srep_index| 
-                  file1 = File.open($points_file_path + srep_index.to_s, 'r')
-         #  puts "file: " +  file1.to_s
-          test = "here!!!!!!!!!!!!!!!"
-                xt = file1.gets.split(' ').collect{|x| x.to_f}
-	           yt = file1.gets.split(' ').collect{|y| y.to_f}
+             file1 = File.open($points_file_path + srep_index.to_s, 'r')
+             test = "here!!"
+             xt = file1.gets.split(' ').collect{|x| x.to_f}
+	     yt = file1.gets.split(' ').collect{|y| y.to_f}
              file2 = File.open($radius_file_path + srep_index.to_s, 'r')
-           	       rt = file2.gets.split(' ').collect{|r| r.to_f}
+             rt = file2.gets.split(' ').collect{|r| r.to_f} #=> get the r files 
+      #       if srep_index == 2
+       #        alert(rt.to_s)
+        #     end
              file3 = File.open($logrk_file_path + srep_index.to_s, 'r')
              logrkm1 = file3.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
              puts "logrkm1 length: " + logrkm1.length.to_s
-           $a_big_number.times do
-  # puts test 
-        #   puts "file: " +  file1.to_s
+             $a_big_number.times do # default: 100
+            # puts test 
+            # puts "file: " +  file1.to_s
 
              # interpolate one side
-             indices = srep.base_index
-             base_index = $current_base_index
-             distance_to_next_base = ( indices[base_index+1] - indices[base_index] ) - $step_go_so_far 
+               indices = srep.base_index
+               base_index = $current_base_index
+               distance_to_next_base = ( indices[base_index+1] - indices[base_index] ) - $step_go_so_far 
              if distance_to_next_base == 0 # <= reached another base point
                $step_go_so_far  = 0
                $current_base_index = $current_base_index +1    
@@ -342,8 +344,8 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
                spoke_index = $current_base_index
              end
           
-             curr_index = indices[base_index] + $step_go_so_far  + 1 
-            # this is wrong... .
+             curr_index = indices[base_index] + $step_go_so_far + 1 
+             # this is wrong... . <= why?
              d1t = 0.01 * $step_go_so_far 
              d2t = distance_to_next_base * 0.01 
 
@@ -388,7 +390,17 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
                end
                u1t = srep.atoms[base_index].spoke_direction[0]
                u2t = srep.atoms[base_index+1].spoke_direction[0]
-               ui = interpolateSpokeAtPos(u1t, norm_v1t, k1t, d1t, u2t, norm_v2t, k2t, d2t)
+           #    if (srep_index == 2)
+           #         ui = interpolateSpokeAtPos2(u1t,norm_v1t,k1t,d1t)
+           #    else
+                   ui = interpolateSpokeAtPos(u1t, norm_v1t, k1t, d1t, u2t, norm_v2t, k2t, d2t)
+           #    end
+          #     if srep_index == 2
+        #            alert ui
+	#       end
+               # ui should be normalized
+         #      ui_size = Math.sqrt(ui[0] ** 2 + ui[1] ** 2)
+         #      ui = [ui[0]/ui_size, ui[1]/ui_size]
       #        puts "ui: " + ui.to_s
                srep.interpolated_spokes_begin << [xt[curr_index],yt[curr_index],-1]    
       #        puts "rt: " + rt[curr_index-1].to_s
@@ -396,7 +408,11 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
                # interpolate another side
                u1t = $sreps[srep_index].atoms[base_index].spoke_direction[1]
                u2t = $sreps[srep_index].atoms[base_index+1].spoke_direction[1]
-               ui = interpolateSpokeAtPos(u1t, norm_v1t, k1t, d1t, u2t, norm_v2t, k2t, d2t)
+              # if (srep_index == 2)
+              #     ui = interpolateSpokeAtPos2(u1t,norm_v1t,k1t,d1t)
+             #  else 
+                   ui = interpolateSpokeAtPos(u1t, norm_v1t, k1t, d1t, u2t, norm_v2t, k2t, d2t)
+            #   end
        #       puts "ui: " + ui.to_s
                spoke_index = indices[base_index]+$step_go_so_far+1
                spoke_begin_x = xt[spoke_index]
