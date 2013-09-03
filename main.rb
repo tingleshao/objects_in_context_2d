@@ -16,7 +16,7 @@ load 'view/srep_info.rb'
 load 'view/file_loader_view.rb'
 load 'lib/io_toolbox.rb'
 
-$mosrepindex = 3
+$mosrepindex = 5
 
 # change the path will effect all these things 
 $points_file_path = "data/mosrep"+$mosrepindex.to_s+"/interpolated_points_"
