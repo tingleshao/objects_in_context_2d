@@ -46,7 +46,7 @@ def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep
         ui[index2] = foo / Math.sqrt(x**2+y**2)
       end
     end 
-   
+   '''
     # add noise to usi
     curr_spoke_dir_noise = spoke_dir_noise[i]
     new_x = 1.0
@@ -58,7 +58,7 @@ def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep
     len = Math.sqrt(new_x**2 + new_y **2)
     usi[0][0] = new_x / len
     usi[0][1] = new_y / len
-
+'''
     # make sure the spoke length vector is in type Float
     li = spoke_length[i]
      
@@ -80,7 +80,7 @@ def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep
   end
 
   # add noise for atom base position
-  alert(atom_position_noise)
+ # alert(atom_position_noise)
   atom_position_noise.each_with_index do |one_atom_noise, i| 
   #   alert(one_atom_noise)
      srep.atoms[i].x = srep.atoms[i].x + one_atom_noise[0]

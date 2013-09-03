@@ -16,7 +16,7 @@ load 'view/srep_info.rb'
 load 'view/file_loader_view.rb'
 load 'lib/io_toolbox.rb'
 
-$mosrepindex = 5
+$mosrepindex = 3
 
 $noise_file_name = 'noise_data_1.txt'
 
@@ -828,7 +828,7 @@ def initialConfig
   #l2 = [[35,35,35],[35,35],[40,40],[35,35],[40,40],[40,40,40]]
   #u2 = [[[6,1],[6,-0.5],[-9,1]],[[-1,4],[3,-0.5]],[[-1,4],[5,-0.5]],[[1,9],[5,1]],[[1,9],[5,3]],[[1,2],[3,5],[6,1]]]
   srep2_noise_data = getNoiseForOneSrep(noise_data,2)
-  srep2 = generate2DDiscreteSrep(points2,l2,u2,0.01,2,noise_data)
+  srep2 = generate2DDiscreteSrep(points2,l2,u2,0.01,2,srep2_noise_data)
   srep2.color = Color.purple
   srep2.orientation = [0,1]
   $sreps << srep2
