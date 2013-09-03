@@ -68,7 +68,10 @@ for r in rs:
 print s2
 
 # the noise for spoke direction
-s3 = np.random.normal(0,math.sqrt(gaussian_variance_spoke_dirs),14)
+s3_raw = np.random.normal(0,math.sqrt(gaussian_variance_spoke_dirs),14)
+s3 = []
+for s3_e in s3_raw:
+ 	s3.append(s3_e)
 print s3
 
 

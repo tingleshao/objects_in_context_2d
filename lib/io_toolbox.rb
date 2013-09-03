@@ -201,6 +201,21 @@ end
 # New!!
 def readNoiseFromNoiseFile(noise_file_name)
 # this function reads the mosrep noise data file and returns a large array of all the noise information
-   
+   input_f = File.open('python/'+noise_file_name)
+   raw_data = input_f.readlines
+   # line 0 - 2: atoms noise 
+   # line 3: radius noise
+   # line 4: spoke dir noise in degrees
+   noise_data = [[[],[],[]],[],[]]
+   raw_data.each_with_index do | line, i |
+       if i == 3
+          noise_data[1] = line.strip[1..-2].split(',').map{|e| e.to_f}
+       elsif i == 4
+          noise_data[2] = line.strip[1..-2].split(',').map{|e| e.to_f}
+       else 
+          noise_data[0][i] = line.strip[1..-2].split(',').map{|e| e.to_f}
+       end
+   end  
+   return noise_data
 end
 
