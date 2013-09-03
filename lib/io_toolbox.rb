@@ -198,5 +198,9 @@ def saveSrepDataAsXML(file_name,sreps,number_of_sreps)
 	f.close
 end
 
-
+# New!!
+def readNoiseFromNoiseFile(noise_file_name)
+# this function reads the mosrep noise data file and returns a large array of all the noise information
+   
+end
 

@@ -796,9 +796,9 @@ def initialConfig
  # u0 = [[[-1,3],[-0.1,-4],[-9,1]],[[-1,4],[1.1,-3]],[[-1,4],[0.2,-6]],[[1,9],[0.05,-8]],[[1,2],[1,-5],[6,1]]]
 
 # TODO: add code here to read the noise file and add that information into srep data
-#       readNoiseFromNoiseFile() is in io_toolbox.
-#       getNoiseForOneSrep() is in srep_toolbox.
-#       generate2DDiscreteSrep() is modified to add noise.
+#       readNoiseFromNoiseFile() is in io_toolbox. 
+#       getNoiseForOneSrep() is in srep_toolbox. <- OK
+#       generate2DDiscreteSrep() is modified to add noise. <- OK
 
   noise_data = readNoiseFromNoiseFile(noise_file_name)
   srep0_noise_data = getNoiseForOneSrep(noise_data,0)
@@ -828,7 +828,7 @@ def initialConfig
   srep2_noise_data = getNoiseForOneSrep(noise_data,2)
   srep2 = generate2DDiscreteSrep(points2,l2,u2,0.01,2,noise_data)
   srep2.color = Color.purple
-  srep2.orientation = [1,0]
+  srep2.orientation = [0,1]
   $sreps << srep2
 
   refresh @points, $sreps, @shifts

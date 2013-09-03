@@ -12,6 +12,7 @@ load 'lib/color.rb'
 load 'view/srep_info.rb'
 load 'lib/math_toolbox.rb'
 
+
 $points_file_path2 = "data2/interpolated_points_"
 $radius_file_path2 = "data2/interpolated_rs_"
 $logrk_file_path2 = 'data2/interpolated_logrkm1s_'
@@ -20,6 +21,12 @@ $pi = Math::PI
 def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep_index, noise)
   # This function returns an srep which has parameters specified in the arguments lists
   srep = SRep.new()
+
+  # add noise 
+  atom_position_noise = noise_data[0]
+  spoke_length_noise = noise_data[1]
+  spoke_dir_noise = noise_data[2]
+
   srep.index = srep_index	
   atoms.each_with_index do |atom, i|
     if i == 0 or i == atoms.length - 1
@@ -39,18 +46,45 @@ def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep
         ui[index2] = foo / Math.sqrt(x**2+y**2)
       end
     end 
+   
+    # add noise to usi
+    curr_spoke_dir_noise = spoke_dir_noise[i]
+    new_x = 1.0
+    curr_degree = Math.atan(usi[0][1] / usi[0][0])
+    degree_with_noise = curr_degree + curr_spoke_dir_noise
+    new_tan = Math.tan(degree_with_noise)
+    new_y = new_x * new_tan
+    # normalize again
+    len = Math.sqrt(new_x**2 + new_y **2)
+    usi[0][0] = new_x / len
+    usi[0][1] = new_y / len
+
     # make sure the spoke length vector is in type Float
     li = spoke_length[i]
+     
+    # add noise to li
+    li.each_with_index do |l, index|
+      li[index] = li[index] + spoke_length_noise[i]
+    end
+
     li.each_with_index do |l, index|
       li[index] = Float(l)
     end
-    # make sure the positions x-y is in type Float
+
+         # make sure the positions x-y is in type Float
     atom.each_with_index do |foo, index|
 	atom[index] = Float(foo)
     end
     atom_obj = Atom.new(li, usi, type, atom[0], atom[1], Color.red)
     srep.atoms.push(atom_obj)
   end
+
+  # add noise for atom base position
+  atom_position_noise.each_with_index do |one_atom_noise, i| 
+     srep.atoms[i].x = srep.atoms[i].x + one_atom_noise[0]
+     srep.atoms[i].y = srep.atoms[i].y + one_atom_noise[1]
+  end 
+
   srep.color = Color.default
 
   # compute the interpolated curve 
@@ -594,9 +628,32 @@ def computeOrthogonalizedSpokes(srep)
 
   return implied_boundary_dirs 
    
-   
 end
 
+# new 
+def getNoiseForOneSrep(noise_data, srep_index)
+   # this function returns noise data for one srep, given the index of that srep and the noise data for a mos-rep (all sreps)
+   # assume the noise data is already an array
+   # assume the number of atoms for that mosrep is fixed as: 5,5,4 <- this may be dangerous! 
+   one_srep_noise_data = []
+   mosrep_atom_position_noise_data = noise_data[0]
+   mosrep_spoke_length_noise_data = noise_data[1]
+   mosrep_spoke_dir_noise_data = noise_data[2]
+   if srep_index == 0 
+      one_srep_noise_data << mos_rep_atom_position_noise_data[0]
+      one_srep_noise_data << mosrep_spoke_length_noise_data[0,5]
+      one_srep_noise_data << mosrep_spoke_dir_noise_data[0,5]
+   elsif srep_index == 1
+      one_srep_noise_data << mos_rep_atom_position_noise_data[1]
+      one_srep_noise_data << mosrep_spoke_length_noise_data[5,5]
+      one_srep_noise_data << mosrep_spoke_dir_noise_data[5,5]
+   elsif srep_index == 2
+      one_srep_noise_data << mos_rep_atom_position_noise_data[2]
+      one_srep_noise_data << mosrep_spoke_length_noise_data[10,4]
+      one_srep_noise_data << mosrep_spoke_dir_noise_data[10,4]
+   end   
+   return one_srep_noise_data
+end
 
 
 
