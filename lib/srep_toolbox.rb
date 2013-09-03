@@ -17,7 +17,7 @@ $radius_file_path2 = "data2/interpolated_rs_"
 $logrk_file_path2 = 'data2/interpolated_logrkm1s_'
 $pi = Math::PI
 
-def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep_index)
+def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep_index, noise)
   # This function returns an srep which has parameters specified in the arguments lists
   srep = SRep.new()
   srep.index = srep_index	

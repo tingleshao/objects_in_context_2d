@@ -161,5 +161,17 @@ class SRep
     return intersection_points
   end
 
+  # NEW!!
+  def addNoise(noise_data) 
+  # this function uses the noise_data array, add it into srep  
+     atom_position_noise = noise_data[0]
+     spoke_length_noise = noise_data[1]
+     spoke_dir_noise = noise_data[2]
+     # add noise for atom base position
+     atom_position_noise.each_with_index do |one_atom_noise, i| 
+        @atoms[i].x = @atoms[i].x + one_atom_noise[0]
+        @atoms[i].y = @atoms[i].y + one_atom_noise[1]
+     end 
+  end
 
 end
