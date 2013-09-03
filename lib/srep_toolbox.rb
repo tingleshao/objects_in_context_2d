@@ -22,7 +22,7 @@ def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep
   srep = SRep.new()
   srep.index = srep_index	
   atoms.each_with_index do |atom, i|
-    if spoke_length[i].length == 3
+    if i == 0 or i == atoms.length - 1
 	type = 'end'
     else
 	type = 'inner'

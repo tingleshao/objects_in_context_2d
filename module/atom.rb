@@ -32,10 +32,6 @@ class Atom
   def dilate(ratio)
     if @linking_index == -1
       @expand_spoke_length[0] = @expand_spoke_length[0] * ratio
-      @expand_spoke_length[1] = @expand_spoke_length[1] * ratio
-      if @type == 'end'
-        @expand_spoke_length[2] = @expand_spoke_length[2] * ratio
-      end
     end
   end
 

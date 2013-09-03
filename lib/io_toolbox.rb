@@ -64,7 +64,7 @@ def returnSpokeDirListFromXML(doc,srep_index)
   #   spoke_dir_lst << [atom_0_sp0, atom_0_sp1, atom_0_sp2]
   #   ind = 3
      number_of_atoms.times do |i|
-        atom_i_sp0 = retrieve_spoke_dir_from_raw_xml_content(sps[0].content())
+        atom_i_sp0 = retrieve_spoke_dir_from_raw_xml_content(sps[i].content())
  #       ind += 1
  #       atom_i_sp1 = retrieve_spoke_dir_from_raw_xml_content(sps[ind].content())
   #     ind += 1
