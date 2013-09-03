@@ -46,19 +46,25 @@ def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep
         ui[index2] = foo / Math.sqrt(x**2+y**2)
       end
     end 
-   '''
+   
     # add noise to usi
     curr_spoke_dir_noise = spoke_dir_noise[i]
-    new_x = 1.0
-    curr_degree = Math.atan(usi[0][1] / usi[0][0])
-    degree_with_noise = curr_degree + curr_spoke_dir_noise
+    new_x = 1.0 
+    curr_degree = Math.atan(usi[0][1] / usi[0][0]) 
+    degree_with_noise = curr_degree + curr_spoke_dir_noise * 3.14 / 180
     new_tan = Math.tan(degree_with_noise)
     new_y = new_x * new_tan
     # normalize again
     len = Math.sqrt(new_x**2 + new_y **2)
-    usi[0][0] = new_x / len
-    usi[0][1] = new_y / len
-'''
+  #  if srep_index == 2
+  #     alert(usi)
+  #  end
+    usi[0][0] = (new_x / len).abs * usi[0][0] / usi[0][0].abs
+    usi[0][1] = (new_y / len).abs *  usi[0][1] / usi[0][1].abs
+
+    # now need to make sure it has the correct sign
+    
+  
     # make sure the spoke length vector is in type Float
     li = spoke_length[i]
      
