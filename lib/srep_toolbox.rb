@@ -18,7 +18,7 @@ $radius_file_path2 = "data2/interpolated_rs_"
 $logrk_file_path2 = 'data2/interpolated_logrkm1s_'
 $pi = Math::PI
 
-def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep_index, noise)
+def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep_index, noise_data)
   # This function returns an srep which has parameters specified in the arguments lists
   srep = SRep.new()
 
@@ -80,7 +80,9 @@ def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep
   end
 
   # add noise for atom base position
+  alert(atom_position_noise)
   atom_position_noise.each_with_index do |one_atom_noise, i| 
+  #   alert(one_atom_noise)
      srep.atoms[i].x = srep.atoms[i].x + one_atom_noise[0]
      srep.atoms[i].y = srep.atoms[i].y + one_atom_noise[1]
   end 
@@ -640,15 +642,15 @@ def getNoiseForOneSrep(noise_data, srep_index)
    mosrep_spoke_length_noise_data = noise_data[1]
    mosrep_spoke_dir_noise_data = noise_data[2]
    if srep_index == 0 
-      one_srep_noise_data << mos_rep_atom_position_noise_data[0]
+      one_srep_noise_data << mosrep_atom_position_noise_data[0]
       one_srep_noise_data << mosrep_spoke_length_noise_data[0,5]
       one_srep_noise_data << mosrep_spoke_dir_noise_data[0,5]
    elsif srep_index == 1
-      one_srep_noise_data << mos_rep_atom_position_noise_data[1]
+      one_srep_noise_data << mosrep_atom_position_noise_data[1]
       one_srep_noise_data << mosrep_spoke_length_noise_data[5,5]
       one_srep_noise_data << mosrep_spoke_dir_noise_data[5,5]
    elsif srep_index == 2
-      one_srep_noise_data << mos_rep_atom_position_noise_data[2]
+      one_srep_noise_data << mosrep_atom_position_noise_data[2]
       one_srep_noise_data << mosrep_spoke_length_noise_data[10,4]
       one_srep_noise_data << mosrep_spoke_dir_noise_data[10,4]
    end   

@@ -213,7 +213,8 @@ def readNoiseFromNoiseFile(noise_file_name)
        elsif i == 4
           noise_data[2] = line.strip[1..-2].split(',').map{|e| e.to_f}
        else 
-          noise_data[0][i] = line.strip[1..-2].split(',').map{|e| e.to_f}
+          noise_data[0][i] = line.strip[1..-3].split('],').map{|e| e.strip()[1..-1].split(',').map{|ee| ee.to_f}}
+
        end
    end  
    return noise_data

@@ -804,7 +804,7 @@ def initialConfig
 
   noise_data = readNoiseFromNoiseFile($noise_file_name)
   srep0_noise_data = getNoiseForOneSrep(noise_data,0)
-  srep0 = generate2DDiscreteSrep(points0,l0,u0,0.01,0,srep_0_noise_data)
+  srep0 = generate2DDiscreteSrep(points0,l0,u0,0.01,0,srep0_noise_data)
   srep0.orientation = [0,1]
   $sreps = [srep0]
   
