@@ -57,10 +57,6 @@ srep3_pts = [[-10+s[20],140+s[21]],[40+s[22],170+s[23]],[75+s[24],185+s[25]],[11
 srep0_noise = [[s[0],s[1]],[s[2],s[3]],[s[4],s[5]],[s[6],s[7]],[s[8],s[9]]]
 srep1_noise = [[s[10],s[11]],[s[12],s[13]],[s[14],s[15]],[s[16],s[17]],[s[18],s[19]]]
 srep2_noise = [[s[20],s[21]],[s[22],s[23]],[s[24],s[25]],[s[26],s[27]]]
-# print out them to check
-print srep0_noise
-print srep1_noise
-print srep2_noise
 
 # the noise for disk radius
 s2 = []
@@ -68,15 +64,12 @@ for r in rs:
 	noise = np.random.normal(0,math.sqrt(37.0 * 0.1), 1)
 	s2.append(noise[0])
 
-# print out them to check
-print s2
 
 # the noise for spoke direction
 s3_raw = np.random.normal(0,math.sqrt(gaussian_variance_spoke_dirs),14)
 s3 = []
 for s3_e in s3_raw:
  	s3.append(s3_e)
-print s3
 
 
 # making the variance of the translation 30 pixels
@@ -91,9 +84,7 @@ ss1 = np.random.normal(0,4.0*math.sqrt(translation_variance),1)[0]
 ssx = ss1 * -2.0 / math.sqrt(3)
 ssy = ss1 * 1.0 / math.sqrt(3)
 # add this thing into srep0_noise
-for pt in srep0_noise:
-	pt = [pt[0]+ssx,pt[1]+ssy]
-
+srep0_noise = [[s[0]+ssx,s[1]+ssy],[s[2]+ssx,s[3]+ssy],[s[4]+ssx,s[5]+ssy],[s[6]+ssx,s[7]+ssy],[s[8]+ssx,s[9]+ssy]]
 # generate a number for swing variance 
 ss2 = np.random.normal(0,math.sqrt(swing_variance),1)[0]
 # purely change in y will be OK
@@ -102,6 +93,15 @@ ssy2 = ss2 / 2.0
 # add this thing into srep1_noise
 srep1_noise[0][1] = srep1_noise[0][1] + ssy1
 srep1_noise[1][1] = srep1_noise[1][1] + ssy2
+# print out them to check
+print srep0_noise
+print srep1_noise
+print srep2_noise
+# print out them to check
+print s2
+print s3
+
+
 
 # save the three noises array into txt
 output_f = open(output_file_name,'w')

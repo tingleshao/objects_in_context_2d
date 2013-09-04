@@ -201,7 +201,8 @@ end
 # New!!
 def readNoiseFromNoiseFile(noise_file_name)
 # this function reads the mosrep noise data file and returns a large array of all the noise information
-   input_f = File.open('python/'+noise_file_name)
+   #alert(noise_file_name)
+   input_f = File.open('/home/chong/rablo2d_repo/rablo2d_freeze/python/'+noise_file_name)
    raw_data = input_f.readlines
    # line 0 - 2: atoms noise 
    # line 3: radius noise
