@@ -31,7 +31,11 @@ major_var_2 = float(sys.argv[4])
 '''
 
 output_file_index = int(sys.argv[1])
-output_file_name = 'noise_data_' + str(output_file_index) + '.txt'
+
+python_dir = '/home/chong/rablo2d_repo/rablo2d_freeze/python/'
+
+
+output_file_name = python_dir + 'noise_data_' + str(output_file_index) + '.txt'
  
 # example: config_3, first 2 pts, (90, 65), (150,80) => distance = 61.8 => variance ~= 6
 gaussian_variance_base_pts = 5.0
