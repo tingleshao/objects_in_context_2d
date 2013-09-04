@@ -16,9 +16,12 @@ load 'view/srep_info.rb'
 load 'view/file_loader_view.rb'
 load 'lib/io_toolbox.rb'
 
-$mosrepindex = 3
+#$mosrepindex = 3
 
-$noise_file_name = 'noise_data_1.txt'
+$mosrepindex = ARGV[1].to_s
+$noise_index = ARGV[2].to_s
+
+$noise_file_name = 'noise_data_' + $noise_index + '.txt'
 
 # change the path will effect all these things 
 $points_file_path = "data/mosrep"+$mosrepindex.to_s+"/interpolated_points_"

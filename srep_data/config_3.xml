@@ -7,23 +7,23 @@
       <points>
         <point>
           <x>90</x>
-          <y>65</y>
+          <y>35</y>
         </point>
         <point>
           <x>150</x>
-          <y>80</y>
+          <y>50</y>
         </point>
         <point>
           <x>210</x>
-          <y>90</y>
+          <y>60</y>
         </point>
         <point>
           <x>270</x>
-          <y>75</y>
+          <y>45</y>
         </point>
         <point>
           <x>330</x>
-          <y>55</y>
+          <y>25</y>
         </point>
       </points>
       <radius>
@@ -108,7 +108,7 @@
           <r>40</r>
         </disk>
         <disk>
-          <r>45</r>
+          <r>50</r>
         </disk>
         <disk>
           <r>40</r>
@@ -154,19 +154,19 @@
       <number_of_base_points>4</number_of_base_points>
       <points>
         <point>
-          <x>10</x>
+          <x>-20</x>
           <y>140</y>
         </point>
         <point>
-          <x>40</x>
+          <x>10</x>
           <y>170</y>
         </point>
         <point>
-          <x>75</x>
+          <x>45</x>
           <y>185</y>
         </point>
         <point>
-          <x>110</x>
+          <x>80</x>
           <y>195</y>
         </point>
       </points>

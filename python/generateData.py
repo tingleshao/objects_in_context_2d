@@ -34,7 +34,7 @@ output_file_index = int(sys.argv[1])
 output_file_name = 'noise_data_' + str(output_file_index) + '.txt'
  
 # example: config_3, first 2 pts, (90, 65), (150,80) => distance = 61.8 => variance ~= 6
-gaussian_variance_base_pts = 6.0
+gaussian_variance_base_pts = 5.0
 # hard code the r's for the r variances
 rs = [35,40,35,40,35,35,40,45,40,35,35,40,35,40]
 # spoke dir variance, this number is in degrees
@@ -61,7 +61,7 @@ print srep2_noise
 # the noise for disk radius
 s2 = []
 for r in rs:
-	noise = np.random.normal(0,math.sqrt(r * 0.1), 1)
+	noise = np.random.normal(0,math.sqrt(37.0 * 0.1), 1)
 	s2.append(noise[0])
 
 # print out them to check
@@ -74,6 +74,30 @@ for s3_e in s3_raw:
  	s3.append(s3_e)
 print s3
 
+
+# making the variance of the translation 30 pixels
+translation_variance = 30
+
+# making the variance of the swing 20 pixels 
+swing_variance = 20
+
+# generate a number for translation variance
+ss1 = np.random.normal(0,4.0*math.sqrt(translation_variance),1)[0]
+# decompose the value into a vector of direction (-1,2)
+ssx = ss1 * -2.0 / math.sqrt(3)
+ssy = ss1 * 1.0 / math.sqrt(3)
+# add this thing into srep0_noise
+for pt in srep0_noise:
+	pt = [pt[0]+ssx,pt[1]+ssy]
+
+# generate a number for swing variance 
+ss2 = np.random.normal(0,math.sqrt(swing_variance),1)[0]
+# purely change in y will be OK
+ssy1 = ss2
+ssy2 = ss2 / 2.0
+# add this thing into srep1_noise
+srep1_noise[0][1] = srep1_noise[0][1] + ssy1
+srep1_noise[1][1] = srep1_noise[1][1] + ssy2
 
 # save the three noises array into txt
 output_f = open(output_file_name,'w')
@@ -88,6 +112,7 @@ output_f.write('\n')
 output_f.write(str(s3))
 
 output_f.close()
+
 
 # the following part is not used now because the change in design
 # add two major modes of variations 
