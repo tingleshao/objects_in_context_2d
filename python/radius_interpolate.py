@@ -36,6 +36,9 @@ out = interpolate.splev(unew,tck)
 print out
 
 print "index: " + index
+
+# TODO: there should be interpolated_rs data for each base+noise data file pair
+#       consider a two-level interpolate data dir structure.
 f = open('data/mosrep'+mosrepindex+'/interpolated_rs_'+index,'w')
 writeRadius(out[0], out[1],f)
 

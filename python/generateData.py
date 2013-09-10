@@ -45,7 +45,7 @@ rs = [35,40,35,40,35,35,40,45,40,35,35,40,35,40]
 gaussian_variance_spoke_dirs = 7.0 
 
 # gaussian seed
-s = np.random.normal(0,math.sqrt(gaussian_variance_base_pts),28)
+s = np.random.normal(0,0.3*math.sqrt(gaussian_variance_base_pts),28)
 
 # the following hard coded data may be used in the future
 '''
@@ -61,12 +61,12 @@ srep2_noise = [[s[20],s[21]],[s[22],s[23]],[s[24],s[25]],[s[26],s[27]]]
 # the noise for disk radius
 s2 = []
 for r in rs:
-	noise = np.random.normal(0,math.sqrt(37.0 * 0.1), 1)
+	noise = np.random.normal(0,0.3*math.sqrt(37.0 * 0.1), 1)
 	s2.append(noise[0])
 
 
 # the noise for spoke direction
-s3_raw = np.random.normal(0,math.sqrt(gaussian_variance_spoke_dirs),14)
+s3_raw = np.random.normal(0,0.3*math.sqrt(gaussian_variance_spoke_dirs),14)
 s3 = []
 for s3_e in s3_raw:
  	s3.append(s3_e)
@@ -79,14 +79,14 @@ translation_variance = 30
 swing_variance = 20
 
 # generate a number for translation variance
-ss1 = np.random.normal(0,4.0*math.sqrt(translation_variance),1)[0]
+ss1 = np.random.normal(0,6.0*math.sqrt(translation_variance),1)[0]
 # decompose the value into a vector of direction (-1,2)
-ssx = ss1 * -2.0 / math.sqrt(3)
+ssx = ss1 * 2.0 / math.sqrt(3)
 ssy = ss1 * 1.0 / math.sqrt(3)
 # add this thing into srep0_noise
 srep0_noise = [[s[0]+ssx,s[1]+ssy],[s[2]+ssx,s[3]+ssy],[s[4]+ssx,s[5]+ssy],[s[6]+ssx,s[7]+ssy],[s[8]+ssx,s[9]+ssy]]
 # generate a number for swing variance 
-ss2 = np.random.normal(0,math.sqrt(swing_variance),1)[0]
+ss2 = np.random.normal(0,6.0*math.sqrt(swing_variance),1)[0]
 # purely change in y will be OK
 ssy1 = ss2
 ssy2 = ss2 / 2.0
