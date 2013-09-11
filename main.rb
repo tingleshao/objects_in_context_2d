@@ -24,15 +24,15 @@ $noise_index = ARGV[2].to_s
 $noise_file_name = 'noise_data_' + $noise_index + '.txt'
 
 # change the path will effect all these things 
-$points_file_path = "data/mosrep"+$mosrepindex.to_s+"/interpolated_points_"
-$radius_file_path = "data/mosrep"+$mosrepindex.to_s+"/interpolated_rs_"
-$logrk_file_path = "data/mosrep"+$mosrepindex.to_s+"/interpolated_logrkm1s_"
+$points_file_path = "data/mosrep"+$mosrepindex.to_s+ "/noise_" + $noise_index + "/interpolated_points_"
+$radius_file_path = "data/mosrep"+$mosrepindex.to_s + "/noise_" + $noise_index +"/interpolated_rs_"
+$logrk_file_path = "data/mosrep"+$mosrepindex.to_s + "/noise_" + $noise_index + "/interpolated_logrkm1s_"
 #$logrk_file_path2 = "data2/interpolated_logrkm1s_"
 #$logrk_file_path3 = "data3/interpolated_logrkm1s_"
 #$radius_file_path2 = "data2/interpolated_rs_"
 #$points_file_path2 = "data2/interpolated_points_"
-$saved_linking_data_path = "data/saved_data/linking_structure_" + $mosrepindex.to_s
-$saved_mapping_data_path = "data/saved_data/mapping_information_" + $mosrepindex.to_s 
+$saved_linking_data_path = "data/saved_data/mosrep_" + $mosrepindex.to_s + '/noise_' + $noise_index + '/linking'
+$saved_mapping_data_path = "data/saved_data/mosrep_" + $mosrepindex.to_s + '/noise_' + $noise_index + '/mapping'
 
 $dilate_ratio = 1.05
 $a_big_number = 100

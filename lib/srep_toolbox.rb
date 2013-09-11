@@ -214,7 +214,7 @@ def interpolateSkeletalCurveGamma(xt,yt,step_size,index)
   ys = '"[' + yt.join(" ") + ']"'
   step_size_s = step_size.to_s
   index = index.to_s
-  system("python python/curve_interpolate.py " + xs + ' ' + ys + ' ' + step_size_s + ' ' + index.to_s + ' ' + $mosrepindex.to_s)
+  system("python python/curve_interpolate.py " + xs + ' ' + ys + ' ' + step_size_s + ' ' + index.to_s + ' ' + $mosrepindex.to_s + ' ' + $noise_index.to_s)
   # the 'interpolated_points_[index]' file contains interpolated points
   # the interpolated file is stored by the python program.
 
@@ -240,7 +240,7 @@ def interpolateRadius(xt,yt,rt,step_size,index)
   xs = '"[' + xyt.join(" ") + ']"'
   rs = '"[' + rt.join(" ") + ']"'
   step_size_s = step_size.to_s
-  system("python python/radius_interpolate.py " + xs + ' ' + rs + ' ' + step_size_s + ' ' + index +' ' + $mosrepindex.to_s )
+  system("python python/radius_interpolate.py " + xs + ' ' + rs + ' ' + step_size_s + ' ' + index +' ' + $mosrepindex.to_s + ' ' + $noise_index.to_s )
   # the 'interpolated_radius_[index]' file contains interpolated points
   r_file = File.new($radius_file_path+index, "r")
   irs = r_file.gets
@@ -314,7 +314,7 @@ def interpolateKappa3(rt,kt,step_size,index,base_index)
   step_size_str = step_size.to_s
   puts "in ruby: " + base_index.to_s.strip()
   puts "in ruby: " + log1minusRKstr.to_s
-  system("python python/logrk_interpolate_linear.py " + log1minusRKstr + ' ' + step_size_str + ' ' + index.to_s + ' "' + base_index.to_s.strip()+'"' + ' ' + $mosrepindex.to_s)
+  system("python python/logrk_interpolate_linear.py " + log1minusRKstr + ' ' + step_size_str + ' ' + index.to_s + ' "' + base_index.to_s.strip()+'"' + ' ' + $mosrepindex.to_s + ' ' + $noise_index.to_s)
   # the 'interpolated_logrkm1s' file contains interpolated log(1-rk)
   log1minusRK_file = File.new($logrk_file_path3 + index.to_s , "r")
   ilog1minusRKs = log1minusRK_file.gets
