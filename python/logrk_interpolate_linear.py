@@ -20,6 +20,7 @@ rkk = rks.strip('[]').split(' ')
 rk = []
 base_index_s = sys.argv[4]
 mosrepindex = sys.argv[5]
+noise_index = sys.argv[6]
 # convert string into array
 for ele in rkk:
 	rk.append(float(ele))
@@ -35,7 +36,7 @@ print t
 f = interp1d(x,rk)
 
 print "index: " + index
-file_handle = open('data/mosrep' + mosrepindex + '/interpolated_logrkm1s_'+str(index),'w')
+file_handle = open('data/mosrep' + mosrepindex + '/'+'noise_'+noise_index+'/interpolated_logrkm1s_'+str(index),'w')
 writelogrk(f(t),file_handle)
 print "f(t): " + str(f(t))
 plt.figure()

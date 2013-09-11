@@ -17,6 +17,7 @@ rs = sys.argv[2]
 step_size = float(sys.argv[3])
 index = sys.argv[4]
 mosrepindex = sys.argv[5]
+noise_index = sys.argv[6]
 xx = xs.strip('[]').split(' ')
 rr = rs.strip('[]').split(' ')
 x = []
@@ -39,7 +40,9 @@ print "index: " + index
 
 # TODO: there should be interpolated_rs data for each base+noise data file pair
 #       consider a two-level interpolate data dir structure.
-f = open('data/mosrep'+mosrepindex+'/interpolated_rs_'+index,'w')
+#f = open('data/mosrep'+mosrepindex+'/interpolated_rs_'+index,'w')
+
+f = open('data/mosrep'+mosrepindex+'/'+'noise_'+noise_index+'/interpolated_rs_'+index,'w')
 writeRadius(out[0], out[1],f)
 
 plt.figure()

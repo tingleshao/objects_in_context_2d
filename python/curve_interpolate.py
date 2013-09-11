@@ -23,6 +23,7 @@ ys = sys.argv[2]
 step_size = float(sys.argv[3])
 index = sys.argv[4]
 mosrepindex = sys.argv[5]
+noise_index = sys.argv[6]
 xx = xs.strip('[]').split(' ')
 yy = ys.strip('[]').split(' ')
 x = []
