@@ -1,5 +1,5 @@
 # file: main.rb
-# This is the main program of the 2D objects in context protypeing system.
+# The main program of the 2D objects in context protypeing system.
 # It contains a class Field that abstracts the canvas of the main window that displays the s-reps. 
 # It contains a class InterpolationControl that abstracts a subwindow for user 
 #  to select which s-rep's spokes to interpolate. 
@@ -31,12 +31,16 @@ $logrk_file_path = "data/mosrep"+$mosrepindex.to_s + "/noise_" + $noise_index + 
 #$logrk_file_path3 = "data3/interpolated_logrkm1s_"
 #$radius_file_path2 = "data2/interpolated_rs_"
 #$points_file_path2 = "data2/interpolated_points_"
-$saved_linking_data_path = "data/saved_data/mosrep_" + $mosrepindex.to_s + '/noise_' + $noise_index + '/linking'
-$saved_mapping_data_path = "data/saved_data/mosrep_" + $mosrepindex.to_s + '/noise_' + $noise_index + '/mapping'
+$saved_linking_data_path = "data/saved_data/mosrep_" + $mosrepindex.to_s + '/noise_' + $noise_index.to_s + '/linking'
+$saved_mapping_data_path = "data/saved_data/mosrep_" + $mosrepindex.to_s + '/noise_' + $noise_index.to_s + '/mapping'
 
+$saved_data_path = 'data/saved_data/mosrep_' + $mosrepindex.to_s + '/noise_' + $noise_index.to_s + '/'
 $dilate_ratio = 1.05
 $a_big_number = 100
 $end_disk_spoke_number = 20
+
+
+
 
 class Field
 # this is the Field class that draws everything about s-rep on the main UI
@@ -410,6 +414,10 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
                srep.interpolated_spokes_begin << [xt[curr_index],yt[curr_index],-1]    
       #        puts "rt: " + rt[curr_index-1].to_s
                srep.interpolated_spokes_end  <<  [xt[curr_index]+ui[0]*rt[curr_index],yt[curr_index]-ui[1]*rt[curr_index],-1,[],'regular']
+
+
+
+
                # interpolate another side
                u1t = $sreps[srep_index].atoms[base_index].spoke_direction[1]
                u2t = $sreps[srep_index].atoms[base_index+1].spoke_direction[1]
@@ -523,33 +531,49 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
           refresh @points, $sreps, @shifts           
       }
 #
- #     button("save") {
+      button("save") {
          # save all the linking infomation with assocaited mosrep index as file name postfix
 	 # things to save:
          #      linking structure index 
          #      mapping: medial curve pts color, where it links to 
          # save as txt
          # save linking 
-  #       link_save = File.open($saved_linking_data_path,'w')
-   #      link_save.write($linkingPts.to_s)
-    #     link_save.close
+         link_save = File.open($saved_linking_data_path,'w')
+         link_save.write($linkingPts.to_s)
+         link_save.close
          # save mapping information
-     #    mapping_save = File.open($saved_mapping_data_path, 'w')
-      #   mapping_info = $sreps[0].get_linking_info # TODO: fix this get_linking_info method
-       #  mapping_save.write(mapping_info.to_s)
-        # mapping_save.close 
-      #}
+         mapping_save = File.open($saved_mapping_data_path, 'w')
+         mapping_info = $sreps[0].get_linking_info # TODO: fix this get_linking_info method
+         mapping_save.write(mapping_info.to_s)
+         mapping_save.close 
+      }
 
-  #    button("save2") {
+      button("save2") {
 	 # according to the notes, this save2 button will save the follows:
          # 1. array for all the interpolated spokes for the reference obj, parameterized by a 
          #     number from 0 to 1 ( currently it has 100 spokes? )
          # 2. index for the neighbor ( 0 if not intersected ) <- how about self-linking?
          # 3. array for linking length   
          # 4. a link position array, indicates which spoke on that object this spoke links to 
-         # actually  I realized that all the information are already stored in atom for srep0
-         # so I am done
-  #    }
+         # ^^^^^^^^^^^^^^^
+	 # data1: base pts positions for 3 s-reps, in 3 files
+         # data2: interpolated spokes end for 3 sreps, in 3 files 
+         # data3: extended_spokes for srep0, in one file
+         # from the 3 kinds of data above, we should be able to generate all the data for stats
+         number_of_sreps = $sreps.size
+         number_of_sreps.times do |i|
+            data1_save = File.open($saved_data_path + "base_pts_" + i.to_s)
+            pts_info = $sreps[i].skeletal_curve
+            data1_save.write(pts_info.to_s)
+            data1_save.close
+         end
+         number_of_sreps.times do |i|
+            data2_save = File.open($saved_data_path + "interpolated_spokes_" + i.to_s)
+            interp_info + $sreps[i].interpolated_spkes_begin
+            interp_info = $sreps[i].interpolated_spokes_end
+            data2_save
+         end
+      }
   
       button("save as") {
          # currently save as config_1

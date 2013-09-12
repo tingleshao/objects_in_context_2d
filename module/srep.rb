@@ -11,7 +11,7 @@
 class SRep 
   attr_accessor :interpolate_finished, :index, :atoms, :skeletal_curve, :interpolated_spokes_begin, 
      :interpolated_spokes_end, :extend_interpolated_spokes_end, :show_curve, :show_interpolated_spokes, 
-     :show_extend_disk, :show_extend_spokes, :step_size, :color, :offset, :base_index, :mask_func, :orientation
+     :show_extend_disk, :show_extend_spokes, :step_size, :color, :offset, :base_index, :mask_func, :orientation, :mapping_info, :correspond_info
 	
   def initialize(index, atoms, skeletal_curve, step_size, color, offset)
     @index = index
@@ -29,6 +29,8 @@ class SRep
     @interpolated_spokes_end = []
     @extend_interpolated_spokes_end = []
     @mask_func = []
+    @mapping_info = []
+    @correspond_info = []
     puts "srep fully initialized"
   end
 
@@ -44,6 +46,8 @@ class SRep
     @interpolated_spokes_end = []
     @extend_interpolated_spokes_end = []
     @mask_func = [] 
+    @mapping_info = []
+    @correspond_info = [] 
     puts "null srep initialized"
   end
 
@@ -124,7 +128,7 @@ class SRep
       # if mask_func[ind] == -1) <-- have not intersected to anyone
       #extend spoke
       # calculate direction
-      if isb[2] == -1
+      if isb[2] == -1  #TODO optimize this by doing a pre-calculation
         spoke_begin = @interpolated_spokes_begin[ind]
         spoke_v = [ isb[0] - spoke_begin[0], isb[1] - spoke_begin[1]]
         extend_v = spoke_v.collect{|e| e * ratio }
@@ -133,21 +137,21 @@ class SRep
         @extend_interpolated_spokes_end[ind] = extend_v_end
         # check intersection with others 
         if checkIntersection 
-          
+          # for this srep, check its spoke intersection with itself and other sreps 
           sreps.each_with_index do |srep, srep_ind|   
-            srep.extend_interpolated_spokes_end.each_with_index do |spoke_end, spoke_end_index|
+            srep.extend_interpolated_spokes_end.each_with_index do |spoke_end, spoke_end_index|  
               if ( ( srep.index != @index ) || ( (ind-spoke_end_index).abs > 1 ) && srep.index == @index )
                 check_result = checkSpokeIntersection(@interpolated_spokes_end[ind][0], @interpolated_spokes_end[ind][1], extend_v_end[0], extend_v_end[1], srep.interpolated_spokes_end[spoke_end_index][0], srep.interpolated_spokes_end[spoke_end_index][1], spoke_end[0], spoke_end[1])
                 if check_result[0] 
-		  @extend_interpolated_spokes_end[ind] = isb
+		  @extend_interpolated_spokes_end[ind] = isb # TODO: can I remove this line?
                   @extend_interpolated_spokes_end[ind][2] = srep.index
                   @extend_interpolated_spokes_end[ind][3] = srep.extend_interpolated_spokes_end[spoke_end_index]
                   intersection_points << [check_result[1], check_result[2]]
-                  if spoke_end[2] == -1
+                  if spoke_end[2] == -1 # write the infomation into the corresponding other objects 
                     spoke_end[2] = @index
                     spoke_end[3] = @extend_interpolated_spokes_end[ind]
                   end
-                # prevent some spokes that from escaping the intersections  
+                # prevent some spokes from escaping the intersections  
                 elsif srep.index != @index and checkSpokeEndAndDiskIntersection(@extend_interpolated_spokes_end[ind][0], @extend_interpolated_spokes_end[ind][1], srep)
                   @extend_interpolated_spokes_end[ind] = isb
                   @extend_interpolated_spokes_end[ind][2] = srep.index
@@ -159,6 +163,18 @@ class SRep
       end
     end
     return intersection_points
+  end
+
+  def getMappingInfo()
+    # mapping info is stored in [2] of extend_interpolated_spokes_end
+    
+    return @mapping_info
+  end
+
+  def getCorrespondInfo() 
+    # corresponding info is stored in [3] of extend_interpolated_spokes_end
+    
+    return @correspond_info
   end
 
   # NEW!!
