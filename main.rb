@@ -569,10 +569,19 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
          end
          number_of_sreps.times do |i|
             data2_save = File.open($saved_data_path + "interpolated_spokes_" + i.to_s)
-            interp_info + $sreps[i].interpolated_spkes_begin
-            interp_info = $sreps[i].interpolated_spokes_end
-            data2_save
+            interp_info_begin + $sreps[i].interpolated_spokes_begin
+            data2_save.write(interp_info_begin.to_s)
+            data2_save.write("\n========\n")
+            interp_info_end = $sreps[i].interpolated_spokes_end
+            data2_save.write(interp_info_end.to_s)
+            data2_save.close
          end
+         data3_save = File.open($saved_data_path + 'ref_obj_linking')
+         ref_obj_linking_info = $sreps[0].extend_interpolated_spokes_end
+         data3_save.write(ref_obj_linking_info.to_s)
+         data3_save.close
+         
+         alert('save completed.')
       }
   
       button("save as") {
