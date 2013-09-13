@@ -562,7 +562,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
          # from the 3 kinds of data above, we should be able to generate all the data for stats
          number_of_sreps = $sreps.size
          number_of_sreps.times do |i|
-            data1_save = File.open($saved_data_path + "base_pts_" + i.to_s)
+            data1_save = File.open($saved_data_path + "interpolated_pts_" + i.to_s)
             pts_info = $sreps[i].skeletal_curve
             data1_save.write(pts_info.to_s)
             data1_save.close
