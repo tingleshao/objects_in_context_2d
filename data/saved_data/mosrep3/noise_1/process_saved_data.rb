@@ -44,7 +44,7 @@ ext_spokes_read.close
 
 ext_spokes_lst = ext_spokes_str.strip[2..-3].split("], [")
 ext_spokes_lst.each_with_index do |s, i|
-#     puts i.to_s + ' ' + s
+ #    puts i.to_s + ' ' + s
 end
 
 # process the lst to get the x y position data 
@@ -104,6 +104,58 @@ end
 end
 
 # Do point 2: computing the interpolated extended spoke length. 
+# retrieve the x and y for ext_spokes_end
+ext_spokes_end_x = []
+ext_spokes_end_y = []
+ext_spokes_lst.each_with_index do |s|
+   ext_end_x = s.split(',')[0].to_f
+   ext_end_y = s.split(',')[1].to_f
+   ext_spokes_end_x << ext_end_x
+   ext_spokes_end_y << ext_end_y
+end
+
+ext_spokes_end_x.each_with_index do |x, i|
+ #  puts i.to_s + ' ' + x.to_s + " " + ext_spokes_end_y[i].to_s
+end
+# calculate the length
+ext_interp_spokes_length_0 = []
+interp_spokes_end_0_x.each_with_index do |begin_x, i|
+   end_x = ext_spokes_end_x[i]
+   begin_y = interp_spokes_end_0_y[i]
+   end_y = ext_spokes_end_y[i]
+   spoke_len = Math.sqrt( (end_x - begin_x)**2 + (end_y - begin_y) **2 )
+   ext_interp_spokes_length_0 << spoke_len
+end
+# reorder the length
+ordered_ext_interp_spokes_length = []
+#      1 3  
+#  end1   end2
+#      2 4
+99.times do |i|
+    ordered_ext_interp_spokes_length << ext_interp_spokes_length_0[2*i]
+end
+40.times do |i|
+    ordered_ext_interp_spokes_length << ext_interp_spokes_length_0[238+i]
+end
+99.times do |i|
+    ordered_ext_interp_spokes_length << ext_interp_spokes_length_0[2*i+1]
+end
+40.times do |i|
+    ordered_ext_interp_spokes_length << ext_interp_spokes_length_0[197+i]
+end
+
+# print the result
+ordered_interp_spokes_length_0.each_with_index do |l, i|
+    puts i.to_s + ' ' + l.to_s
+end
+ordered_ext_interp_spokes_length.each_with_index do |l, i|
+    puts i.to_s + " " + l.to_s
+end
+
+
+
+
+
 
 
 
