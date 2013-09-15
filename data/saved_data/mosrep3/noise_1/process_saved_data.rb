@@ -75,13 +75,23 @@ interp_spokes_end_0_x.each_with_index do |x, i|
 end
 
 
-
-
-
-
-
-
+#calculate length
 interp_spokes_length_0 = []
+interp_spokes_begin_0_x.each_with_index do |begin_x, i|
+   end_x = interp_spokes_end_0_x[i]
+   begin_y = interp_spokes_begin_0_y[i]
+   end_y = interp_spokes_end_0_y[i]
+   spoke_len = Math.sqrt( (end_x - begin_x)**2 + (end_y - begin_y) **2 )
+   interp_spokes_length_0 << spoke_len
+end
+
+#reorder the spokes so that it goes clockwise continuously 
+
+
+
+
+
+
 
 
 
