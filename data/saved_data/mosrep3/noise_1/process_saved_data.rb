@@ -25,7 +25,7 @@ interp_spokes_end_0_str = interp_spoke_0_str.split("========\n")[1]
 
 interp_spokes_begin_0_lst = interp_spokes_begin_0_str.strip[2..-3].split('], [')
 interp_spokes_begin_0_lst.each_with_index do |s,i|
-   	puts i.to_s + ' ' + s 
+   #	puts i.to_s + ' ' + s 
 end
 
 interp_spokes_end_0_lst = interp_spokes_end_0_str.strip[2..-3].split("], [")
@@ -58,8 +58,22 @@ interp_spokes_begin_0_lst.each do |s|
 end
 
 interp_spokes_begin_0_x.each_with_index do |x, i|
- #   puts i.to_s + " " + x.to_s + interp_spokes_begin_0_y[i].to_s 
+   # puts i.to_s + " " + x.to_s + " " interp_spokes_begin_0_y[i].to_s 
 end
+
+interp_spokes_end_0_x = []
+interp_spokes_end_0_y = []
+interp_spokes_end_0_lst.each do |s|
+    end_pt_x = s.split(',')[0].to_f
+    end_pt_y = s.split(',')[1].to_f
+    interp_spokes_end_0_x << end_pt_x
+    interp_spokes_end_0_y << end_pt_y
+end
+
+interp_spokes_end_0_x.each_with_index do |x, i|
+ #  puts i.to_s + " " + x.to_s + " " + interp_spokes_end_0_y[i].to_s
+end
+
 
 
 
