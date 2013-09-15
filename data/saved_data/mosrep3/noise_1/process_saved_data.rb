@@ -25,29 +25,60 @@ interp_spokes_end_0_str = interp_spoke_0_str.split("========\n")[1]
 
 interp_spokes_begin_0_lst = interp_spokes_begin_0_str.strip[2..-3].split('], [')
 interp_spokes_begin_0_lst.each_with_index do |s,i|
-#    	puts i.to_s + ' ' + s 
+   	puts i.to_s + ' ' + s 
 end
 
 interp_spokes_end_0_lst = interp_spokes_end_0_str.strip[2..-3].split("], [")
 interp_spokes_end_0_lst.each_with_index do |s, i|
-	puts i.to_s + ' ' + s
+#	puts i.to_s + ' ' + s
 end
 
 # read extended interpolated spokes end data 
-ext_spoke_read = File.open($dir+'ref_obj_linking', 'r')
-ext_spoke_str = ''
-while line = ext_spoke_read.gets
-     ext_spoke_str += line
+ext_spokes_read = File.open($dir+'ref_obj_linking', 'r')
+ext_spokes_str = ''
+while line = ext_spokes_read.gets
+     ext_spokes_str += line
 end
-ext_spoke_read.close
-#puts ext_spoke_str
+ext_spokes_read.close
 
-ext_spoke_lst = ext_spoke_str.strip[2..-3].split("], [")
-ext_spoke_lst.each_with_index do |s, i|
-     puts i.to_s + ' ' + s
+
+ext_spokes_lst = ext_spokes_str.strip[2..-3].split("], [")
+ext_spokes_lst.each_with_index do |s, i|
+#     puts i.to_s + ' ' + s
 end
 
 # process the lst to get the x y position data 
+interp_spokes_begin_0_x = []
+interp_spokes_begin_0_y = []
+interp_spokes_begin_0_lst.each do |s|
+    begin_pt_x = s.split(',')[0].to_f
+    begin_pt_y = s.split(',')[1].to_f
+    interp_spokes_begin_0_x << begin_pt_x
+    interp_spokes_begin_0_y << begin_pt_y
+end
+
+interp_spokes_begin_0_x.each_with_index do |x, i|
+ #   puts i.to_s + " " + x.to_s + interp_spokes_begin_0_y[i].to_s 
+end
+
+
+
+
+
+
+
+interp_spokes_length_0 = []
+
+
+
+
+
+
+
+
+
+
+
 
 
 
