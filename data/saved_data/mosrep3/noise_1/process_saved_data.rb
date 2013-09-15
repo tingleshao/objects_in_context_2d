@@ -18,23 +18,45 @@ while line = interp_spoke_0_read.gets
  	interp_spoke_0_str += line	
 end
 interp_spoke_0_read.close
-#puts interp_spoke_0_str
+
 
 interp_spokes_begin_0_str = interp_spoke_0_str.split("========\n")[0]
 interp_spokes_end_0_str = interp_spoke_0_str.split("========\n")[1]
-#puts interp_spokes_begin_0_str
-
-#puts interp_spokes_end_0_str
 
 interp_spokes_begin_0_lst = interp_spokes_begin_0_str.strip[2..-3].split('], [')
 interp_spokes_begin_0_lst.each_with_index do |s,i|
-    	puts i.to_s + ' ' + s 
+#    	puts i.to_s + ' ' + s 
 end
 
 interp_spokes_end_0_lst = interp_spokes_end_0_str.strip[2..-3].split("], [")
 interp_spokes_end_0_lst.each_with_index do |s, i|
 	puts i.to_s + ' ' + s
 end
+
+# read extended interpolated spokes end data 
+ext_spoke_read = File.open($dir+'ref_obj_linking', 'r')
+ext_spoke_str = ''
+while line = ext_spoke_read.gets
+     ext_spoke_str += line
+end
+ext_spoke_read.close
+#puts ext_spoke_str
+
+ext_spoke_lst = ext_spoke_str.strip[2..-3].split("], [")
+ext_spoke_lst.each_with_index do |s, i|
+     puts i.to_s + ' ' + s
+end
+
+# process the lst to get the x y position data 
+
+
+
+
+
+
+
+
+
 
 #puts "aaa: " +  interp_spokes_begin_0_lst[-1]
 
