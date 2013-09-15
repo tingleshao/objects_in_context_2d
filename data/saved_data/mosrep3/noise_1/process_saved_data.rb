@@ -58,7 +58,7 @@ interp_spokes_begin_0_lst.each do |s|
 end
 
 interp_spokes_begin_0_x.each_with_index do |x, i|
-   # puts i.to_s + " " + x.to_s + " " interp_spokes_begin_0_y[i].to_s 
+ #   puts i.to_s + " " + x.to_s + " "+ interp_spokes_begin_0_y[i].to_s 
 end
 
 interp_spokes_end_0_x = []
@@ -71,7 +71,7 @@ interp_spokes_end_0_lst.each do |s|
 end
 
 interp_spokes_end_0_x.each_with_index do |x, i|
- #  puts i.to_s + " " + x.to_s + " " + interp_spokes_end_0_y[i].to_s
+  # puts i.to_s + " " + x.to_s + " " + interp_spokes_end_0_y[i].to_s
 end
 
 
@@ -86,39 +86,24 @@ interp_spokes_begin_0_x.each_with_index do |begin_x, i|
 end
 
 #reorder the spokes so that it goes clockwise continuously 
+ordered_interp_spokes_length_0 = []
+#      1 3  
+#  end1   end2
+#      2 4
+99.times do |i|
+    ordered_interp_spokes_length_0 << interp_spokes_length_0[2*i]
+end
+40.times do |i|
+    ordered_interp_spokes_length_0 << interp_spokes_length_0[238+i]
+end
+99.times do |i|
+    ordered_interp_spokes_length_0 << interp_spokes_length_0[2*i+1]
+end
+40.times do |i|
+    ordered_interp_spokes_length_0 << interp_spokes_length_0[197+i]
+end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#puts "aaa: " +  interp_spokes_begin_0_lst[-1]
-
-
-
-
-# Do point 2:
+# Do point 2: computing the interpolated extended spoke length. 
 
 
 
