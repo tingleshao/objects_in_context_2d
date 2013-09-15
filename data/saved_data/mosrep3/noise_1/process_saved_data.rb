@@ -26,10 +26,19 @@ interp_spokes_end_0_str = interp_spoke_0_str.split("========\n")[1]
 
 #puts interp_spokes_end_0_str
 
-interp_spokes_begin_0_lst = interp_spokes_begin_0_str.strip[3..-3].split('], [')
-interp_spokes_begin_0_lst.each do |s|
-    puts s 
+interp_spokes_begin_0_lst = interp_spokes_begin_0_str.strip[2..-3].split('], [')
+interp_spokes_begin_0_lst.each_with_index do |s,i|
+    	puts i.to_s + ' ' + s 
 end
+
+interp_spokes_end_0_lst = interp_spokes_end_0_str.strip[2..-3].split("], [")
+interp_spokes_end_0_lst.each_with_index do |s, i|
+	puts i.to_s + ' ' + s
+end
+
+#puts "aaa: " +  interp_spokes_begin_0_lst[-1]
+
+
 
 
 # Do point 2:
