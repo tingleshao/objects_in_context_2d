@@ -339,24 +339,21 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
              logrkm1 = file3.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
              puts "logrkm1 length: " + logrkm1.length.to_s
              $a_big_number.times do # default: 100
-            # puts test 
-            # puts "file: " +  file1.to_s
-
-             # interpolate one side
-               indices = srep.base_index
-               base_index = $current_base_index
-               distance_to_next_base = ( indices[base_index+1] - indices[base_index] ) - $step_go_so_far 
-             if distance_to_next_base == 0 # <= reached another base point
-               $step_go_so_far  = 0
-               $current_base_index = $current_base_index +1    
-               distance_to_next_base = indices[base_index+1] - indices[base_index]
-               spoke_index = $current_base_index
-             end
+            # interpolate one side
+                indices = srep.base_index
+                base_index = $current_base_index
+                distance_to_next_base = ( indices[base_index+1] - indices[base_index] ) - $step_go_so_far 
+                if distance_to_next_base == 0 # <= reached another base point
+                   $step_go_so_far  = 0
+                   $current_base_index = $current_base_index +1    
+                   distance_to_next_base = indices[base_index+1] - indices[base_index]
+                   spoke_index = $current_base_index
+                end
           
-             curr_index = indices[base_index] + $step_go_so_far + 1 
-             # this is wrong... . <= why?
-             d1t = 0.01 * $step_go_so_far 
-             d2t = distance_to_next_base * 0.01 
+                curr_index = indices[base_index] + $step_go_so_far + 1 
+                # this is wrong... . <= why?
+                d1t = 0.01 * $step_go_so_far 
+                d2t = distance_to_next_base * 0.01 
 
              # calculate parameters
              # read all points, rs, logrkm1s from the file
@@ -370,39 +367,39 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
           # logrk: interpolated logrk <= needs to be fixed.
 
 # here it uses the large difference to produce v, which is not good.
-             if curr_index < xt.length-1
-               v1t = [xt[curr_index] - xt[indices[base_index]], yt[curr_index] - yt[indices[base_index]]]
+               if curr_index < xt.length-1
+                  v1t = [xt[curr_index] - xt[indices[base_index]], yt[curr_index] - yt[indices[base_index]]]
             # it checks whether it reaches the next base index
-               if curr_index == indices[base_index+1]
-                 v2t = [xt[indices[base_index+1]+1] - xt[curr_index], yt[indices[base_index+1]+1] - yt[curr_index]]
-               else
-                 v2t = [xt[indices[base_index+1]] - xt[curr_index], yt[indices[base_index+1]] - yt[curr_index]]
-               end
+                  if curr_index == indices[base_index+1]
+                     v2t = [xt[indices[base_index+1]+1] - xt[curr_index], yt[indices[base_index+1]+1] - yt[curr_index]]
+                  else
+                     v2t = [xt[indices[base_index+1]] - xt[curr_index], yt[indices[base_index+1]] - yt[curr_index]]
+                  end
 
     #           puts "v1t: " + v1t.to_s
             # yes it normalizes the size of v vector
-               size_v1t = v1t[0]**2 + v1t[1]**2
-               norm_v1t = v1t.collect{|v| v / size_v1t} 
-               size_v2t = v2t[0]**2 + v2t[1]**2
+                  size_v1t = v1t[0]**2 + v1t[1]**2
+                  norm_v1t = v1t.collect{|v| v / size_v1t} 
+                  size_v2t = v2t[0]**2 + v2t[1]**2
      #          puts "size_v2t: " + size_v2t.to_s
-               norm_v2t = v2t.collect{|v| v / size_v2t} 
+                  norm_v2t = v2t.collect{|v| v / size_v2t} 
           
 
 # these k's are calculated using the stored value of log(1-rk)
-	       puts "curr logrkm1: " + logrkm1[indices[base_index]].to_s
-               puts "additional logrkm1: " + logrkm1[indices[base_index+1]].to_s
-               k1t = ( 1 + ( -1 * Math.exp(logrkm1[indices[base_index]]   ) ) ) / rt[indices[base_index]] 
-               if logrkm1[indices[base_index+1]] 
-                  k2t = ( 1 + ( -1 * Math.exp(logrkm1[indices[base_index+1]] ) ) ) / rt[indices[base_index+1]] 
-               else
-                  k2t = ( 1 + ( -1 * Math.exp(logrkm1[-1] ) ) ) / rt[indices[-1]] 
-               end
-               u1t = srep.atoms[base_index].spoke_direction[0]
-               u2t = srep.atoms[base_index+1].spoke_direction[0]
+	          puts "curr logrkm1: " + logrkm1[indices[base_index]].to_s
+                  puts "additional logrkm1: " + logrkm1[indices[base_index+1]].to_s
+                  k1t = ( 1 + ( -1 * Math.exp(logrkm1[indices[base_index]]   ) ) ) / rt[indices[base_index]] 
+                  if logrkm1[indices[base_index+1]] 
+                     k2t = ( 1 + ( -1 * Math.exp(logrkm1[indices[base_index+1]] ) ) ) / rt[indices[base_index+1]] 
+                  else
+                     k2t = ( 1 + ( -1 * Math.exp(logrkm1[-1] ) ) ) / rt[indices[-1]] 
+                  end
+                  u1t = srep.atoms[base_index].spoke_direction[0]
+                  u2t = srep.atoms[base_index+1].spoke_direction[0]
            #    if (srep_index == 2)
            #         ui = interpolateSpokeAtPos2(u1t,norm_v1t,k1t,d1t)
            #    else
-                   ui = interpolateSpokeAtPos(u1t, norm_v1t, k1t, d1t, u2t, norm_v2t, k2t, d2t)
+                  ui = interpolateSpokeAtPos(u1t, norm_v1t, k1t, d1t, u2t, norm_v2t, k2t, d2t)
            #    end
           #     if srep_index == 2
         #            alert ui
@@ -411,31 +408,31 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
          #      ui_size = Math.sqrt(ui[0] ** 2 + ui[1] ** 2)
          #      ui = [ui[0]/ui_size, ui[1]/ui_size]
       #        puts "ui: " + ui.to_s
-               srep.interpolated_spokes_begin << [xt[curr_index],yt[curr_index],-1]    
+                  srep.interpolated_spokes_begin << [xt[curr_index],yt[curr_index],-1]    
       #        puts "rt: " + rt[curr_index-1].to_s
-               srep.interpolated_spokes_end  <<  [xt[curr_index]+ui[0]*rt[curr_index],yt[curr_index]-ui[1]*rt[curr_index],-1,[],'regular']
+                  srep.interpolated_spokes_end  <<  [xt[curr_index]+ui[0]*rt[curr_index],yt[curr_index]-ui[1]*rt[curr_index],-1,[],'regular']
 
 
 
 
                # interpolate another side
-               u1t = $sreps[srep_index].atoms[base_index].spoke_direction[1]
-               u2t = $sreps[srep_index].atoms[base_index+1].spoke_direction[1]
+                  u1t = $sreps[srep_index].atoms[base_index].spoke_direction[1]
+                  u2t = $sreps[srep_index].atoms[base_index+1].spoke_direction[1]
               # if (srep_index == 2)
               #     ui = interpolateSpokeAtPos2(u1t,norm_v1t,k1t,d1t)
              #  else 
-                   ui = interpolateSpokeAtPos(u1t, norm_v1t, k1t, d1t, u2t, norm_v2t, k2t, d2t)
+                  ui = interpolateSpokeAtPos(u1t, norm_v1t, k1t, d1t, u2t, norm_v2t, k2t, d2t)
             #   end
        #       puts "ui: " + ui.to_s
-               spoke_index = indices[base_index]+$step_go_so_far+1
-               spoke_begin_x = xt[spoke_index]
-               spoke_begin_y = yt[spoke_index ]
-               $sreps[srep_index].interpolated_spokes_begin << [spoke_begin_x,spoke_begin_y,-1,[],'regular']    
+                  spoke_index = indices[base_index]+$step_go_so_far+1
+                  spoke_begin_x = xt[spoke_index]
+                  spoke_begin_y = yt[spoke_index ]
+                  $sreps[srep_index].interpolated_spokes_begin << [spoke_begin_x,spoke_begin_y,-1,[],'regular']    
      #          puts "rt: " + rt[indices[base_index]+$step_go_so_far].to_s
-               spoke_end_x = spoke_begin_x + ui[0]*rt[spoke_index]
-               spoke_end_y = spoke_begin_y - ui[1]*rt[spoke_index]
-               $sreps[srep_index].interpolated_spokes_end  <<  [spoke_end_x,spoke_end_y,-1,[],'regular']
-             else
+                  spoke_end_x = spoke_begin_x + ui[0]*rt[spoke_index]
+                  spoke_end_y = spoke_begin_y - ui[1]*rt[spoke_index]
+                  $sreps[srep_index].interpolated_spokes_end  <<  [spoke_end_x,spoke_end_y,-1,[],'regular']
+              else
 
 
 
