@@ -31,10 +31,10 @@ $logrk_file_path = "data/mosrep"+$mosrepindex.to_s + "/noise_" + $noise_index + 
 #$logrk_file_path3 = "data3/interpolated_logrkm1s_"
 #$radius_file_path2 = "data2/interpolated_rs_"
 #$points_file_path2 = "data2/interpolated_points_"
-$saved_linking_data_path = "data/saved_data/mosrep_" + $mosrepindex.to_s + '/noise_' + $noise_index.to_s + '/linking'
-$saved_mapping_data_path = "data/saved_data/mosrep_" + $mosrepindex.to_s + '/noise_' + $noise_index.to_s + '/mapping'
+$saved_linking_data_path = "data/saved_data/mosrep" + $mosrepindex.to_s + '/noise_' + $noise_index.to_s + '/linking'
+$saved_mapping_data_path = "data/saved_data/mosrep" + $mosrepindex.to_s + '/noise_' + $noise_index.to_s + '/mapping'
 
-$saved_data_path = 'data/saved_data/mosrep_' + $mosrepindex.to_s + '/noise_' + $noise_index.to_s + '/'
+$saved_data_path = 'data/saved_data/mosrep' + $mosrepindex.to_s + '/noise_' + $noise_index.to_s + '/'
 $dilate_ratio = 1.05
 $a_big_number = 100
 $end_disk_spoke_number = 20
@@ -562,21 +562,21 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
          # from the 3 kinds of data above, we should be able to generate all the data for stats
          number_of_sreps = $sreps.size
          number_of_sreps.times do |i|
-            data1_save = File.open($saved_data_path + "interpolated_pts_" + i.to_s)
+            data1_save = File.open($saved_data_path + "interpolated_pts_" + i.to_s, 'w')
             pts_info = $sreps[i].skeletal_curve
             data1_save.write(pts_info.to_s)
             data1_save.close
          end
          number_of_sreps.times do |i|
-            data2_save = File.open($saved_data_path + "interpolated_spokes_" + i.to_s)
-            interp_info_begin + $sreps[i].interpolated_spokes_begin
+            data2_save = File.open($saved_data_path + "interpolated_spokes_" + i.to_s,'w')
+            interp_info_begin = $sreps[i].interpolated_spokes_begin
             data2_save.write(interp_info_begin.to_s)
             data2_save.write("\n========\n")
             interp_info_end = $sreps[i].interpolated_spokes_end
             data2_save.write(interp_info_end.to_s)
             data2_save.close
          end
-         data3_save = File.open($saved_data_path + 'ref_obj_linking')
+         data3_save = File.open($saved_data_path + 'ref_obj_linking','w')
          ref_obj_linking_info = $sreps[0].extend_interpolated_spokes_end
          data3_save.write(ref_obj_linking_info.to_s)
          data3_save.close
