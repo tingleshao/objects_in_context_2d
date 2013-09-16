@@ -7,6 +7,9 @@ $end_disk_spoke_number = 20
 
 $dir = '' 
 
+$a = 1 
+$b = 2
+
 
 # read interpolated spoke begin and spoke end data
 # 1. spoke begin data is for the single srep spoke length data, which should be computed with spoke end data.
@@ -108,13 +111,17 @@ end
 ext_spokes_end_x = []
 ext_spokes_end_y = []
 linking_labels = []
+linked_spoke_indices = []
 ext_spokes_lst.each_with_index do |s|
    ext_end_x = s.split(',')[0].to_f
    ext_end_y = s.split(',')[1].to_f
    label = s.split(',')[2].to_i
+   linked_spoke_index = s.split(',')[3]
+
    ext_spokes_end_x << ext_end_x
    ext_spokes_end_y << ext_end_y
    linking_labels << label
+   linked_spoke_indices << linked_spoke_index
 end
 
 ext_spokes_end_x.each_with_index do |x, i|
@@ -122,6 +129,8 @@ ext_spokes_end_x.each_with_index do |x, i|
 end
 # calculate the length
 ext_interp_spokes_length_0 = []
+
+
 interp_spokes_end_0_x.each_with_index do |begin_x, i|
    end_x = ext_spokes_end_x[i]
    begin_y = interp_spokes_end_0_y[i]
@@ -132,24 +141,29 @@ end
 # reorder the length
 ordered_ext_interp_spokes_length = []
 ordered_linking_labels = []
+ordered_linked_spoke_indices = []
 #      1 3  
 #  end1   end2
 #      2 4
 99.times do |i|
     ordered_ext_interp_spokes_length << ext_interp_spokes_length_0[2*i]
     ordered_linking_labels << linking_labels[2*i]
+    ordered_linked_spoke_indices << linked_spoke_indices[2*i]
 end
 40.times do |i|
     ordered_ext_interp_spokes_length << ext_interp_spokes_length_0[238+i]
     ordered_linking_labels << linking_labels[238+i]
+    ordered_linked_spoke_indices << linked_spoke_indices[238+i]
 end
 99.times do |i|
     ordered_ext_interp_spokes_length << ext_interp_spokes_length_0[2*i+1]
     ordered_linking_labels << linking_labels[2*i+1]
+    ordered_linked_spoke_indices << linked_spoke_indices[2*i+1]
 end
 40.times do |i|
     ordered_ext_interp_spokes_length << ext_interp_spokes_length_0[197+i]
     ordered_linking_labels << linking_labels[197+i]
+    ordered_linked_spoke_indices << linked_spoke_indices[197+i]
 end
 
 # print the result
@@ -157,7 +171,7 @@ ordered_interp_spokes_length_0.each_with_index do |l, i|
  #   puts i.to_s + ' ' + l.to_s
 end
 ordered_ext_interp_spokes_length.each_with_index do |l, i|
-    puts i.to_s + " " + l.to_s + " " + ordered_linking_labels[i].to_s
+#    puts i.to_s + " " + l.to_s + " " + ordered_linking_labels[i].to_s
 end
 
 # output the part 2 of data list 
@@ -170,12 +184,28 @@ ordered_ext_interp_spokes_length.each_with_index do |l, i|
        extended_length_write.puts  '0.0'
     end
 end
-puts 'write complete '
+puts 'write extended spoke length complete.'
 extended_length_write.close
 
-# 
+# given an linked spoke pos index on the other obj, I should be able to convert
+#   it into an number between a to b.
+# then the array would be sorted according to srep 0's spoke index 
+linked_spoke_index_in_other_obj_write = File.open('linked_spoke_index_in_other_obj','r')
+ordered_linked_spoke_indices.each_with_index do |ind, i|
+     if ind == []
+        linked_spoke_index_in_other_obj_write.puts '0.0'
+     else
+        linked_spoke_index_in_other_obj_write.puts convert_index_into_param(ind.to_i).to_s
+     end
+end
 
 
+convert_index_into_param()
+
+def convert_index_into_param(ind)
+    puts 'hi'
+    return ind
+end
 
 
 

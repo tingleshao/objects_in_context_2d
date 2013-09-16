@@ -83,7 +83,13 @@ def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep
     end
     atom_obj = Atom.new(li, usi, type, atom[0], atom[1], Color.red)
     srep.atoms.push(atom_obj)
-  end
+  end 
+  # calculate the theta and d for mean case 
+  first_atom = srep.atom[0]
+  last_atom = srep.atom[-1]
+  d = Math.sqrt( (first_atom.x - last_atom.x)**2 + (first_atom.y - last_atom.y)**2 ) * 1.1
+  theta_1 = first_atom.spoke_direction . ..
+   
 
   # add noise for atom base position
  # alert(atom_position_noise)
