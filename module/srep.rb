@@ -145,16 +145,18 @@ class SRep
                 if check_result[0] 
 		  @extend_interpolated_spokes_end[ind] = isb # TODO: can I remove this line?
                   @extend_interpolated_spokes_end[ind][2] = srep.index
-                  @extend_interpolated_spokes_end[ind][3] = srep.extend_interpolated_spokes_end[spoke_end_index]
+                  @extend_interpolated_spokes_end[ind][3] = spoke_end_index
                   intersection_points << [check_result[1], check_result[2]]
                   if spoke_end[2] == -1 # write the infomation into the corresponding other objects 
                     spoke_end[2] = @index
-                    spoke_end[3] = @extend_interpolated_spokes_end[ind]
+                    spoke_end[3] = ind
                   end
                 # prevent some spokes from escaping the intersections  
-                elsif srep.index != @index and checkSpokeEndAndDiskIntersection(@extend_interpolated_spokes_end[ind][0], @extend_interpolated_spokes_end[ind][1], srep)
+                elsif srep.index != @index and checkSpokeEndAndDiskIntersection(@extend_interpolated_spokes_end[ind][0], @extend_interpolated_spokes_end[ind][1], srep)[0]
                   @extend_interpolated_spokes_end[ind] = isb
                   @extend_interpolated_spokes_end[ind][2] = srep.index
+                  @extend_interpolated_spokes_end[ind][3] = checkSpokeEndAndDiskIntersection(@extend_interpolated_spokes_end[ind][0], @extend_interpolated_spokes_end[ind][1], srep)[1]
+                  # TODO: modify this so that it can distinguish the upper and lower side, may just look at neighbors, or relate this to the spoke orientation
                 end
               end
             end

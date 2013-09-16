@@ -567,16 +567,16 @@ end
 
 def checkSpokeEndAndDiskIntersection(x,y,srep)
   # this function avoids a few spokes that goes too far away
-  srep.atoms.each do |atom|
+  srep.atoms.each_with_index do |atom, i|
     disk_x = atom.x
     disk_y = atom.y
     disk_r = atom.expand_spoke_length[0] 
     disk_to_center = Math.sqrt(( x - disk_x ) ** 2 + ( y - disk_y ) ** 2)
     if disk_r * 0.9 >= disk_to_center
-       return true
+       return [true, i]
     end
   end
-  return false
+  return [false, -1]
 end
 
 def linkLinkingStructurePoints(sreps, app, shift)

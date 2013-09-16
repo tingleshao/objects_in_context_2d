@@ -796,7 +796,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
 
      stack do @status = para :stroke => black end
      @field.paint
-     #para $info
+     para "dilate count: " + $dilateCount.to_s
   
    end  
  end
