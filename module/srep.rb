@@ -155,8 +155,22 @@ class SRep
                 elsif srep.index != @index and checkSpokeEndAndDiskIntersection(@extend_interpolated_spokes_end[ind][0], @extend_interpolated_spokes_end[ind][1], srep)[0]
                   @extend_interpolated_spokes_end[ind] = isb
                   @extend_interpolated_spokes_end[ind][2] = srep.index
-                  @extend_interpolated_spokes_end[ind][3] = checkSpokeEndAndDiskIntersection(@extend_interpolated_spokes_end[ind][0], @extend_interpolated_spokes_end[ind][1], srep)[1]
                   # TODO: modify this so that it can distinguish the upper and lower side, may just look at neighbors, or relate this to the spoke orientation
+                  disk_index = checkSpokeEndAndDiskIntersection(@extend_interpolated_spokes_end[ind][0], @extend_interpolated_spokes_end[ind][1], srep)[1]
+                  # compute the spoke index:
+                  # if srep index is 0, then use lower spokes,
+                  # otherwise use upper ones .
+                  # this solution is for now:
+                  #  since we only need the extend_interpolated_spokes_end information for srep 0
+                  #  we can assume the other two are srep 1 and srep 2
+                  # then there are only one case in converting the base atom index into intended 
+                  #  spoke index
+                  if srep_ind == 1
+                      computed_spoke_index = (disk_index * 99 / 5).to_i
+                  elsif srep_ind == 2
+                      computed_spoke_index = (disk_index * 99 / 4).to_i
+                  end
+                  @extend_interpolated_spokes_end[ind][3] = computed_spoke_index
                 end
               end
             end
