@@ -107,11 +107,14 @@ end
 # retrieve the x and y for ext_spokes_end
 ext_spokes_end_x = []
 ext_spokes_end_y = []
+linking_labels = []
 ext_spokes_lst.each_with_index do |s|
    ext_end_x = s.split(',')[0].to_f
    ext_end_y = s.split(',')[1].to_f
+   label = s.split(',')[2].to_i
    ext_spokes_end_x << ext_end_x
    ext_spokes_end_y << ext_end_y
+   linking_labels << label
 end
 
 ext_spokes_end_x.each_with_index do |x, i|
@@ -128,30 +131,47 @@ interp_spokes_end_0_x.each_with_index do |begin_x, i|
 end
 # reorder the length
 ordered_ext_interp_spokes_length = []
+ordered_linking_labels = []
 #      1 3  
 #  end1   end2
 #      2 4
 99.times do |i|
     ordered_ext_interp_spokes_length << ext_interp_spokes_length_0[2*i]
+    ordered_linking_labels << linking_labels[2*i]
 end
 40.times do |i|
     ordered_ext_interp_spokes_length << ext_interp_spokes_length_0[238+i]
+    ordered_linking_labels << linking_labels[238+i]
 end
 99.times do |i|
     ordered_ext_interp_spokes_length << ext_interp_spokes_length_0[2*i+1]
+    ordered_linking_labels << linking_labels[2*i+1]
 end
 40.times do |i|
     ordered_ext_interp_spokes_length << ext_interp_spokes_length_0[197+i]
+    ordered_linking_labels << linking_labels[197+i]
 end
 
 # print the result
 ordered_interp_spokes_length_0.each_with_index do |l, i|
-    puts i.to_s + ' ' + l.to_s
+ #   puts i.to_s + ' ' + l.to_s
 end
 ordered_ext_interp_spokes_length.each_with_index do |l, i|
-    puts i.to_s + " " + l.to_s
+    puts i.to_s + " " + l.to_s + " " + ordered_linking_labels[i].to_s
 end
 
+# output the part 2 of data list 
+
+extended_length_write = File.open('extended_length.txt','w')
+ordered_ext_interp_spokes_length.each_with_index do |l, i|
+    if ordered_linking_labels[i].to_i != -1
+       extended_length_write.puts  l.to_s
+    else 
+       extended_length_write.puts  '0.0'
+    end
+end
+puts 'write complete '
+extended_length_write.close
 
 
 
