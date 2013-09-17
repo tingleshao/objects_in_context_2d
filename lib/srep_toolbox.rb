@@ -85,12 +85,23 @@ def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep
     srep.atoms.push(atom_obj)
   end 
   # calculate the theta and d for mean case 
-  first_atom = srep.atom[0]
-  last_atom = srep.atom[-1]
-  d = Math.sqrt( (first_atom.x - last_atom.x)**2 + (first_atom.y - last_atom.y)**2 ) * 1.1
-  theta_1 = first_atom.spoke_direction . ..
-   
+  if true
+	  first_atom = srep.atom[0]
+	  last_atom = srep.atom[-1]
+	  d = Math.sqrt( (first_atom.x - last_atom.x)**2 + (first_atom.y - last_atom.y)**2 ) * 1.1
+	  first_atom_u0 = first_atom.spoke_direction[0]
+	  first_atom_u1 = first_atom.spoke_direction[1]
+	  theta1 = acos(first_atom_u0[0].abs) + acos(first_atom_u1[0].abs)
+	  
 
+	  last_atom_u0 = last_atom.spoke_direction[0]
+	  last_atom_u1 = last_atom.spoke_direction[1]
+	  theta2 = acos(last_atom_u0[0].abs) + acos(last_atom_u1[0].abs)
+	  scale_write = File.open("/home/chong/rablo2d_repo/rablo2d_freeze/data/saved_data/mosrep3/scale_write_srep_"+srep_index.to_s,'w')
+	  scale_write.puts "d: " + d.to_s + "\ntheta1: " + theta1.to_s + "\ntheta2: " + theta2.to_s  
+	  scale_wirte.close 
+	  alert("srep" + srep_index.to_s + ": \n" + "d: " + d.to_s + "\ntheta1: " + theta1.to_s + "\ntheta2: " + theta2.to_s)
+  end
   # add noise for atom base position
  # alert(atom_position_noise)
   atom_position_noise.each_with_index do |one_atom_noise, i| 
