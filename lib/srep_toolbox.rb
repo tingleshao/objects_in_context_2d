@@ -85,27 +85,6 @@ def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep
     srep.atoms.push(atom_obj)
   end 
   # calculate the theta and d for mean case 
-  if true
-	  first_atom = srep.atom[0]
-	  last_atom = srep.atom[-1]
-	  d = Math.sqrt( (first_atom.x - last_atom.x)**2 + (first_atom.y - last_atom.y)**2 ) * 1.1
-	  first_atom_u0 = first_atom.spoke_direction[0]
-	  first_atom_u1 = first_atom.spoke_direction[1]
-	  theta1 = (acos(first_atom_u0[0].abs) + acos(first_atom_u1[0].abs))
-          d1 = theta1 * first_atom.spoke_length
-	  
-
-	  last_atom_u0 = last_atom.spoke_direction[0]
-	  last_atom_u1 = last_atom.spoke_direction[1]
-	  theta2 = acos(last_atom_u0[0].abs) + acos(last_atom_u1[0].abs)
-          d2 = theta2 * last_atom.spoke_length
-
-	  scale_write = File.open("/home/chong/rablo2d_repo/rablo2d_freeze/data/saved_data/mosrep3/scale_write_srep_"+srep_index.to_s,'w')
-	  scale_write.puts "d: " + d.to_s + "\ntheta1: " + theta1.to_s + "\ntheta2: " + theta2.to_s
-          scale_write.puts "d1: " + d1.to_s + "\nd2: " + d2.to_s  
-	  scale_wirte.close 
-	  alert("srep" + srep_index.to_s + ": \n" + "d: " + d.to_s + "\ntheta1: " + theta1.to_s + "\ntheta2: " + theta2.to_s)
-  end
   # add noise for atom base position
  # alert(atom_position_noise)
   atom_position_noise.each_with_index do |one_atom_noise, i| 
@@ -154,6 +133,7 @@ def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep
   if refine
   # make sure the upper and lower spokes have the same angle
   # get the upper spokes directions 
+    theta_lst = []
     srep.atoms.each_with_index do |atom, i| 
       u1 = atom.spoke_direction[0]  
       puts "u1: " + u1.to_s
@@ -162,6 +142,12 @@ def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep
       u1_proj_on_v = norm_v.collect{|e| e* (u1[0] * norm_v[0] + u1[1] * norm_v[1])} 
       size_proj = Math.sqrt(u1_proj_on_v[0] **2 + u1_proj_on_v[1] **2 )
       norm_proj = [u1_proj_on_v[0] / size_proj, u1_proj_on_v[1] / size_proj]
+
+      cos_theta = (u1[0] * norm_proj[0] + u1[1] * norm_proj[1])
+    #  alert(cos_theta)
+      theta = Math.acos(cos_theta)
+      theta_lst << theta
+
       u1_prep_to_v = [u1[0] - u1_proj_on_v[0], u1[1] - u1_proj_on_v[1]]
       u0 = [1 * u1_proj_on_v[0] - u1_prep_to_v[0], 1  *  u1_proj_on_v[1] - u1_prep_to_v[1]]
       # normalize u0
@@ -187,6 +173,30 @@ def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep
     aendu2[0] = aendu2[0] / aendu2_size
     aendu2[1] = aendu2[1] / aendu2_size
     srep.atoms[-1].spoke_direction[2] = aendu2
+
+     if true
+	  first_atom = srep.atoms[0]
+	  last_atom = srep.atoms[-1]
+	  d = Math.sqrt( (first_atom.x - last_atom.x)**2 + (first_atom.y - last_atom.y)**2 ) * 1.1
+	  first_atom_u0 = first_atom.spoke_direction[0]
+	  first_atom_u1 = first_atom.spoke_direction[1]
+	  theta1 = theta_lst[0] * 2
+          d1 = theta1 * first_atom.spoke_length[0]
+	  
+
+	  last_atom_u0 = last_atom.spoke_direction[0]
+	  last_atom_u1 = last_atom.spoke_direction[1]
+	  theta2 = theta_lst[-1] * 2
+          d2 = theta2 * last_atom.spoke_length[0]
+
+	  scale_write = File.open("/home/chong/rablo2d_repo/rablo2d_freeze/data/saved_data/mosrep3/scale_write_srep_"+srep_index.to_s,'w')
+	  scale_write.puts "d: " + d.to_s + "\ntheta1: " + theta1.to_s + "\ntheta2: " + theta2.to_s
+          scale_write.puts "d1: " + d1.to_s + "\nd2: " + d2.to_s  
+	  scale_write.close 
+#	  alert("srep" + srep_index.to_s + ": \n" + "d: " + d.to_s + "\ntheta1: " + theta1.to_s + "\ntheta2: " + theta2.to_s)
+  end
+
+
   end
   return srep
 end
