@@ -5,17 +5,73 @@
 $a_big_number = 100
 $end_disk_spoke_number = 20
 
-$dir = '' 
+dir = '' 
 
-$a = 1 
-$b = 2
+def convert_index_into_param(srep_ind, ind)
+
+	a = 1.0
+	b = 2.0
+        x = 0.0
+	#convert_index_into_param()
+	srep1_d = 262.61340991061337
+	srep1_d1 = 100.30808848763076
+	srep1_d2 = 81.16122082909462
+
+	srep1_sum_d = 2 * srep1_d + srep1_d1 + srep1_d2
+
+	srep2_d = 222.63024693026233
+	srep2_d1 = 100.82602152757617
+	srep2_d2 = 78.71687886134345
+
+	srep2_sum_d = 2 * srep2_d + srep2_d1 + srep2_d2
+
+	srep3_d = 126.50819039964416
+	srep3_d1 = 77.90119788092397
+	srep3_d2 = 121.62157533960419
+
+	srep3_sum_d = 2 * srep3_d + srep3_d1 + srep3_d2
+
+   if srep_ind == 1
+	   if ind <= 98
+	      x = ind.to_f * srep2_d * (b-a) / (99.0 * srep2_sum_d )
+	   elsif ind <= 138
+	      x = srep2_d * (b-a) / srep2_sum_d + (ind-99) * srep2_d2 * (b-a)/ (40.0 * srep2_sum_d)
+	   elsif ind <= 237
+	      x = ( srep2_d + srep2_d2 ) * (b-a) / srep2_sum_d + (ind - 139) * srep2_d * (b-a) / (99.0 * srep2_sum_d )
+	   else
+	      x = ( srep2_d * 2 + srep2_d2) * (b-a) / srep2_sum_d + (ind - 238) * srep2_d1 * (b-a) / (40.0 * srep2_sum_d )
+	   end
+   elsif srep_ind == 2
+           if ind <= 98
+	      x = ind.to_f * srep3_d * (b-a) / (99.0 * srep3_sum_d )
+	   elsif ind <= 138
+	      x = srep3_d * (b-a) / srep3_sum_d + (ind-99) * srep3_d2 * (b-a)/ (40.0 * srep3_sum_d) 
+	   elsif ind <= 237
+	      x = ( srep3_d + srep3_d2 ) * (b-a) / srep3_sum_d + (ind - 139) * srep3_d * (b-a) / (99.0 * srep3_sum_d)
+	   else
+	      x = ( srep3_d * 2 + srep3_d2) * (b-a) / srep3_sum_d + (ind - 238) * srep3_d1 * (b-a) / (40.0 * srep3_sum_d )
+	   end
+   elsif srep_ind == 0
+           if ind <= 98
+	      x = ind.to_f * srep1_d * (b-a) / (99.0 * srep1_sum_d )
+	   elsif ind <= 138
+	      x = srep1_d * (b-a) / srep1_sum_d + (ind-99) * srep1_d2 * (b-a)/ (40.0 * srep1_sum_d )
+	   elsif ind <= 237
+	      x = ( srep1_d + srep1_d2 ) * (b-a) / srep1_sum_d + (ind - 139) * srep1_d * (b-a) / (99.0 * srep1_sum_d)
+	   else
+	      x = ( srep1_d * 2 + srep1_d2) * (b-a) / srep1_sum_d + (ind - 238) * srep1_d1 * (b-a) / (40.0 * srep1_sum_d )
+	   end
+   end
+   y = a + x 
+   return y
+end
 
 
 # read interpolated spoke begin and spoke end data
 # 1. spoke begin data is for the single srep spoke length data, which should be computed with spoke end data.
 # 2. spoke end data is for computing the interpolated extended spoke length. 
 # read data
-interp_spoke_0_read = File.open($dir+'interpolated_spokes_0','r')
+interp_spoke_0_read = File.open(dir+'interpolated_spokes_0','r')
 interp_spoke_0_str = ''
 while line = interp_spoke_0_read.gets
  	interp_spoke_0_str += line	
@@ -37,7 +93,7 @@ interp_spokes_end_0_lst.each_with_index do |s, i|
 end
 
 # read extended interpolated spokes end data 
-ext_spokes_read = File.open($dir+'ref_obj_linking', 'r')
+ext_spokes_read = File.open(dir+'ref_obj_linking', 'r')
 ext_spokes_str = ''
 while line = ext_spokes_read.gets
      ext_spokes_str += line
@@ -190,73 +246,16 @@ extended_length_write.close
 # given an linked spoke pos index on the other obj, I should be able to convert
 #   it into an number between a to b.
 # then the array would be sorted according to srep 0's spoke index 
-linked_spoke_index_in_other_obj_write = File.open('linked_spoke_index_in_other_obj','r')
+linked_spoke_index_in_other_obj_write = File.open('linked_spoke_index_in_other_obj.txt','w')
 ordered_linked_spoke_indices.each_with_index do |ind, i|
-     if ind == '[]'
+     if ind.strip == "[]"
         linked_spoke_index_in_other_obj_write.puts '0.0'
      else
         srep_ind = ordered_linking_labels[i]
         linked_spoke_index_in_other_obj_write.puts convert_index_into_param(srep_ind,ind.to_i).to_s
      end
 end
-
-
-convert_index_into_param()
-$srep1_d = 262.61340991061337
-$srep1_d1 = 100.30808848763076
-$srep1_d2 = 81.16122082909462
-$srep1_sum_d = 2 * $srep_1_d + $srep1_d1 + $srep1_d2
-
-$srep2_d = 222.63024693026233
-$srep2_d1 = 100.82602152757617
-$srep2_d2 = 78.71687886134345
-$srep2_sum_d = 2 * $srep_2_d + $srep2_d1 + $srep2_d2
-
-$srep3_d = 126.50819039964416
-$srep3_d1 = 77.90119788092397
-$srep3_d2 = 121.62157533960419
-$srep3_sum_d = 2 * $srep_3_d + $srep3_d1 + $srep3_d2
-
-def convert_index_into_param(srep_ind, ind)
-   if srep_ind == 1
-	   if ind <= 98
-	      x = ind.to_f * $srep2_d * ($b-$a) / 99.0 * $srep2_sum_d 
-	   elsif ind <= 138
-	      x = $srep2_d * ($b-$a) / $srep2_sum_d + (ind-99) * $srep2_d2 * ($b-$a)/ 40.0 * $srep2_sum_d 
-	   elsif ind <= 237
-	      x = ( $srep2_d + $srep2_d2 ) * ($b-$a) / $srep2_sum_d + (ind - 139) * srep2_d * ($b-$a) / 99.0 * $srep2_sum_d
-	   else
-	      x = ( $srep2_d * 2 + $srep2_d2) * ($b-$a) / $srep2_sum_d + (ind - 238) * srep2_d1 * ($b-$a) / 40.0 * srep2_sum_d 
-	   end
-   elsif srep_ind == 2
-           if ind <= 98
-	      x = ind.to_f * $srep3_d * ($b-$a) / 99.0 * $srep3_sum_d 
-	   elsif ind <= 138
-	      x = $srep3_d * ($b-$a) / $srep3_sum_d + (ind-99) * $srep3_d2 * ($b-$a)/ 40.0 * $srep3_sum_d 
-	   elsif ind <= 237
-	      x = ( $srep3_d + $srep3_d2 ) * ($b-$a) / $srep3_sum_d + (ind - 139) * srep23d * ($b-$a) / 99.0 * $srep3_sum_d
-	   else
-	      x = ( $srep3_d * 2 + $srep3_d2) * ($b-$a) / $srep3_sum_d + (ind - 238) * srep3_d1 * ($b-$a) / 40.0 * srep3_sum_d 
-	   end
-   elsif srep_ind == 1
-           if ind <= 98
-	      x = ind.to_f * $srep1_d * ($b-$a) / 99.0 * $srep1_sum_d 
-	   elsif ind <= 138
-	      x = $srep1_d * ($b-$a) / $srep1_sum_d + (ind-99) * $srep1_d2 * ($b-$a)/ 40.0 * $srep1_sum_d 
-	   elsif ind <= 237
-	      x = ( $srep1_d + $srep1_d2 ) * ($b-$a) / $srep1_sum_d + (ind - 139) * srep1_d * ($b-$a) / 99.0 * $srep1_sum_d
-	   else
-	      x = ( $srep1_d * 2 + $srep1_d2) * ($b-$a) / $srep1_sum_d + (ind - 238) * srep1_d1 * ($b-$a) / 40.0 * srep1_sum_d 
-	   end
-   end
-   x = $a + x 
-   return x 
-end
-
-
-
-
-
-
+puts 'write mapping info complete.'
+linked_spoke_index_in_other_obj_write.close
 
 
