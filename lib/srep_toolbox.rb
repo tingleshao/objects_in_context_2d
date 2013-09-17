@@ -91,14 +91,18 @@ def generate2DDiscreteSrep(atoms, spoke_length, spoke_direction, step_size, srep
 	  d = Math.sqrt( (first_atom.x - last_atom.x)**2 + (first_atom.y - last_atom.y)**2 ) * 1.1
 	  first_atom_u0 = first_atom.spoke_direction[0]
 	  first_atom_u1 = first_atom.spoke_direction[1]
-	  theta1 = acos(first_atom_u0[0].abs) + acos(first_atom_u1[0].abs)
+	  theta1 = (acos(first_atom_u0[0].abs) + acos(first_atom_u1[0].abs))
+          d1 = theta1 * first_atom.spoke_length
 	  
 
 	  last_atom_u0 = last_atom.spoke_direction[0]
 	  last_atom_u1 = last_atom.spoke_direction[1]
 	  theta2 = acos(last_atom_u0[0].abs) + acos(last_atom_u1[0].abs)
+          d2 = theta2 * last_atom.spoke_length
+
 	  scale_write = File.open("/home/chong/rablo2d_repo/rablo2d_freeze/data/saved_data/mosrep3/scale_write_srep_"+srep_index.to_s,'w')
-	  scale_write.puts "d: " + d.to_s + "\ntheta1: " + theta1.to_s + "\ntheta2: " + theta2.to_s  
+	  scale_write.puts "d: " + d.to_s + "\ntheta1: " + theta1.to_s + "\ntheta2: " + theta2.to_s
+          scale_write.puts "d1: " + d1.to_s + "\nd2: " + d2.to_s  
 	  scale_wirte.close 
 	  alert("srep" + srep_index.to_s + ": \n" + "d: " + d.to_s + "\ntheta1: " + theta1.to_s + "\ntheta2: " + theta2.to_s)
   end
