@@ -83,14 +83,8 @@ interp_spokes_begin_0_str = interp_spoke_0_str.split("========\n")[0]
 interp_spokes_end_0_str = interp_spoke_0_str.split("========\n")[1]
 
 interp_spokes_begin_0_lst = interp_spokes_begin_0_str.strip[2..-3].split('], [')
-interp_spokes_begin_0_lst.each_with_index do |s,i|
-   #	puts i.to_s + ' ' + s 
-end
 
 interp_spokes_end_0_lst = interp_spokes_end_0_str.strip[2..-3].split("], [")
-interp_spokes_end_0_lst.each_with_index do |s, i|
-#	puts i.to_s + ' ' + s
-end
 
 # read extended interpolated spokes end data 
 ext_spokes_read = File.open(dir+'ref_obj_linking', 'r')
@@ -257,5 +251,273 @@ ordered_linked_spoke_indices.each_with_index do |ind, i|
 end
 puts 'write mapping info complete.'
 linked_spoke_index_in_other_obj_write.close
+
+# output data for single sreps
+# for every srep, the data layout is:
+#  1. medial curve x y positions: x1 y1 x2 y2 x3 y3 
+#  2. z values for spoke directions ordered in closkwise order (may simply use u1[0], u1[1] for now? after siguring out how to use CPNS code switch to z values)
+#  3. log spoke length
+
+# 1. medial curve x y positions
+# srep1:
+skeletal_curve_0_read = File.open('interpolated_pts_0','r')
+skeletal_curve_0_str = ""
+while line = skeletal_curve_0_read.gets
+     skeletal_curve_0_str += line
+end
+skeletal_curve_0_read.close
+skeletal_curve_xs_0 = skeletal_curve_0_str.strip[1..-2].split("], [")[0][1..-2]
+skeletal_curve_ys_0 = skeletal_curve_0_str.strip[1..-2].split("], [")[1][1..-2]
+
+skeletal_curve_xs_0_lst = skeletal_curve_xs_0.split(", ").map{|i| i.to_f}
+skeletal_curve_ys_0_lst = skeletal_curve_ys_0.split(", ").map{|i| i.to_f}
+
+skeletal_curve_0_write = File.open('skeletal_curve_srep_0.txt','w')
+skeletal_curve_xs_0_lst.each_with_index do |x, i|
+   skeletal_curve_0_write.puts x.to_s + " " + skeletal_curve_ys_0_lst[i].to_s + "\n"
+end
+skeletal_curve_0_write.close
+puts 'write srep 1 base points info complete.'
+
+
+# srep2
+skeletal_curve_1_read = File.open('interpolated_pts_1','r')
+skeletal_curve_1_str = ""
+while line = skeletal_curve_1_read.gets
+     skeletal_curve_1_str += line
+end
+skeletal_curve_1_read.close
+skeletal_curve_xs_1 = skeletal_curve_1_str.strip[1..-2].split("], [")[0][1..-2]
+skeletal_curve_ys_1 = skeletal_curve_1_str.strip[1..-2].split("], [")[1][1..-2]
+
+skeletal_curve_xs_1_lst = skeletal_curve_xs_1.split(", ").map{|i| i.to_f}
+skeletal_curve_ys_1_lst = skeletal_curve_ys_1.split(", ").map{|i| i.to_f}
+
+skeletal_curve_1_write = File.open('skeletal_curve_srep_1.txt','w')
+skeletal_curve_xs_1_lst.each_with_index do |x, i|
+   skeletal_curve_1_write.puts x.to_s + " " + skeletal_curve_ys_1_lst[i].to_s + "\n"
+end
+skeletal_curve_1_write.close
+puts 'write srep 2 base points info complete.'
+
+
+# srep3
+skeletal_curve_2_read = File.open('interpolated_pts_2','r')
+skeletal_curve_2_str = ""
+while line = skeletal_curve_2_read.gets
+     skeletal_curve_2_str += line
+end
+skeletal_curve_2_read.close
+skeletal_curve_xs_2 = skeletal_curve_2_str.strip[1..-2].split("], [")[0][1..-2]
+skeletal_curve_ys_2 = skeletal_curve_2_str.strip[1..-2].split("], [")[1][1..-2]
+
+skeletal_curve_xs_2_lst = skeletal_curve_xs_2.split(", ").map{|i| i.to_f}
+skeletal_curve_ys_2_lst = skeletal_curve_ys_2.split(", ").map{|i| i.to_f}
+
+skeletal_curve_2_write = File.open('skeletal_curve_srep_2.txt','w')
+skeletal_curve_xs_2_lst.each_with_index do |x, i|
+   skeletal_curve_2_write.puts x.to_s + " " + skeletal_curve_ys_2_lst[i].to_s + "\n"
+end
+skeletal_curve_2_write.close
+puts 'write srep 3 base points info complete.'
+
+
+
+#  2. z values for spoke directions ordered in closkwise order (may simply use u1[0], u1[1] for now? after siguring out how to use CPNS code switch to z values)
+# srep 1
+ordered_interp_spokes_end_0_x = []
+ordered_interp_spokes_end_0_y = []
+
+99.times do |i|
+    ordered_interp_spokes_end_0_x << interp_spokes_end_0_x[2*i]
+    ordered_interp_spokes_end_0_y << interp_spokes_end_0_y[2*i]
+end
+40.times do |i|
+    ordered_interp_spokes_end_0_x << interp_spokes_end_0_x[238+i]
+    ordered_interp_spokes_end_0_y << interp_spokes_end_0_y[238+i]
+end
+99.times do |i|
+    ordered_interp_spokes_end_0_x << interp_spokes_end_0_x[2*i+1]
+    ordered_interp_spokes_end_0_y << interp_spokes_end_0_y[2*i+1]
+end
+40.times do |i|
+    ordered_interp_spokes_end_0_x << interp_spokes_end_0_x[197+i]
+    ordered_interp_spokes_end_0_y << interp_spokes_end_0_y[197+i]
+end
+
+spoke_dir_0_write = File.open('spoke_dir_srep_0.txt','w')
+ordered_interp_spokes_end_0_x.each_with_index do |x, i|
+   spoke_dir_0_write.puts x.to_s + " " + ordered_interp_spokes_end_0_y[i].to_s + "\n"
+end
+skeletal_curve_0_write.close
+puts 'write srep 1 base points info complete.'
+
+# srep 2
+interp_spoke_1_read = File.open(dir+'interpolated_spokes_1','r')
+interp_spoke_1_str = ''
+while line = interp_spoke_1_read.gets
+ 	interp_spoke_1_str += line	
+end
+interp_spoke_1_read.close
+
+interp_spokes_end_1_str = interp_spoke_1_str.split("========\n")[1]
+interp_spokes_end_1_lst = interp_spokes_end_1_str.strip[2..-3].split("], [")
+
+interp_spokes_end_1_x = []
+interp_spokes_end_1_y = []
+interp_spokes_end_1_lst.each do |s|
+    end_pt_x = s.split(',')[0].to_f
+    end_pt_y = s.split(',')[1].to_f
+    interp_spokes_end_1_x << end_pt_x
+    interp_spokes_end_1_y << end_pt_y
+end
+
+ordered_interp_spokes_end_1_x = []
+ordered_interp_spokes_end_1_y = []
+
+99.times do |i|
+    ordered_interp_spokes_end_1_x << interp_spokes_end_1_x[2*i]
+    ordered_interp_spokes_end_1_y << interp_spokes_end_1_y[2*i]
+end
+40.times do |i|
+    ordered_interp_spokes_end_1_x << interp_spokes_end_1_x[238+i]
+    ordered_interp_spokes_end_1_y << interp_spokes_end_1_y[238+i]
+end
+99.times do |i|
+    ordered_interp_spokes_end_1_x << interp_spokes_end_1_x[2*i+1]
+    ordered_interp_spokes_end_1_y << interp_spokes_end_1_y[2*i+1]
+end
+40.times do |i|
+    ordered_interp_spokes_end_1_x << interp_spokes_end_1_x[197+i]
+    ordered_interp_spokes_end_1_y << interp_spokes_end_1_y[197+i]
+end
+
+spoke_dir_1_write = File.open('spoke_dir_srep_1.txt','w')
+ordered_interp_spokes_end_1_x.each_with_index do |x, i|
+   spoke_dir_1_write.puts x.to_s + " " + ordered_interp_spokes_end_1_y[i].to_s + "\n"
+end
+skeletal_curve_1_write.close
+puts 'write srep 2 base points info complete.'
+
+
+
+# srep 3
+interp_spoke_2_read = File.open(dir+'interpolated_spokes_2','r')
+interp_spoke_2_str = ''
+while line = interp_spoke_2_read.gets
+ 	interp_spoke_2_str += line	
+end
+interp_spoke_2_read.close
+
+interp_spokes_end_2_str = interp_spoke_2_str.split("========\n")[1]
+interp_spokes_end_2_lst = interp_spokes_end_2_str.strip[2..-3].split("], [")
+
+interp_spokes_end_2_x = []
+interp_spokes_end_2_y = []
+interp_spokes_end_2_lst.each do |s|
+    end_pt_x = s.split(',')[0].to_f
+    end_pt_y = s.split(',')[1].to_f
+    interp_spokes_end_1_x << end_pt_x
+    interp_spokes_end_1_y << end_pt_y
+end
+
+ordered_interp_spokes_end_2_x = []
+ordered_interp_spokes_end_2_y = []
+
+99.times do |i|
+    ordered_interp_spokes_end_2_x << interp_spokes_end_2_x[2*i]
+    ordered_interp_spokes_end_2_y << interp_spokes_end_2_y[2*i]
+end
+40.times do |i|
+    ordered_interp_spokes_end_2_x << interp_spokes_end_2_x[238+i]
+    ordered_interp_spokes_end_2_y << interp_spokes_end_2_y[238+i]
+end
+99.times do |i|
+    ordered_interp_spokes_end_2_x << interp_spokes_end_2_x[2*i+1]
+    ordered_interp_spokes_end_2_y << interp_spokes_end_2_y[2*i+1]
+end
+40.times do |i|
+    ordered_interp_spokes_end_2_x << interp_spokes_end_2_x[197+i]
+    ordered_interp_spokes_end_2_y << interp_spokes_end_2_y[197+i]
+end
+
+spoke_dir_2_write = File.open('spoke_dir_srep_2.txt','w')
+ordered_interp_spokes_end_2_x.each_with_index do |x, i|
+   spoke_dir_2_write.puts x.to_s + " " + ordered_interp_spokes_end_2_y[i].to_s + "\n"
+end
+skeletal_curve_2_write.close
+puts 'write srep 3 base points info complete.'
+
+#  3. log spoke length
+# srep 1:
+log_spoke_len_0_write = File.open('log_spoke_len_srep_0.txt','w')
+ordered_interp_spokes_length_0.each_with_index do |l, i|
+   log_spoke_len_0_write.puts Math.log(l.to_f) + "\n"
+end
+log_spoke_len_0_write.close
+puts 'write srep 1 log spoke length info complete.'
+
+
+# srep 2:
+interp_spokes_begin_1_str = interp_spoke_0_str.split("========\n")[0]
+interp_spokes_begin_1_lst = interp_spokes_begin_1_str.strip[2..-3].split('], [')
+
+interp_spokes_begin_1_x = []
+interp_spokes_begin_1_y = []
+interp_spokes_begin_1_lst.each do |s|
+    begin_pt_x = s.split(',')[0].to_f
+    begin_pt_y = s.split(',')[1].to_f
+    interp_spokes_begin_1_x << begin_pt_x
+    interp_spokes_begin_1_y << begin_pt_y
+end
+
+interp_spokes_length_1 = []
+interp_spokes_begin_1_x.each_with_index do |begin_x, i|
+   end_x = interp_spokes_end_1_x[i]
+   begin_y = interp_spokes_begin_1_y[i]
+   end_y = interp_spokes_end_1_y[i]
+   spoke_len = Math.sqrt( (end_x - begin_x)**2 + (end_y - begin_y) **2 )
+   interp_spokes_length_1 << spoke_len
+end
+
+log_spoke_len_1_write = File.open('log_spoke_len_srep_1.txt','w')
+ordered_interp_spokes_length_1.each_with_index do |l, i|
+   log_spoke_len_1_write.puts Math.log(l.to_f) + "\n"
+end
+log_spoke_len_1_write.close
+puts 'write srep 2 log spoke length info complete.'
+
+
+# srep 3:
+egin_1_str = interp_spoke_0_str.split("========\n")[0]
+interp_spokes_begin_1_lst = interp_spokes_begin_1_str.strip[2..-3].split('], [')
+
+interp_spokes_begin_1_x = []
+interp_spokes_begin_1_y = []
+interp_spokes_begin_1_lst.each do |s|
+    begin_pt_x = s.split(',')[0].to_f
+    begin_pt_y = s.split(',')[1].to_f
+    interp_spokes_begin_1_x << begin_pt_x
+    interp_spokes_begin_1_y << begin_pt_y
+end
+
+interp_spokes_length_1 = []
+interp_spokes_begin_1_x.each_with_index do |begin_x, i|
+   end_x = interp_spokes_end_1_x[i]
+   begin_y = interp_spokes_begin_1_y[i]
+   end_y = interp_spokes_end_1_y[i]
+   spoke_len = Math.sqrt( (end_x - begin_x)**2 + (end_y - begin_y) **2 )
+   interp_spokes_length_1 << spoke_len
+end
+
+log_spoke_len_1_write = File.open('log_spoke_len_srep_1.txt','w')
+ordered_interp_spokes_length_1.each_with_index do |l, i|
+   log_spoke_len_1_write.puts Math.log(l.to_f) + "\n"
+end
+log_spoke_len_1_write.close
+puts 'write srep 2 log spoke length info complete.'
+
+
+
 
 
