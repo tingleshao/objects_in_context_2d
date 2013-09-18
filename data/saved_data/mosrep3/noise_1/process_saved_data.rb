@@ -459,7 +459,7 @@ puts 'write srep 1 log spoke length info complete.'
 
 
 # srep 2:
-interp_spokes_begin_1_str = interp_spoke_0_str.split("========\n")[0]
+interp_spokes_begin_1_str = interp_spoke_1_str.split("========\n")[0]
 interp_spokes_begin_1_lst = interp_spokes_begin_1_str.strip[2..-3].split('], [')
 
 interp_spokes_begin_1_x = []
@@ -489,33 +489,33 @@ puts 'write srep 2 log spoke length info complete.'
 
 
 # srep 3:
-egin_1_str = interp_spoke_0_str.split("========\n")[0]
-interp_spokes_begin_1_lst = interp_spokes_begin_1_str.strip[2..-3].split('], [')
+interp_spokes_begin_2_str = interp_spoke_2_str.split("========\n")[0]
+interp_spokes_begin_2_lst = interp_spokes_begin_2_str.strip[2..-3].split('], [')
 
-interp_spokes_begin_1_x = []
-interp_spokes_begin_1_y = []
-interp_spokes_begin_1_lst.each do |s|
+interp_spokes_begin_2_x = []
+interp_spokes_begin_2_y = []
+interp_spokes_begin_2_lst.each do |s|
     begin_pt_x = s.split(',')[0].to_f
     begin_pt_y = s.split(',')[1].to_f
-    interp_spokes_begin_1_x << begin_pt_x
-    interp_spokes_begin_1_y << begin_pt_y
+    interp_spokes_begin_2_x << begin_pt_x
+    interp_spokes_begin_2_y << begin_pt_y
 end
 
-interp_spokes_length_1 = []
-interp_spokes_begin_1_x.each_with_index do |begin_x, i|
-   end_x = interp_spokes_end_1_x[i]
-   begin_y = interp_spokes_begin_1_y[i]
-   end_y = interp_spokes_end_1_y[i]
+interp_spokes_length_2 = []
+interp_spokes_begin_2_x.each_with_index do |begin_x, i|
+   end_x = interp_spokes_end_2_x[i]
+   begin_y = interp_spokes_begin_2_y[i]
+   end_y = interp_spokes_end_2_y[i]
    spoke_len = Math.sqrt( (end_x - begin_x)**2 + (end_y - begin_y) **2 )
-   interp_spokes_length_1 << spoke_len
+   interp_spokes_length_2 << spoke_len
 end
 
-log_spoke_len_1_write = File.open('log_spoke_len_srep_1.txt','w')
-ordered_interp_spokes_length_1.each_with_index do |l, i|
-   log_spoke_len_1_write.puts Math.log(l.to_f) + "\n"
+log_spoke_len_2_write = File.open('log_spoke_len_srep_2.txt','w')
+ordered_interp_spokes_length_2.each_with_index do |l, i|
+   log_spoke_len_2_write.puts Math.log(l.to_f) + "\n"
 end
-log_spoke_len_1_write.close
-puts 'write srep 2 log spoke length info complete.'
+log_spoke_len_2_write.close
+puts 'write srep 3 log spoke length info complete.'
 
 
 
