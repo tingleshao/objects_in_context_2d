@@ -349,7 +349,7 @@ spoke_dir_0_write = File.open('spoke_dir_srep_0.txt','w')
 ordered_interp_spokes_end_0_x.each_with_index do |x, i|
    spoke_dir_0_write.puts x.to_s + " " + ordered_interp_spokes_end_0_y[i].to_s + "\n"
 end
-skeletal_curve_0_write.close
+spoke_dir_0_write.close
 puts 'write srep 1 base points info complete.'
 
 # srep 2
@@ -396,7 +396,7 @@ spoke_dir_1_write = File.open('spoke_dir_srep_1.txt','w')
 ordered_interp_spokes_end_1_x.each_with_index do |x, i|
    spoke_dir_1_write.puts x.to_s + " " + ordered_interp_spokes_end_1_y[i].to_s + "\n"
 end
-skeletal_curve_1_write.close
+spoke_dir_1_write.close
 puts 'write srep 2 base points info complete.'
 
 
@@ -417,8 +417,8 @@ interp_spokes_end_2_y = []
 interp_spokes_end_2_lst.each do |s|
     end_pt_x = s.split(',')[0].to_f
     end_pt_y = s.split(',')[1].to_f
-    interp_spokes_end_1_x << end_pt_x
-    interp_spokes_end_1_y << end_pt_y
+    interp_spokes_end_2_x << end_pt_x
+    interp_spokes_end_2_y << end_pt_y
 end
 
 ordered_interp_spokes_end_2_x = []
@@ -445,14 +445,14 @@ spoke_dir_2_write = File.open('spoke_dir_srep_2.txt','w')
 ordered_interp_spokes_end_2_x.each_with_index do |x, i|
    spoke_dir_2_write.puts x.to_s + " " + ordered_interp_spokes_end_2_y[i].to_s + "\n"
 end
-skeletal_curve_2_write.close
+spoke_dir_2_write.close
 puts 'write srep 3 base points info complete.'
 
 #  3. log spoke length
 # srep 1:
 log_spoke_len_0_write = File.open('log_spoke_len_srep_0.txt','w')
 ordered_interp_spokes_length_0.each_with_index do |l, i|
-   log_spoke_len_0_write.puts Math.log(l.to_f) + "\n"
+   log_spoke_len_0_write.puts Math.log(l.to_f).to_s + "\n"
 end
 log_spoke_len_0_write.close
 puts 'write srep 1 log spoke length info complete.'
@@ -480,9 +480,27 @@ interp_spokes_begin_1_x.each_with_index do |begin_x, i|
    interp_spokes_length_1 << spoke_len
 end
 
+ordered_interp_spokes_length_1 = []
+#      1 3  
+#  end1   end2
+#      2 4
+99.times do |i|
+    ordered_interp_spokes_length_1 << interp_spokes_length_1[2*i]
+end
+40.times do |i|
+    ordered_interp_spokes_length_1 << interp_spokes_length_1[238+i]
+end
+99.times do |i|
+    ordered_interp_spokes_length_1 << interp_spokes_length_1[2*i+1]
+end
+40.times do |i|
+    ordered_interp_spokes_length_1 << interp_spokes_length_1[197+i]
+end
+
+
 log_spoke_len_1_write = File.open('log_spoke_len_srep_1.txt','w')
 ordered_interp_spokes_length_1.each_with_index do |l, i|
-   log_spoke_len_1_write.puts Math.log(l.to_f) + "\n"
+   log_spoke_len_1_write.puts Math.log(l.to_f).to_s + "\n"
 end
 log_spoke_len_1_write.close
 puts 'write srep 2 log spoke length info complete.'
@@ -510,9 +528,25 @@ interp_spokes_begin_2_x.each_with_index do |begin_x, i|
    interp_spokes_length_2 << spoke_len
 end
 
+ordered_interp_spokes_length_2 = []
+99.times do |i|
+    ordered_interp_spokes_length_2 << interp_spokes_length_2[2*i]
+end
+40.times do |i|
+    ordered_interp_spokes_length_2 << interp_spokes_length_2[238+i]
+end
+99.times do |i|
+    ordered_interp_spokes_length_2 << interp_spokes_length_2[2*i+1]
+end
+40.times do |i|
+    ordered_interp_spokes_length_2 << interp_spokes_length_2[197+i]
+end
+
+
+
 log_spoke_len_2_write = File.open('log_spoke_len_srep_2.txt','w')
 ordered_interp_spokes_length_2.each_with_index do |l, i|
-   log_spoke_len_2_write.puts Math.log(l.to_f) + "\n"
+   log_spoke_len_2_write.puts Math.log(l.to_f).to_s + "\n"
 end
 log_spoke_len_2_write.close
 puts 'write srep 3 log spoke length info complete.'
