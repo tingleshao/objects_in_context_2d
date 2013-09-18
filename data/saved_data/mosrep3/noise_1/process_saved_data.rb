@@ -345,13 +345,6 @@ end
     ordered_interp_spokes_end_0_y << interp_spokes_end_0_y[197+i]
 end
 
-spoke_dir_0_write = File.open('spoke_dir_srep_0.txt','w')
-ordered_interp_spokes_end_0_x.each_with_index do |x, i|
-   spoke_dir_0_write.puts x.to_s + " " + ordered_interp_spokes_end_0_y[i].to_s + "\n"
-end
-spoke_dir_0_write.close
-puts 'write srep 1 base points info complete.'
-
 # srep 2
 interp_spoke_1_read = File.open(dir+'interpolated_spokes_1','r')
 interp_spoke_1_str = ''
@@ -392,15 +385,6 @@ end
     ordered_interp_spokes_end_1_y << interp_spokes_end_1_y[197+i]
 end
 
-spoke_dir_1_write = File.open('spoke_dir_srep_1.txt','w')
-ordered_interp_spokes_end_1_x.each_with_index do |x, i|
-   spoke_dir_1_write.puts x.to_s + " " + ordered_interp_spokes_end_1_y[i].to_s + "\n"
-end
-spoke_dir_1_write.close
-puts 'write srep 2 base points info complete.'
-
-
-
 # srep 3
 interp_spoke_2_read = File.open(dir+'interpolated_spokes_2','r')
 interp_spoke_2_str = ''
@@ -440,13 +424,6 @@ end
     ordered_interp_spokes_end_2_x << interp_spokes_end_2_x[197+i]
     ordered_interp_spokes_end_2_y << interp_spokes_end_2_y[197+i]
 end
-
-spoke_dir_2_write = File.open('spoke_dir_srep_2.txt','w')
-ordered_interp_spokes_end_2_x.each_with_index do |x, i|
-   spoke_dir_2_write.puts x.to_s + " " + ordered_interp_spokes_end_2_y[i].to_s + "\n"
-end
-spoke_dir_2_write.close
-puts 'write srep 3 base points info complete.'
 
 #  3. log spoke length
 # srep 1:
@@ -550,6 +527,96 @@ ordered_interp_spokes_length_2.each_with_index do |l, i|
 end
 log_spoke_len_2_write.close
 puts 'write srep 3 log spoke length info complete.'
+
+
+
+# part 2 output
+
+
+ordered_interp_spokes_begin_0_x = []
+ordered_interp_spokes_begin_0_y = []
+
+99.times do |i|
+    ordered_interp_spokes_begin_0_x << interp_spokes_begin_0_x[2*i]
+    ordered_interp_spokes_begin_0_y << interp_spokes_begin_0_y[2*i]
+end
+40.times do |i|
+    ordered_interp_spokes_begin_0_x << interp_spokes_begin_0_x[238+i]
+    ordered_interp_spokes_begin_0_y << interp_spokes_begin_0_y[238+i]
+end
+99.times do |i|
+    ordered_interp_spokes_begin_0_x << interp_spokes_begin_0_x[2*i+1]
+    ordered_interp_spokes_begin_0_y << interp_spokes_begin_0_y[2*i+1]
+end
+40.times do |i|
+    ordered_interp_spokes_begin_0_x << interp_spokes_begin_0_x[197+i]
+    ordered_interp_spokes_begin_0_y << interp_spokes_begin_0_y[197+i]
+end
+
+
+ordered_interp_spokes_begin_1_x = []
+ordered_interp_spokes_begin_1_y = []
+
+99.times do |i|
+    ordered_interp_spokes_begin_1_x << interp_spokes_begin_1_x[2*i]
+    ordered_interp_spokes_begin_1_y << interp_spokes_begin_1_y[2*i]
+end
+40.times do |i|
+    ordered_interp_spokes_begin_1_x << interp_spokes_begin_1_x[238+i]
+    ordered_interp_spokes_begin_1_y << interp_spokes_begin_1_y[238+i]
+end
+99.times do |i|
+    ordered_interp_spokes_begin_1_x << interp_spokes_begin_1_x[2*i+1]
+    ordered_interp_spokes_begin_1_y << interp_spokes_begin_1_y[2*i+1]
+end
+40.times do |i|
+    ordered_interp_spokes_begin_1_x << interp_spokes_begin_1_x[197+i]
+    ordered_interp_spokes_begin_1_y << interp_spokes_begin_1_y[197+i]
+end
+
+
+ordered_interp_spokes_begin_2_x = []
+ordered_interp_spokes_begin_2_y = []
+
+99.times do |i|
+    ordered_interp_spokes_begin_2_x << interp_spokes_begin_2_x[2*i]
+    ordered_interp_spokes_begin_2_y << interp_spokes_begin_2_y[2*i]
+end
+40.times do |i|
+    ordered_interp_spokes_begin_2_x << interp_spokes_begin_2_x[238+i]
+    ordered_interp_spokes_begin_2_y << interp_spokes_begin_2_y[238+i]
+end
+99.times do |i|
+    ordered_interp_spokes_begin_2_x << interp_spokes_begin_2_x[2*i+1]
+    ordered_interp_spokes_begin_2_y << interp_spokes_begin_2_y[2*i+1]
+end
+40.times do |i|
+    ordered_interp_spokes_begin_2_x << interp_spokes_begin_2_x[197+i]
+    ordered_interp_spokes_begin_2_y << interp_spokes_begin_2_y[197+i]
+end
+
+
+# srep 1
+spoke_dir_0_write = File.open('spoke_dir_srep_0.txt','w')
+ordered_interp_spokes_end_0_x.each_with_index do |x, i|
+   spoke_dir_0_write.puts (x - ordered_interp_spokes_begin_0_x[i]).to_s + " " + (ordered_interp_spokes_end_0_y[i] - ordered_interp_spokes_begin_0_y[i]).to_s + "\n"
+end
+spoke_dir_0_write.close
+puts 'write srep 1 base points info complete.'
+# srep 2
+spoke_dir_1_write = File.open('spoke_dir_srep_1.txt','w')
+ordered_interp_spokes_end_1_x.each_with_index do |x, i|
+   spoke_dir_1_write.puts (x- ordered_interp_spokes_begin_1_x[i]).to_s + " " + (ordered_interp_spokes_end_1_y[i] - ordered_interp_spokes_begin_1_y[i]).to_s + "\n"
+end
+spoke_dir_1_write.close
+puts 'write srep 2 base points info complete.'
+#srep3
+spoke_dir_2_write = File.open('spoke_dir_srep_2.txt','w')
+ordered_interp_spokes_end_2_x.each_with_index do |x, i|
+   spoke_dir_2_write.puts (x - ordered_interp_spokes_begin_2_x[i]).to_s + " " + (ordered_interp_spokes_end_2_y[i] - ordered_interp_spokes_begin_2_y[i]).to_s + "\n"
+end
+spoke_dir_2_write.close
+puts 'write srep 3 base points info complete.'
 
 
 
