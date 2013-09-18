@@ -7,7 +7,9 @@ data_vector = File.open('data_vector.txt','w')
 3.times do |i|
    reader = File.open('skeletal_curve_srep_' + i.to_s + '.txt', 'r')
    while line = reader.gets
-      data_vector.puts line
+      line.strip.split(' ').each do |e|
+         data_vector.puts  e
+      end
    end
    reader.close
 end
@@ -15,7 +17,9 @@ end
 3.times do |i|
   reader = File.open('spoke_dir_srep_' + i.to_s + '.txt', 'r')
   while line = reader.gets
-      data_vector.puts line
+       line.strip.split(' ').each do |e|
+         data_vector.puts  e
+      end
   end  
   reader.close
 end
@@ -34,7 +38,7 @@ while line = reader.gets
 end
 reader.close
 
-reader = File.open('linked_spoke_index_in_order_obj.txt')
+reader = File.open('linked_spoke_index_in_other_obj.txt')
 while line = reader.gets
     data_vector.puts line
 end
