@@ -1,0 +1,15 @@
+   101 * 2   < -- skeletal curve
+   101 * 2
+   101 * 2
+   -------
+   278 * 2   < -- spoke dir
+   278 * 2
+   278 * 2
+   -------
+   278       < -- log spoke len
+   278 
+   278
+   -------
+   278       < -- extended length
+   -------
+   278       < -- linked index in other obj
