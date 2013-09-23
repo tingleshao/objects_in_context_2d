@@ -11,6 +11,7 @@ for i = 1:40
 end
 color_mat = repmat([0,0,1],40,1);
 color_mat(13,:) = [1,0,0];
+color_mat(7,:) = [0,1,0];
 para_struct = struct('npcadiradd', 5, 'irecenter', 1,'icolor', color_mat);
 pca_para_struct = struct('npc', 5, 'irecenter', 1, 'viout', [1 1 1 0 1]);
 figure;
@@ -56,12 +57,12 @@ disp(strcat('for mean plus 2 stdev, index of shortest spoke:', num2str(pc1_plus2
 % asking number of data points has projection score more than 2 stdev
 num_of_data_greater_than_2_stdev = size(find(abs(pc1) > pc1_stdev * 2),1);
 
-% asking how many of them has negative spoke length
+% asking how many of them has at least one negative spoke length
 recovered_data = zeros(3664,40);
 for i = 1:40,
     recovered_data(:,i) = vmean + pc1(i) .* eigv_1;
 end
-recovered_extended_spoke_length = recovered_data(3108:3386,:); 
+recovered_extended_spoke_length = recovered_data(3109:3386,:); 
 count = 0;
 for i = 1:40,
  if find(recovered_extended_spoke_length(:,i) < 0)
@@ -70,3 +71,16 @@ for i = 1:40,
 end
 
 disp(strcat('number of data that has at least 1 negative spoke len: ',num2str(count)));
+
+% asking the data index that has the largest score on pc 2
+% and compute how many spokes on that projection on pc2 are negative
+pc2 = mpc(2,:);
+pc2_max_index = find(pc2==max(pc2));
+% project it on pc2 dir 
+eigv2 = meigvec(:,2);
+proj_on_pc2 = vmean + max(pc2) * eigv2;
+% count how many are smaller than 0;
+proj_on_pc2_extended_spokes_len = proj_on_pc2(3109:3386,:);
+num_of_less_than_zero = size(find(proj_on_pc2_extended_spokes_len < 0),1);
+disp(strcat('number of extended spoke length less than zero in the data point the porjection on pc2: ',num2str(num_of_less_than_zero)));
+
