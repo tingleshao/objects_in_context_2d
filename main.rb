@@ -40,7 +40,26 @@ $a_big_number = 100
 $end_disk_spoke_number = 20
 
 
+def transform_interp_spoke_index(n)
+     k = n - 1
+     i = -1
+     if k <= 98
+        i = k * 2
+     elsif k <= 138
+        i = k - 98 + 237
+     elsif k <= 237
+        i = (k-139) * 2 + 1
+     else
+        i = (k-238) + 198
+     end
+     return i
+end
 
+$colored_spoke_indices_origin = [49]
+$colored_spoke_indices = []
+$colored_spoke_indices_origin.each do |n|
+   $colored_spoke_indices << transform_interp_spoke_index(n)
+end
 
 class Field
 # this is the Field class that draws everything about s-rep on the main UI
@@ -196,13 +215,12 @@ class Field
       end
     end
   end
-
+  
   # method for rendering interpolated spokes
   def render_interp_spokes(shiftx, shifty, color, ibegin, iend, srep_index)
 
     ibegin.each_with_index do |p, i|
-
-       if (i == 49 / 2 and srep_index == 0)
+       if ($colored_spoke_indices.include? i and srep_index == 0)
           @app.stroke Color.blue
        else
           @app.stroke color
@@ -835,6 +853,8 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
    render_field
  end
   
+
+
 # initialization
 def initialConfig
   $step_go_so_far = 0
