@@ -134,7 +134,7 @@ class Field
     if srep.interpolated_spokes_begin.length > 0 and srep.show_interpolated_spokes
       spoke_begin = srep.interpolated_spokes_begin
       spoke_end = srep.interpolated_spokes_end
-      render_interp_spokes(shiftx, shifty, Color.white, spoke_begin, spoke_end)
+      render_interp_spokes(shiftx, shifty, Color.white, spoke_begin, spoke_end, srep.index)
     end
 
     if (srep.getExtendInterpolatedSpokesEnd()).length > 0 and srep.show_extend_spokes
@@ -198,9 +198,15 @@ class Field
   end
 
   # method for rendering interpolated spokes
-  def render_interp_spokes(shiftx, shifty, color, ibegin, iend)
-    @app.stroke color
+  def render_interp_spokes(shiftx, shifty, color, ibegin, iend, srep_index)
+
     ibegin.each_with_index do |p, i|
+
+       if (i == 49 / 2 and srep_index == 0)
+          @app.stroke Color.blue
+       else
+          @app.stroke color
+       end
        @app.line(p[0]+shiftx, p[1]+shifty, iend[i][0]+shiftx, iend[i][1]+shifty)
     end
   end
@@ -211,6 +217,11 @@ class Field
     iend.each_with_index do |p, i|
       @app.line(ibegin[i][0]+shiftx, ibegin[i][1]+shifty, p[0]+shiftx, p[1]+shifty)
     end
+  end
+
+  def color_one_spoke(shiftx, shifty, color, ibegin, iend) 
+    @app.stroke color
+    @app.line(ibegin[0]+shiftx, ibegin[1]+shifty, iend[0]+shiftx, iend[0]+shifty)
   end
   
   # method for rendering atoms
@@ -584,94 +595,110 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
       button("save as") {
          # currently save as config_1
          saveSrepDataAsXML('srep_data/config_1.xml',$sreps,3)
-      }
-     
-      button("Interpolate Spokes 2") {
-	srep = $sreps[0]
-	srep_index = 0
-	curr_index = 0
-	if not $xt 
-		file = File.open($points_file_path + srep_index.to_s, 'r')
-		$xt = file.gets.split(' ').collect{|x| x.to_f}
-		$yt = file.gets.split(' ').collect{|y| y.to_f}
-		file = File.open($radius_file_path2 + srep_index.to_s, 'r')
-		  # rt: interpolated radius r
-	    	$rt = file.gets.split(' ').collect{|r| r.to_f}
-		  # logrk: interpolated logrk 
-		file = File.open($logrk_file_path3 + srep_index.to_s, 'r')
-		$logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
-		$indices = srep.base_index
-      	        puts "read all data needed >"   
-        end
-        # initially it is zero 
-        base_index = $current_base_index
+      }  
 
-        distance_to_next_base = ( $indices[base_index+1] - $indices[base_index] ) - $step_go_so_far 
-        puts "dis to next base: " + distance_to_next_base.to_s
-        curr_index = $indices[base_index] + $step_go_so_far  + 1 
-        if distance_to_next_base == 0 # <= reached another base point
-                puts "############################################################"
-		puts "############################################################"
-		puts "                         at base end!                       "
-		puts "############################################################"
-		puts "############################################################"
-		$step_go_so_far  = 0
-		# update current_base_index
-		$current_base_index = $current_base_index + 1    
-		$ui1 = srep.atoms[$current_base_index].spoke_direction[0]
-		$ui2 = srep.atoms[$current_base_index].spoke_direction[1]
-		distance_to_next_base = $indices[base_index+1] - $indices[base_index]
-		#  Why here is no checking for base index out of bound? 
-                base_index = $current_base_index
-		spoke_index = $current_base_index
-	end
+      button("label spokes") {
+         indices = [49]
+         indices.each do |k|
+            i = k / 2 - 1
+            # get the position for that spoke with index i 
+            shiftx = @shifts[0]
+	    shifty = @shifts[1]
+            srep_0 = $sreps[0]
+            ibegin = [srep_0.interpolated_spokes_begin[i][0],srep_0.interpolated_spokes_begin[i][1]]
+            iend = [srep_0.interpolated_spokes_end[i][0],srep_0.interpolated_spokes_end[i][1]]
+            # color it
+	    @field.color_one_spoke(shiftx, shifty, Color.blue, ibegin, iend)
+         end
+      } 
+     
+    #  button("Interpolate Spokes 2") {
+    #	srep = $sreps[0]
+   #	srep_index = 0
+#	curr_index = 0
+#	if not $xt 
+#		file = File.open($points_file_path + srep_index.to_s, 'r')
+#		$xt = file.gets.split(' ').collect{|x| x.to_f}
+#		$yt = file.gets.split(' ').collect{|y| y.to_f}
+#		file = File.open($radius_file_path2 + srep_index.to_s, 'r')
+#		  # rt: interpolated radius r
+#	    	$rt = file.gets.split(' ').collect{|r| r.to_f}
+#		  # logrk: interpolated logrk 
+#		file = File.open($logrk_file_path3 + srep_index.to_s, 'r')
+#		$logrkm1 = file.gets.split(' ').collect{|logrkm1| logrkm1.to_f}
+#		$indices = srep.base_index
+ #     	        puts "read all data needed >"   
+  #      end
+   #     # initially it is zero 
+   #     base_index = $current_base_index
+
+    #    distance_to_next_base = ( $indices[base_index+1] - $indices[base_index] ) - $step_go_so_far 
+     #   puts "dis to next base: " + distance_to_next_base.to_s
+    #    curr_index = $indices[base_index] + $step_go_so_far  + 1 
+     #   if distance_to_next_base == 0 # <= reached another base point
+      #          puts "############################################################"
+	#	puts "############################################################"
+	#	puts "                         at base end!                       "
+	#	puts "############################################################"
+	#	puts "############################################################"
+	#	$step_go_so_far  = 0
+#		# update current_base_index
+#		$current_base_index = $current_base_index + 1    
+#		$ui1 = srep.atoms[$current_base_index].spoke_direction[0]
+#		$ui2 = srep.atoms[$current_base_index].spoke_direction[1]
+#		distance_to_next_base = $indices[base_index+1] - $indices[base_index]
+#		#  Why here is no checking for base index out of bound? 
+ #               base_index = $current_base_index
+#		spoke_index = $current_base_index
+#	end
           
-        # -->>>>>> after here we have the curr_index
+ #       # -->>>>>> after here we have the curr_index
          
-        # initialization
-	if curr_index == 1
-                $ui1 = srep.atoms[0].spoke_direction[0]
-                $ui2 = srep.atoms[0].spoke_direction[1]
-       		distance_to_next_base = $indices[base_index+1] - $indices[base_index]
+  #      # initialization
+#	if curr_index == 1
+ #               $ui1 = srep.atoms[0].spoke_direction[0]
+  #              $ui2 = srep.atoms[0].spoke_direction[1]
+   #    		distance_to_next_base = $indices[base_index+1] - $indices[base_index]
 
-                base_index = $current_base_index
-		spoke_index = $current_base_index
-        end
+    #            base_index = $current_base_index
+	#	spoke_index = $current_base_index
+  #      end
         # avoid index out of bound when computing v
-        if curr_index != base_index[-1]
+   #     if curr_index != base_index[-1]
               # calculate v1 
-               v1t = [$xt[curr_index+1] - $xt[curr_index], $yt[curr_index+1] - $yt[curr_index]]
-	end
+    #           v1t = [$xt[curr_index+1] - $xt[curr_index], $yt[curr_index+1] - $yt[curr_index]]
+#	end
             # normalize the size of v vector
-        size_v1t = Math.sqrt(v1t[0]**2 + v1t[1]**2)
-        d1t = size_v1t
-        norm_v1t = v1t.collect{|v| v / size_v1t} 
+ #       size_v1t = Math.sqrt(v1t[0]**2 + v1t[1]**2)
+  #      d1t = size_v1t
+   #     norm_v1t = v1t.collect{|v| v / size_v1t} 
      
-        k1t = ( 1 + ( -1 * Math.exp($logrkm1[curr_index] ) ) ) / $rt[curr_index] 
+    #    k1t = ( 1 + ( -1 * Math.exp($logrkm1[curr_index] ) ) ) / $rt[curr_index] 
             
         # call a method to interpolate 
-        puts "u1before update" + $ui1.to_s
-        $ui1 = interpolateSpokeAtPos2($ui1, norm_v1t, -1 * k1t, d1t)
-        puts "u1after update" + $ui1.to_s
-        puts "u2before update" + $ui2.to_s
-        $ui2 = interpolateSpokeAtPos2($ui2, norm_v1t, k1t, d1t)
-        puts "u2after update" + $ui2.to_s
-      #        puts "ui: " + ui.to_s
-        srep.interpolated_spokes_begin << [$xt[curr_index],$yt[curr_index],-1]    
-      #        puts "rt: " + rt[curr_index-1].to_s
-        srep.interpolated_spokes_end  <<  [$xt[curr_index]+$ui1[0]*$rt[curr_index],$yt[curr_index]-$ui1[1]*$rt[curr_index],-1,[],'regular']
- # srep.interpolated_spokes_end  <<  [$xt[curr_index]+$ui1[0],$yt[curr_index]-$ui1[1],-1,[],'regular']
-        spoke_index = $indices[base_index]+$step_go_so_far+1
-        spoke_begin_x = $xt[spoke_index]
-        spoke_begin_y = $yt[spoke_index]
-        $sreps[srep_index].interpolated_spokes_begin << [spoke_begin_x,spoke_begin_y,-1,[],'regular']    
-        spoke_end_x = spoke_begin_x + $ui2[0]*$rt[spoke_index]
-        spoke_end_y = spoke_begin_y - $ui2[1]*$rt[spoke_index]
-        $sreps[srep_index].interpolated_spokes_end  <<  [spoke_end_x,spoke_end_y,-1,[],'regular']
-        #       puts "ddl" +  $sreps[srep_index].interpolated_spokes_end.to_s
-        refresh @points, $sreps, @shifts
-        $step_go_so_far = $step_go_so_far + 1              
-       }
+#        puts "u1before update" + $ui1.to_s
+ #       $ui1 = interpolateSpokeAtPos2($ui1, norm_v1t, -1 * k1t, d1t)
+  #      puts "u1after update" + $ui1.to_s
+#        puts "u2before update" + $ui2.to_s
+ #       $ui2 = interpolateSpokeAtPos2($ui2, norm_v1t, k1t, d1t)
+  #      puts "u2after update" + $ui2.to_s
+   #   #        puts "ui: " + ui.to_s
+    #    srep.interpolated_spokes_begin << [$xt[curr_index],$yt[curr_index],-1]    
+     # #        puts "rt: " + rt[curr_index-1].to_s
+      #  srep.interpolated_spokes_end  <<  [$xt[curr_index]+$ui1[0]*$rt[curr_index],$yt[curr_index]-$ui1[1]*$rt[curr_index],-1,[],'regular']
+ ## srep.interpolated_spokes_end  <<  [$xt[curr_index]+$ui1[0],$yt[curr_index]-$ui1[1],-1,[],'regular']
+  #      spoke_index = $indices[base_index]+$step_go_so_far+1
+   #     spoke_begin_x = $xt[spoke_index]
+    #    spoke_begin_y = $yt[spoke_index]
+     #   $sreps[srep_index].interpolated_spokes_begin << [spoke_begin_x,spoke_begin_y,-1,[],'regular']    
+     #   spoke_end_x = spoke_begin_x + $ui2[0]*$rt[spoke_index]
+      #  spoke_end_y = spoke_begin_y - $ui2[1]*$rt[spoke_index]
+       # $sreps[srep_index].interpolated_spokes_end  <<  [spoke_end_x,spoke_end_y,-1,[],'regular']
+    #    #       puts "ddl" +  $sreps[srep_index].interpolated_spokes_end.to_s
+     #   refresh @points, $sreps, @shifts
+      #  $step_go_so_far = $step_go_so_far + 1              
+      # }
+
  #            else
 =begin
 
