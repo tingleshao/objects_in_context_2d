@@ -55,7 +55,7 @@ def transform_interp_spoke_index(n)
      return i
 end
 
-$colored_spoke_indices_origin = [49]
+$colored_spoke_indices_origin = [35, 40, 41, 42, 44, 45, 47, 50]
 $colored_spoke_indices = []
 $colored_spoke_indices_origin.each do |n|
    $colored_spoke_indices << transform_interp_spoke_index(n)
