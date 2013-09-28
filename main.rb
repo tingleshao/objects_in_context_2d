@@ -232,7 +232,13 @@ class Field
   # method for rendering extended part of spokes
   def render_extend_interp_spokes(shiftx, shifty, color, ibegin, iend)
     @app.stroke color
+    # TODO: BUGGY!!
     iend.each_with_index do |p, i|
+	if p.size >= 4 and  (p[3].is_a? Integer) and p[3] >= 0 and p[3] < 3 
+	      @app.stroke $sreps[p[3]].color
+	elsif p.size >=3 and (p[2].is_a? Integer) and p[2] >= 0 and p[2] < 3 
+	      @app.stroke $sreps[p[2]].color
+	end
       @app.line(ibegin[i][0]+shiftx, ibegin[i][1]+shifty, p[0]+shiftx, p[1]+shifty)
     end
   end
