@@ -162,12 +162,12 @@ class Field
     if (srep.getExtendInterpolatedSpokesEnd()).length > 0 and srep.show_extend_spokes
       spoke_begin = srep.interpolated_spokes_end  
       spoke_end = srep.getExtendInterpolatedSpokesEnd()
-           #TODO : working !!!!
-    #  if ($show_subsetof_extended_spokes) 
-           
-    #  else
-           render_extend_interp_spokes(shiftx, shifty, srep.color, spoke_begin, spoke_end)
-   #   end
+
+      if ($show_subsetof_extended_spokes) 
+          render_subset_extend_interp_spokes(shiftx, shifty, srep.color, spoke_begin, spoke_end)
+      else
+          render_extend_interp_spokes(shiftx, shifty, srep.color, spoke_begin, spoke_end)
+      end
     end
     
     if srep.show_curve
@@ -251,6 +251,29 @@ class Field
               @app.stroke color
 	end
       @app.line(ibegin[i][0]+shiftx, ibegin[i][1]+shifty, p[0]+shiftx, p[1]+shifty)
+    end
+  end
+
+  def color_one_spoke(shiftx, shifty, color, ibegin, iend) 
+    @app.stroke color
+    @app.line(ibegin[0]+shiftx, ibegin[1]+shifty, iend[0]+shiftx, iend[0]+shifty)
+  end
+
+    # method for rendering subset of extended part of spokes
+  def render_subset_extend_interp_spokes(shiftx, shifty, color, ibegin, iend)
+
+    iend.each_with_index do |p, i|
+#	if p.size >= 4 and  (p[3].is_a? Integer) and p[3] >= 0 and p[3] < 3 
+#	      @app.stroke $sreps[p[3]].color
+
+        if $subset_index.include? i
+		if p.size >=3 and (p[2].is_a? Integer) and p[2] >= 0 and p[2] < 3 
+		      @app.stroke $sreps[p[2]].color
+		else 
+		      @app.stroke color
+		end
+		@app.line(ibegin[i][0]+shiftx, ibegin[i][1]+shifty, p[0]+shiftx, p[1]+shifty)
+	end
     end
   end
 
