@@ -39,6 +39,9 @@ $dilate_ratio = 1.05
 $a_big_number = 100
 $end_disk_spoke_number = 20
 
+$show_subsetof_extended_spokes = true
+# 0 to 277
+$subset_index = [35, 40, 41, 42, 44, 45, 47, 50]
 
 def transform_interp_spoke_index(n)
      k = n - 1
@@ -159,7 +162,12 @@ class Field
     if (srep.getExtendInterpolatedSpokesEnd()).length > 0 and srep.show_extend_spokes
       spoke_begin = srep.interpolated_spokes_end  
       spoke_end = srep.getExtendInterpolatedSpokesEnd()
-      render_extend_interp_spokes(shiftx, shifty, srep.color, spoke_begin, spoke_end)
+           #TODO : working !!!!
+    #  if ($show_subsetof_extended_spokes) 
+           
+    #  else
+           render_extend_interp_spokes(shiftx, shifty, srep.color, spoke_begin, spoke_end)
+   #   end
     end
     
     if srep.show_curve
@@ -231,13 +239,16 @@ class Field
    
   # method for rendering extended part of spokes
   def render_extend_interp_spokes(shiftx, shifty, color, ibegin, iend)
-    @app.stroke color
-    # TODO: BUGGY!!
+   
+
     iend.each_with_index do |p, i|
-	if p.size >= 4 and  (p[3].is_a? Integer) and p[3] >= 0 and p[3] < 3 
-	      @app.stroke $sreps[p[3]].color
-	elsif p.size >=3 and (p[2].is_a? Integer) and p[2] >= 0 and p[2] < 3 
+#	if p.size >= 4 and  (p[3].is_a? Integer) and p[3] >= 0 and p[3] < 3 
+#	      @app.stroke $sreps[p[3]].color
+
+	if p.size >=3 and (p[2].is_a? Integer) and p[2] >= 0 and p[2] < 3 
 	      @app.stroke $sreps[p[2]].color
+	else 
+              @app.stroke color
 	end
       @app.line(ibegin[i][0]+shiftx, ibegin[i][1]+shifty, p[0]+shiftx, p[1]+shifty)
     end
