@@ -159,7 +159,7 @@ class Field
     if (srep.getExtendInterpolatedSpokesEnd()).length > 0 and srep.show_extend_spokes
       spoke_begin = srep.interpolated_spokes_end  
       spoke_end = srep.getExtendInterpolatedSpokesEnd()
-      render_extend_interp_spokes(shiftx, shifty, Color.red, spoke_begin, spoke_end)
+      render_extend_interp_spokes(shiftx, shifty, srep.color, spoke_begin, spoke_end)
     end
     
     if srep.show_curve
