@@ -161,7 +161,7 @@ class Field
     end
 
     if (srep.getExtendInterpolatedSpokesEnd()).length > 0 and srep.show_extend_spokes
-      spoke_begin = srep.interpolated_spokes_end  
+      spoke_begin = srep.interpolated_spokes_begin  
       spoke_end = srep.getExtendInterpolatedSpokesEnd()
 
       if ($show_subsetof_extended_spokes) 
