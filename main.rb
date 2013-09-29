@@ -43,12 +43,15 @@ $show_subsetof_extended_spokes = true
 # 0 to 277
 $subset_index = [7, 25, 51, 71, 89, 113, 131, 151, 171]
 
-$refine_linking_structure = true
+$refine_linking_structure = false
 $refine_window_r = 20
 $refine_window_dir_lst = [90,90,90]
 $refine_window_center_pos = [[380,410],[420,423], [500,440]]
 $refined_linkingPts = []
 
+$display_fake_linking = true
+$fake_linkingPts = []
+$fake_indices = [0, 10, 20, 30]
 
 
 def transform_interp_spoke_index(n)
@@ -252,6 +255,28 @@ class Field
     end
   end
 
+  def refine_fake_linking_structure()
+     if $linkingPts.size > 0
+         $linkingPts.sort_by! {|p| p[0]}
+         $linkingPts.each_with_index do |p, i|
+             if $fake_indices.include? i and p[1] < 450
+		$fake_linkingPts << p
+             end
+         end
+     end
+     $fake_linkingPts.sort_by! {|p| p[0]}
+  end
+
+  def render_fake_linkingPts(shifts)
+     @app.stroke Color.black
+     shift = shifts[0]
+     $fake_linkingPts.each_with_index do |p, i|
+	 if i < $fake_linkingPts.size - 1
+              @app.line(p[0]+shift, p[1]+shift, $fake_linkingPts[i+1][0]+shift, $fake_linkingPts[i+1][1]+shift)
+          end
+     end
+  end
+
   #dispalys refine window
   def render_refine_windows() 
      @app.stroke Color.red
@@ -266,13 +291,18 @@ class Field
   end
 
   def refine_linking_structure()
-      $refined_linkingPts = []
-      $linkingPts.each_with_index do |dot, i|
+      refined_linkingPts = $linkingPts.dup
+    #  alert($linkingPts)
+      ret = []
+      refined_linkingPts.each_with_index do |dot, i|
            # if dot is in window 
-           has_new_dots = false
-           new_dot = dot
-           $refine_window_center_pos.each_with_index do |p, j|   
-              if ( dot[0] - p[0] )**2 + (dot[1] - p[1])**2 < $refine_window_r ** 2
+         #  has_new_dots = false
+           $refine_window_center_pos.each_with_index do |pp, j|   
+              p = [pp[0] - 300, pp[1] - 300]
+              if ( dot[0] - p[1] )**2 + (dot[1] - p[1])**2 < $refine_window_r ** 2
+		#alert("hi")
+=begin
+		
           	 dot_vec = [ dot[0] - p[0] , (dot[1] - p[1]) ]
                  dot_vec_len = Math.sqrt(dot_vec[0]**2 + dot_vec[1]**2)
                  dot_vec = [dot_vec[0]/dot_vec_len, dot_vec[1]/dot_vec_len]
@@ -281,18 +311,25 @@ class Field
                  dir_vec = [ Math.cos(theta), -1*Math.sin(theta) ]
                  cos_angle = dir_vec[0] * dot_vec[0] + dir_vec[1] * dot_vec[1] 
                  if (cos_angle < 0) # other side
-                    new_dot = [dot[0]+dir_vec[0]*cos_angle,dot[1]+dir_vec[1]*cos_angle]
+                    new_dot = [dot[0]+dir_vec[0]*r*cos_angle,dot[1]+dir_vec[1]*r*cos_angle]
                  else   # same side
                     new_dot = [dot[0]-dir_vec[0]*cos_angle,dot[1]-dir_vec[1]**cos_angle]
                  end
-                 $refined_linkingPts << new_dot
-                 $has_new_dots = true
+=end		 ret << [p[0],p[1]]
+                 break
+		# new_dot = [p[0], p[1]]
+             #    $refined_linkingPts << new_dot
+            #     $has_new_dots = true
+	#	 break 
+               else 
+                 ret << dot
                end
-            if  (not has_new_dots)
-                  $refined_linkingPts << dot
-            end
-          end
+            #      $refined_linkingPts << dot
+           end
       end
+      alert(ret)
+   #   alert($linkingPts)
+      return ret
   end
 
 
@@ -340,7 +377,7 @@ class Field
   # method for rendering linking structure
   def render_linking_structure(shifts)
      shift = shifts[0]
-     if $refined_linkingPts == []
+     if not $refine_linking_structure
        $linkingPts.each do |pt|
          if pt != []
            render_atom(pt[0]+shift, pt[1]+shift, Color.black)
@@ -357,38 +394,47 @@ class Field
 
   # this method calls the render_srep() and render_linking_structure() method
   def paint
-    @app.nostroke
-    checkSrepIntersection
+      if true
+	    @app.nostroke
+	    checkSrepIntersection
 
-    $sreps.each.with_index do |srep, i|
-      render_srep(srep, @shifts[i] , @shifts[i] , 1.5, true)
-    end
+	    $sreps.each.with_index do |srep, i|
+	      render_srep(srep, @shifts[i] , @shifts[i] , 1.5, true)
+	    end
 
-    #render extended spokes 
-    $sreps.each.with_index do |srep, i|
+	    #render extended spokes 
+	    $sreps.each.with_index do |srep, i|
+	       
+	      if (srep.getExtendInterpolatedSpokesEnd()).length > 0 and srep.show_extend_spokes
+		spoke_begin = srep.interpolated_spokes_begin  
+		spoke_end = srep.getExtendInterpolatedSpokesEnd()
+
+		if ($show_subsetof_extended_spokes) 
+		   render_subset_extend_interp_spokes(@shifts[i],@shifts[i], srep.color, spoke_begin, spoke_end, srep.index)
+		else
+		   render_extend_interp_spokes(@shifts[i],@shifts[i], srep.color, spoke_begin, spoke_end)
+		end
+	      end
+	    #render_extended_interp_spokes(srep, @shifts[i] , @shifts[i] , 1.5, true)
+	     end
+	  
+	    if $show_linking_structure 
+	       if $dilateCount < 15
+		   render_linking_structure(@shifts)
+	       else 
+		   refine_fake_linking_structure()
+		   render_fake_linkingPts(@shifts)
+	       end
+	    end
+
+	    # render refining windows
+	    if $refine_linking_structure
+	       render_refine_windows()
+	    end
+      else
+     #  read stdev 2 data and render 
        
-      if (srep.getExtendInterpolatedSpokesEnd()).length > 0 and srep.show_extend_spokes
-        spoke_begin = srep.interpolated_spokes_begin  
-        spoke_end = srep.getExtendInterpolatedSpokesEnd()
-
-        if ($show_subsetof_extended_spokes) 
-           render_subset_extend_interp_spokes(@shifts[i],@shifts[i], srep.color, spoke_begin, spoke_end, srep.index)
-        else
-           render_extend_interp_spokes(@shifts[i],@shifts[i], srep.color, spoke_begin, spoke_end)
-        end
       end
-    #render_extended_interp_spokes(srep, @shifts[i] , @shifts[i] , 1.5, true)
-     end
-  
-    if $show_linking_structure 
-       refine_linking_structure()
-       render_linking_structure(@shifts)
-    end
-
-    # render refining windows
-    if $refine_linking_structure
-       render_refine_windows()
-    end
   end  
  
   # this method interates the sreps and let them check the spoke intersection
@@ -434,7 +480,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
             # dilate interpolated spokes
             # and check intersection 
             # user can specify first serval count to speed up dilate
-            if $dilateCount > 6
+            if $dilateCount > 9
               sublinkingPts = srep.extendInterpolatedSpokes($dilate_ratio, $sreps, true)
               sublinkingPts.each do |p|
                 $linkingPts << p
@@ -444,6 +490,9 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
             end
 	  end
           $linkingPts = $linkingPts.uniq
+          if $refine_linging_structure
+	     $refined_linkingPts.replace( @field.refine_linking_structure() )
+          end
           $dilateCount = $dilateCount + 1
           refresh @points, $sreps, @shifts
         }
