@@ -164,7 +164,7 @@ class Field
       spoke_end = srep.getExtendInterpolatedSpokesEnd()
 
       if ($show_subsetof_extended_spokes) 
-          render_subset_extend_interp_spokes(shiftx, shifty, srep.color, spoke_begin, spoke_end)
+          render_subset_extend_interp_spokes(shiftx, shifty, srep.color, spoke_begin, spoke_end, srep.index)
       else
           render_extend_interp_spokes(shiftx, shifty, srep.color, spoke_begin, spoke_end)
       end
@@ -260,20 +260,28 @@ class Field
   end
 
     # method for rendering subset of extended part of spokes
-  def render_subset_extend_interp_spokes(shiftx, shifty, color, ibegin, iend)
+  def render_subset_extend_interp_spokes(shiftx, shifty, color, ibegin, iend, srep_index)
 
     iend.each_with_index do |p, i|
 #	if p.size >= 4 and  (p[3].is_a? Integer) and p[3] >= 0 and p[3] < 3 
 #	      @app.stroke $sreps[p[3]].color
-
-        if $subset_index.include? i
-		if p.size >=3 and (p[2].is_a? Integer) and p[2] >= 0 and p[2] < 3 
+      if srep_index == 0
+           if $subset_index.include? i
+        
+		if  p.size >=3 and (p[2].is_a? Integer) and p[2] >= 0 and p[2] < 3 
 		      @app.stroke $sreps[p[2]].color
+
+                      other_srep_index = p[2]
+                      other_srep_spoke_index = p[3]
+                      other_srep_spoke_begin = $sreps[other_srep_index].interpolated_spokes_begin[other_srep_spoke_index]
+                      @app.line(other_srep_spoke_begin[0]+shiftx, other_srep_spoke_begin[1]+shifty, p[0]+shiftx, p[1]+shifty)
 		else 
 		      @app.stroke color
 		end
+  
 		@app.line(ibegin[i][0]+shiftx, ibegin[i][1]+shifty, p[0]+shiftx, p[1]+shifty)
-	end
+	   end
+       end
     end
   end
 
