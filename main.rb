@@ -47,6 +47,8 @@ $refine_linking_structure = true
 $refine_window_r = 20
 $refine_window_dir_lst = [90,90,90]
 $refine_window_center_pos = [[380,410],[420,423], [500,440]]
+$refined_linkingPts = []
+
 
 
 def transform_interp_spoke_index(n)
@@ -262,22 +264,36 @@ class Field
          @app.oval(p[0]+r*Math.cos(angle)-3, p[1]-r*Math.sin(angle)-3,3)    
      end
   end
-=begin
+
   def refine_linking_structure()
-      dot_vec = [ dot[0] - p[0] , dot[1] - p[1] ]
-      # get the dot product between it and the angle
-      theta = THAT_ANGLE / 180 
-      dir_vec = [ Math.cos(theta), Math.sin(theta) ]
-      cos_angle_between_dot_and_dir = dir_vec[0] * dot_vec[0] + dir_vec[1] * dot_vec[1] 
-      if (cos_angle_between_dot_and_dir < 0) # other side
-          ...
-      else   # same side
-          ...
+      $refined_linkingPts = []
+      $linkingPts.each_with_index do |dot, i|
+           # if dot is in window 
+           has_new_dots = false
+           new_dot = dot
+           $refine_window_center_pos.each_with_index do |p, j|   
+              if ( dot[0] - p[0] )**2 + (dot[1] - p[1])**2 < $refine_window_r ** 2
+          	 dot_vec = [ dot[0] - p[0] , (dot[1] - p[1]) ]
+                 dot_vec_len = Math.sqrt(dot_vec[0]**2 + dot_vec[1]**2)
+                 dot_vec = [dot_vec[0]/dot_vec_len, dot_vec[1]/dot_vec_len]
+    		  # get the dot product between it and the angle
+   	         theta = $refine_window_dir_lst[i].to_f / 180 * Math::PI 
+                 dir_vec = [ Math.cos(theta), -1*Math.sin(theta) ]
+                 cos_angle = dir_vec[0] * dot_vec[0] + dir_vec[1] * dot_vec[1] 
+                 if (cos_angle < 0) # other side
+                    new_dot = [dot[0]+dir_vec[0]*cos_angle,dot[1]+dir_vec[1]*cos_angle]
+                 else   # same side
+                    new_dot = [dot[0]-dir_vec[0]*cos_angle,dot[1]-dir_vec[1]**cos_angle]
+                 end
+                 $refined_linkingPts << new_dot
+                 $has_new_dots = true
+               end
+            if  (not has_new_dots)
+                  $refined_linkingPts << dot
+            end
+          end
       end
-         
   end
-=end
- 
 
 
   def color_one_spoke(shiftx, shifty, color, ibegin, iend) 
@@ -324,10 +340,18 @@ class Field
   # method for rendering linking structure
   def render_linking_structure(shifts)
      shift = shifts[0]
-     $linkingPts.each do |pt|
-       if pt != []
-         render_atom(pt[0]+shift, pt[1]+shift, Color.black)
+     if $refined_linkingPts == []
+       $linkingPts.each do |pt|
+         if pt != []
+           render_atom(pt[0]+shift, pt[1]+shift, Color.black)
+         end
        end
+     else 
+       $refined_linkingPts.each do |pt|
+         if pt != []
+           render_atom(pt[0]+shift, pt[1]+shift, Color.black)
+         end
+       end   
      end
   end
 
@@ -357,6 +381,7 @@ class Field
      end
   
     if $show_linking_structure 
+       refine_linking_structure()
        render_linking_structure(@shifts)
     end
 
