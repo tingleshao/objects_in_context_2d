@@ -41,7 +41,7 @@ $end_disk_spoke_number = 20
 
 $show_subsetof_extended_spokes = true
 # 0 to 277
-$subset_index = [35, 40, 41, 42, 44, 45, 47, 50]
+$subset_index = [7, 25, 51, 71, 89, 113, 131, 151, 171]
 
 def transform_interp_spoke_index(n)
      k = n - 1
@@ -58,7 +58,8 @@ def transform_interp_spoke_index(n)
      return i
 end
 
-$colored_spoke_indices_origin = [35, 40, 41, 42, 44, 45, 47, 50]
+#$colored_spoke_indices_origin = [35, 40, 41, 42, 44, 45, 47, 50]
+$colored_spoke_indices_origin = []
 $colored_spoke_indices = []
 $colored_spoke_indices_origin.each do |n|
    $colored_spoke_indices << transform_interp_spoke_index(n)
@@ -150,7 +151,7 @@ class Field
       end 
       atom_x = atom.x+shiftx
       atom_y = atom.y+shifty
-      render_spokes(atom_x, atom_y, atom.type, atom.spoke_length, atom.spoke_direction, srep.color)
+      #render_spokes(atom_x, atom_y, atom.type, atom.spoke_length, atom.spoke_direction, srep.color)
     end
 
     if srep.interpolated_spokes_begin.length > 0 and srep.show_interpolated_spokes
