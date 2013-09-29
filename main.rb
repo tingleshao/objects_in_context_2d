@@ -43,6 +43,12 @@ $show_subsetof_extended_spokes = true
 # 0 to 277
 $subset_index = [7, 25, 51, 71, 89, 113, 131, 151, 171]
 
+$refine_linking_structure = true
+$refine_window_r = 10
+$refine_windor_dir_lst = []
+$refine_window_center_pos = []
+
+
 def transform_interp_spoke_index(n)
      k = n - 1
      i = -1
@@ -243,6 +249,20 @@ class Field
       @app.line(ibegin[i][0]+shiftx, ibegin[i][1]+shifty, p[0]+shiftx, p[1]+shifty)
     end
   end
+
+  #dispalys refine window
+  def render_refine_window() 
+     r = $refine_window_r
+     $refine_window_center_pos.each_with_index do |p, i|
+        @app.oval(p[0]-r,p[1]-r,r)     
+	# render the dir for each window
+	angle = $refine_window_dir_lst[i]/180
+	@app.line(p[0]-r*Math.cos(angle), p[1]+r*Math.sin(angle),p[0]+r*Math.cos(angle), p[1]-r*Math.sin(angle))
+     end
+
+     
+  end
+
 
   def color_one_spoke(shiftx, shifty, color, ibegin, iend) 
     @app.stroke color
