@@ -45,8 +45,8 @@ $subset_index = [7, 25, 51, 71, 89, 113, 131, 151, 171]
 
 $refine_linking_structure = true
 $refine_window_r = 10
-$refine_windor_dir_lst = []
-$refine_window_center_pos = []
+$refine_window_dir_lst = [90,90,90,90,100]
+$refine_window_center_pos = [[400,400], [500,500], [450,450], [410,410], [510,510]]
 
 
 def transform_interp_spoke_index(n)
@@ -251,17 +251,18 @@ class Field
   end
 
   #dispalys refine window
-  def render_refine_window() 
+  def render_refine_windows() 
+     @app.stroke Color.red
      r = $refine_window_r
      $refine_window_center_pos.each_with_index do |p, i|
-        @app.oval(p[0]-r,p[1]-r,r)     
+        @app.oval(p[0]-r,p[1]-r,r*2)     
 	# render the dir for each window
-	angle = $refine_window_dir_lst[i]/180
+	angle = $refine_window_dir_lst[i].to_f / 180 * Math::PI
 	@app.line(p[0]-r*Math.cos(angle), p[1]+r*Math.sin(angle),p[0]+r*Math.cos(angle), p[1]-r*Math.sin(angle))
-         @app.oval(p[0]+r*Math.cos(angle), p[1]-r*Math.sin(angle),3)    
+         @app.oval(p[0]+r*Math.cos(angle)-3, p[1]-r*Math.sin(angle)-3,3)    
      end
   end
-
+=begin
   def refine_linking_structure()
       dot_vec = [ dot[0] - p[0] , dot[1] - p[1] ]
       # get the dot product between it and the angle
@@ -275,6 +276,7 @@ class Field
       end
          
   end
+=end
  
 
 
@@ -338,6 +340,7 @@ class Field
       render_srep(srep, @shifts[i] , @shifts[i] , 1.5, true)
     end
 
+    #render extended spokes 
     $sreps.each.with_index do |srep, i|
        
       if (srep.getExtendInterpolatedSpokesEnd()).length > 0 and srep.show_extend_spokes
@@ -355,6 +358,11 @@ class Field
   
     if $show_linking_structure 
        render_linking_structure(@shifts)
+    end
+
+    # render refining windows
+    if $refine_linking_structure
+       render_refine_windows()
     end
   end  
  
