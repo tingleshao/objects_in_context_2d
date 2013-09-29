@@ -160,17 +160,6 @@ class Field
       render_interp_spokes(shiftx, shifty, Color.white, spoke_begin, spoke_end, srep.index)
     end
 
-    if (srep.getExtendInterpolatedSpokesEnd()).length > 0 and srep.show_extend_spokes
-      spoke_begin = srep.interpolated_spokes_begin  
-      spoke_end = srep.getExtendInterpolatedSpokesEnd()
-
-      if ($show_subsetof_extended_spokes) 
-          render_subset_extend_interp_spokes(shiftx, shifty, srep.color, spoke_begin, spoke_end, srep.index)
-      else
-          render_extend_interp_spokes(shiftx, shifty, srep.color, spoke_begin, spoke_end)
-      end
-    end
-    
     if srep.show_curve
       # display the interpolated curve points
       render_curve($sreps, srep.index, srep, shiftx, shifty)
@@ -315,6 +304,21 @@ class Field
       render_srep(srep, @shifts[i] , @shifts[i] , 1.5, true)
     end
 
+    $sreps.each.with_index do |srep, i|
+       
+      if (srep.getExtendInterpolatedSpokesEnd()).length > 0 and srep.show_extend_spokes
+        spoke_begin = srep.interpolated_spokes_begin  
+        spoke_end = srep.getExtendInterpolatedSpokesEnd()
+
+        if ($show_subsetof_extended_spokes) 
+           render_subset_extend_interp_spokes(@shifts[i],@shifts[i], srep.color, spoke_begin, spoke_end, srep.index)
+        else
+           render_extend_interp_spokes(@shifts[i],@shifts[i], srep.color, spoke_begin, spoke_end)
+        end
+      end
+    #render_extended_interp_spokes(srep, @shifts[i] , @shifts[i] , 1.5, true)
+     end
+  
     if $show_linking_structure 
        render_linking_structure(@shifts)
     end
