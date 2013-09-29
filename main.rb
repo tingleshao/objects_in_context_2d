@@ -258,10 +258,24 @@ class Field
 	# render the dir for each window
 	angle = $refine_window_dir_lst[i]/180
 	@app.line(p[0]-r*Math.cos(angle), p[1]+r*Math.sin(angle),p[0]+r*Math.cos(angle), p[1]-r*Math.sin(angle))
+         @app.oval(p[0]+r*Math.cos(angle), p[1]-r*Math.sin(angle),3)    
      end
-
-     
   end
+
+  def refine_linking_structure()
+      dot_vec = [ dot[0] - p[0] , dot[1] - p[1] ]
+      # get the dot product between it and the angle
+      theta = THAT_ANGLE / 180 
+      dir_vec = [ Math.cos(theta), Math.sin(theta) ]
+      cos_angle_between_dot_and_dir = dir_vec[0] * dot_vec[0] + dir_vec[1] * dot_vec[1] 
+      if (cos_angle_between_dot_and_dir < 0) # other side
+          ...
+      else   # same side
+          ...
+      end
+         
+  end
+ 
 
 
   def color_one_spoke(shiftx, shifty, color, ibegin, iend) 
