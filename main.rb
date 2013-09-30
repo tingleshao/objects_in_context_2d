@@ -51,9 +51,9 @@ $refined_linkingPts = []
 
 $display_fake_linking = true
 $fake_linkingPts = []
-$fake_indices = [0, 10, 20, 30]
+$fake_indices = [0, 55, 70, 155, 200, 235, 270, 305, 320, 355, 380, 415, 478, 510]
 
-$render_from_base = false
+$render_from_base = true
 
 def transform_interp_spoke_index(n)
      k = n - 1
@@ -260,7 +260,8 @@ class Field
      if $linkingPts.size > 0
          $linkingPts.sort_by! {|p| p[0]}
          $linkingPts.each_with_index do |p, i|
-             if $fake_indices.include? i and p[1] < 450
+           #  alert(p)
+             if $fake_indices.include? i and p[1] < 150
 		$fake_linkingPts << p
              end
          end
@@ -269,12 +270,16 @@ class Field
   end
 
   def render_fake_linkingPts(shifts)
-     @app.stroke Color.black
+   
      shift = shifts[0]
      $fake_linkingPts.each_with_index do |p, i|
+=begin
 	 if i < $fake_linkingPts.size - 1
               @app.line(p[0]+shift, p[1]+shift, $fake_linkingPts[i+1][0]+shift, $fake_linkingPts[i+1][1]+shift)
           end
+=end
+     @app.stroke rgb(i *255 / 12, 0 ,0 )
+     @app.oval p[0]+300, p[1]+300,3
      end
   end
 
@@ -420,7 +425,7 @@ class Field
 	     end
 	  
 	    if $show_linking_structure 
-	       if $dilateCount < 15
+	       if $dilateCount != 22
 		   render_linking_structure(@shifts)
 	       else 
 		   refine_fake_linking_structure()
@@ -463,35 +468,54 @@ class Field
          offset2 = 278*2*3+offset1
          spoke_len = data_vector[offset2 .. 278*3+offset2-1]
 
+         offset3 = 278*3+offset2
+         extended_lens = data_vector[offset3 .. 278*3+offset3-1]
+      #   alert(offset3)
          99.times do |i|
-            @app.line base_pts_xy[i+1][0]+shift, base_pts_xy[i+1][1]+shift, base_pts_xy[i+1][0] +shift+ spoke_dir_xy[i][0], base_pts_xy[i+1][1]+shift + spoke_dir_xy[i][1] 
-            @app.line base_pts_xy[i+1][0]+shift, base_pts_xy[i+1][1]+shift, base_pts_xy[i+1][0] +shift+ spoke_dir_xy[i+139][0], base_pts_xy[i+1][1]+shift + spoke_dir_xy[i+139][1]
-            
+           @app.stroke Color.black
+            extended_len = extended_lens[i]
+            spoke = [ spoke_dir_xy[i][0], spoke_dir_xy[i][1] ]
+            spoke_len = Math.sqrt(spoke[0]**2 + spoke[1]**2)
+            extended = [ spoke[0].to_f * extended_len / spoke_len, spoke[1].to_f * extended_len / spoke_len ]
+            if i != 0 
+          	  @app.line base_pts_xy[i+1][0]+shift, base_pts_xy[i+1][1]+shift, base_pts_xy[i+1][0] +shift+ spoke_dir_xy[i][0] + extended[0], base_pts_xy[i+1][1]+shift + spoke_dir_xy[i][1] + extended[1]
+	    end
+            extended_len = extended_lens[i+139]
+            spoke = [ spoke_dir_xy[i+139][0], spoke_dir_xy[i+139][1] ]
+            spoke_len = Math.sqrt(spoke[0]**2 + spoke[1]**2)
+            extended = [ spoke[0].to_f * extended_len / spoke_len, spoke[1].to_f * extended_len / spoke_len ]
+	    if i != 48 and i != 73 and i != 24 
+           	 @app.line base_pts_xy[i+1][0]+shift, base_pts_xy[i+1][1]+shift, base_pts_xy[i+1][0] +shift+ spoke_dir_xy[i+139][0]+extended[0], base_pts_xy[i+1][1]+shift + spoke_dir_xy[i+139][1] + extended[1]
+            end
 	    @app.stroke Color.green
-            @app.line base_pts_xy[i+1][0]+shift, base_pts_xy[i+1][1]+shift, base_pts_xy[i+1][0] +shift+ spoke_dir_xy[i][0], base_pts_xy[i+1][1]+shift + spoke_dir_xy[i][1] 
-            @app.line base_pts_xy[i+1][0]+shift, base_pts_xy[i+1][1]+shift, base_pts_xy[i+1][0] +shift+ spoke_dir_xy[i+139][0], base_pts_xy[i+1][1]+shift + spoke_dir_xy[i+139][1]
+          
+            @app.line base_pts_xy[i+1+101][0]+shift, base_pts_xy[i+1+101][1]+shift, base_pts_xy[i+1+101][0] +shift+ spoke_dir_xy[i+278][0], base_pts_xy[i+1+101][1]+shift + spoke_dir_xy[i+278][1]
+          
+            @app.line base_pts_xy[i+1+101][0]+shift, base_pts_xy[i+1+101][1]+shift, base_pts_xy[i+1+101][0] +shift+ spoke_dir_xy[i+139+278][0], base_pts_xy[i+1+101][1]+shift + spoke_dir_xy[i+139+278][1]
 
             @app.stroke Color.red
-            @app.line base_pts_xy[i+1][0]+shift, base_pts_xy[i+1][1]+shift, base_pts_xy[i+1][0] +shift+ spoke_dir_xy[i][0], base_pts_xy[i+1][1]+shift + spoke_dir_xy[i][1] 
-            @app.line base_pts_xy[i+1][0]+shift, base_pts_xy[i+1][1]+shift, base_pts_xy[i+1][0] +shift+ spoke_dir_xy[i+139][0], base_pts_xy[i+1][1]+shift + spoke_dir_xy[i+139][1]
+           
+            @app.line base_pts_xy[i+1+202][0]+shift, base_pts_xy[i+1+202][1]+shift, base_pts_xy[i+1+202][0] +shift+ spoke_dir_xy[i+556][0] , base_pts_xy[i+1+202][1]+shift + spoke_dir_xy[i+556][1] 
+            @app.line base_pts_xy[i+1+202][0]+shift, base_pts_xy[i+1+202][1]+shift, base_pts_xy[i+1+202][0] +shift+ spoke_dir_xy[i+139+556][0], base_pts_xy[i+1+202][1]+shift + spoke_dir_xy[i+139+556][1]
          end
 
          40.times do |i|
+            @app.stroke Color.black
+            if i != 0
             @app.line base_pts_xy[1][0]+shift, base_pts_xy[1][1]+shift, base_pts_xy[1][0] +shift+ spoke_dir_xy[i+238][0], base_pts_xy[1][1]+shift + spoke_dir_xy[i+238][1] 
+            end
             @app.line base_pts_xy[99][0]+shift, base_pts_xy[99][1]+shift, base_pts_xy[99][0] +shift+ spoke_dir_xy[i+99][0], base_pts_xy[99][1]+shift + spoke_dir_xy[i+99][1]
 
             @app.stroke Color.green
-            @app.line base_pts_xy[1][0]+shift, base_pts_xy[1][1]+shift, base_pts_xy[1][0] +shift+ spoke_dir_xy[i+238][0], base_pts_xy[1][1]+shift + spoke_dir_xy[i+238][1] 
-            @app.line base_pts_xy[99][0]+shift, base_pts_xy[99][1]+shift, base_pts_xy[99][0] +shift+ spoke_dir_xy[i+99][0], base_pts_xy[99][1]+shift + spoke_dir_xy[i+99][1]
+            @app.line base_pts_xy[1+101][0]+shift, base_pts_xy[1+101][1]+shift, base_pts_xy[1+101][0] +shift+ spoke_dir_xy[i+238+278][0], base_pts_xy[1+101][1]+shift + spoke_dir_xy[i+238+278][1] 
+            @app.line base_pts_xy[99+101][0]+shift, base_pts_xy[99+101][1]+shift, base_pts_xy[99+101][0] +shift+ spoke_dir_xy[i+99+278][0], base_pts_xy[99+101][1]+shift + spoke_dir_xy[i+99+278][1]
  
             @app.stroke Color.red
-            @app.line base_pts_xy[1][0]+shift, base_pts_xy[1][1]+shift, base_pts_xy[1][0] +shift+ spoke_dir_xy[i+238][0], base_pts_xy[1][1]+shift + spoke_dir_xy[i+238][1] 
-            @app.line base_pts_xy[99][0]+shift, base_pts_xy[99][1]+shift, base_pts_xy[99][0] +shift+ spoke_dir_xy[i+99][0], base_pts_xy[99][1]+shift + spoke_dir_xy[i+99][1]
+            @app.line base_pts_xy[1+202][0]+shift, base_pts_xy[1+202][1]+shift, base_pts_xy[1+202][0] +shift+ spoke_dir_xy[i+238+556][0], base_pts_xy[1+202][1]+shift + spoke_dir_xy[i+238+556][1] 
+            @app.line base_pts_xy[99+202][0]+shift, base_pts_xy[99+202][1]+shift, base_pts_xy[99+202][0] +shift+ spoke_dir_xy[i+99+556][0], base_pts_xy[99+202][1]+shift + spoke_dir_xy[i+99+556][1]
          end
-          
-         offset3 = 278*3+offset2
-         extended_len = data_vector[offset3 .. 278*3+offset3-1]
-
+    
+        
 
 
       end
@@ -540,7 +564,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
             # dilate interpolated spokes
             # and check intersection 
             # user can specify first serval count to speed up dilate
-            if $dilateCount > 9
+            if $dilateCount > 20
               sublinkingPts = srep.extendInterpolatedSpokes($dilate_ratio, $sreps, true)
               sublinkingPts.each do |p|
                 $linkingPts << p

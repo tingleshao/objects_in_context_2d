@@ -603,7 +603,7 @@ def checkSpokeEndAndDiskIntersection(x,y,srep)
     disk_y = atom.y
     disk_r = atom.expand_spoke_length[0] 
     disk_to_center = Math.sqrt(( x - disk_x ) ** 2 + ( y - disk_y ) ** 2)
-    if disk_r * 0.9 >= disk_to_center
+    if disk_r * 0.7 >= disk_to_center
        return [true, i]
     end
   end
