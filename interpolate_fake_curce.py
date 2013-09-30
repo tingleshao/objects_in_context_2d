@@ -24,11 +24,12 @@ print fake_pts_x
 print fake_pts_y
 #fake_pts_x_i = np.linspace(fake_pts_x[0], fake_pts_x[-1], len(fake_pts_x))
 #f = interp1d(fake_pts_x, fake_pts_y, kind='cubic')
-t = np.arange(0.0,1.2,(1.2)/100)
-tck,u = interpolate.splprep([fake_pts_x, fake_pts_y], s=0)
-unew = np.arange(0, 1.01, 0.01)
+#t = np.arange(0.0,1.2,(1.2)/100)
+tck,u = interpolate.splprep([fake_pts_x, fake_pts_y], k = 2, s=1.0)
+unew = np.arange(0, 1.00, 0.001)
 out = interpolate.splev(unew, tck)
-print out
+print str(out)
+print len(out[0])
 plt.figure()
 plt.plot(fake_pts_x, fake_pts_y, 'x', out[0],out[1])
 plt.axis('scaled')
