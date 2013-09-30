@@ -53,6 +53,7 @@ $display_fake_linking = true
 $fake_linkingPts = []
 $fake_indices = [0, 10, 20, 30]
 
+$render_from_base = false
 
 def transform_interp_spoke_index(n)
      k = n - 1
@@ -394,7 +395,7 @@ class Field
 
   # this method calls the render_srep() and render_linking_structure() method
   def paint
-      if true
+      if $render_from_base
 	    @app.nostroke
 	    checkSrepIntersection
 
@@ -432,8 +433,67 @@ class Field
 	       render_refine_windows()
 	    end
       else
+    
+        @app.stroke Color.black
      #  read stdev 2 data and render 
-       
+         shift = 300
+         data_vector_reader = File.open('data_vector.txt','r')
+	 data_vector = []
+         while line = data_vector_reader.gets
+               data_vector << line.strip.to_f
+         end
+         data_vector_reader.close 
+         
+         base_pts = data_vector[0..101*2*3-1]
+         base_pts_xy = []
+         (base_pts.size / 2).times do |i|
+	     base_pts_xy  << [base_pts[i*2], base_pts[i*2+1]]  
+         end
+         base_pts_xy.each do |p|
+            @app.oval(p[0]+shift,p[1]+shift,3)
+         end
+
+	 offset1 = 101*2*3
+         spoke_dir = data_vector[offset1 .. 278*2*3+offset1-1]
+         spoke_dir_xy = []
+         (spoke_dir.size/2).times do |i|
+            spoke_dir_xy << [ spoke_dir[i*2], spoke_dir[i*2+1] ] 
+         end
+         
+         offset2 = 278*2*3+offset1
+         spoke_len = data_vector[offset2 .. 278*3+offset2-1]
+
+         99.times do |i|
+            @app.line base_pts_xy[i+1][0]+shift, base_pts_xy[i+1][1]+shift, base_pts_xy[i+1][0] +shift+ spoke_dir_xy[i][0], base_pts_xy[i+1][1]+shift + spoke_dir_xy[i][1] 
+            @app.line base_pts_xy[i+1][0]+shift, base_pts_xy[i+1][1]+shift, base_pts_xy[i+1][0] +shift+ spoke_dir_xy[i+139][0], base_pts_xy[i+1][1]+shift + spoke_dir_xy[i+139][1]
+            
+	    @app.stroke Color.green
+            @app.line base_pts_xy[i+1][0]+shift, base_pts_xy[i+1][1]+shift, base_pts_xy[i+1][0] +shift+ spoke_dir_xy[i][0], base_pts_xy[i+1][1]+shift + spoke_dir_xy[i][1] 
+            @app.line base_pts_xy[i+1][0]+shift, base_pts_xy[i+1][1]+shift, base_pts_xy[i+1][0] +shift+ spoke_dir_xy[i+139][0], base_pts_xy[i+1][1]+shift + spoke_dir_xy[i+139][1]
+
+            @app.stroke Color.red
+            @app.line base_pts_xy[i+1][0]+shift, base_pts_xy[i+1][1]+shift, base_pts_xy[i+1][0] +shift+ spoke_dir_xy[i][0], base_pts_xy[i+1][1]+shift + spoke_dir_xy[i][1] 
+            @app.line base_pts_xy[i+1][0]+shift, base_pts_xy[i+1][1]+shift, base_pts_xy[i+1][0] +shift+ spoke_dir_xy[i+139][0], base_pts_xy[i+1][1]+shift + spoke_dir_xy[i+139][1]
+         end
+
+         40.times do |i|
+            @app.line base_pts_xy[1][0]+shift, base_pts_xy[1][1]+shift, base_pts_xy[1][0] +shift+ spoke_dir_xy[i+238][0], base_pts_xy[1][1]+shift + spoke_dir_xy[i+238][1] 
+            @app.line base_pts_xy[99][0]+shift, base_pts_xy[99][1]+shift, base_pts_xy[99][0] +shift+ spoke_dir_xy[i+99][0], base_pts_xy[99][1]+shift + spoke_dir_xy[i+99][1]
+
+            @app.stroke Color.green
+            @app.line base_pts_xy[1][0]+shift, base_pts_xy[1][1]+shift, base_pts_xy[1][0] +shift+ spoke_dir_xy[i+238][0], base_pts_xy[1][1]+shift + spoke_dir_xy[i+238][1] 
+            @app.line base_pts_xy[99][0]+shift, base_pts_xy[99][1]+shift, base_pts_xy[99][0] +shift+ spoke_dir_xy[i+99][0], base_pts_xy[99][1]+shift + spoke_dir_xy[i+99][1]
+ 
+            @app.stroke Color.red
+            @app.line base_pts_xy[1][0]+shift, base_pts_xy[1][1]+shift, base_pts_xy[1][0] +shift+ spoke_dir_xy[i+238][0], base_pts_xy[1][1]+shift + spoke_dir_xy[i+238][1] 
+            @app.line base_pts_xy[99][0]+shift, base_pts_xy[99][1]+shift, base_pts_xy[99][0] +shift+ spoke_dir_xy[i+99][0], base_pts_xy[99][1]+shift + spoke_dir_xy[i+99][1]
+         end
+          
+         offset3 = 278*3+offset2
+         extended_len = data_vector[offset3 .. 278*3+offset3-1]
+
+
+
       end
   end  
  
