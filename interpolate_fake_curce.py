@@ -23,6 +23,8 @@ fake_pts_lst_str = fake_pts_str.split(", [")
 fake_pts_x = []
 fake_pts_y = []
 
+print fake_pts_lst_str
+
 for p in fake_pts_lst_str: 
     that_thing = map(int, p[0:-1].split(", "))
     fake_pts_x.append(that_thing[0])

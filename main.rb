@@ -53,7 +53,7 @@ $display_fake_linking = true
 $fake_linkingPts = []
 $fake_indices = [0, 55, 70, 155, 200, 235, 270, 305, 320, 355, 380, 415, 478, 510]
 
-$render_from_base = false
+$render_from_base = true
 
 def transform_interp_spoke_index(n)
      k = n - 1
@@ -269,22 +269,25 @@ class Field
          end
      end
 =end
- $fake_linkingPts = []
+     $fake_linkingPts = []
      $subset_index.each do |i|
 	pt =  $sreps[0].getExtendInterpolatedSpokesEnd()[i]
         $fake_linkingPts << [ pt[0], pt[1] ]
      end
+     $fake_linkingPts << [270-300, 320-300]
+     $fake_linkingPts << [770-300, 370-300]
+   # $fake_linkingPts << [430-300, 600-300]
      $fake_linkingPts.sort_by! {|p| p[0]}
   end
 
   def render_fake_linkingPts(shifts)
      @app.stroke Color.black
      shift = shifts[0]
-     system('python interpolate_fake_curve.py ' + $fake_linkingPts.to_s)
-     interpolated_fake_linkingPts_reader = File.open('saved_interpolated_fake_linkingPts.txt','r')
+     system('python interpolate_fake_curce.py ' + $fake_linkingPts.to_s)
+     interpolated_fake_linkingPts_reader = File.open('interpolate_fake_linkingPts.txt','r')
      interpolated_fake_linkingPts = []
-     while line = interpolated_fake_linkingPts.gets
-         interpolated_fake_linkingPts << [line.strip.split(" ")[0].to_f, line.strip.split(" ")[1].to_f
+     while line = interpolated_fake_linkingPts_reader.gets
+         interpolated_fake_linkingPts << [line.strip.split(" ")[0].to_f, line.strip.split(" ")[1].to_f ]
      end
      interpolated_fake_linkingPts.each_with_index do |p, i|
 	 if i < interpolated_fake_linkingPts.size - 1
@@ -294,9 +297,9 @@ class Field
   #      @app.oval p[0]+300, p[1]+300,3
    #     @app.line p
      end
-     @app.line $fake_linkingPts[0][0]+shift, $fake_linkingPts[0][1]+shift, 270, 320
-     @app.line $fake_linkingPts[8][0]+shift, $fake_linkingPts[8][1]+shift, 770, 370
-     @app.line $fake_linkingPts[2][0]+shift, $fake_linkingPts[2][1]+shift, 430, 600
+  #   @app.line $fake_linkingPts[0][0]+shift, $fake_linkingPts[0][1]+shift, 270, 320
+  #   @app.line $fake_linkingPts[8][0]+shift, $fake_linkingPts[8][1]+shift, 770, 370
+  #   @app.line $fake_linkingPts[2][0]+shift, $fake_linkingPts[2][1]+shift, 430, 600
   end
 
   #dispalys refine window
