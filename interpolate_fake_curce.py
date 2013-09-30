@@ -1,7 +1,13 @@
 import sys
 from scipy.interpolate import interp1d
+import matplotlib.pyplot as plt
+from scipy import interpolate
+import numpy as np
 
-fake_pts_str = sys.argv[1]
+
+#fake_pts_str = sys.argv[1]
+
+fake_pts_str = "[[100, 200], [150, 110], [170, 200], [200, 210]]"
 
 fake_pts_str = fake_pts_str[2:-1]
 fake_pts_lst_str = fake_pts_str.split(", [")
@@ -10,9 +16,26 @@ fake_pts_x = []
 fake_pts_y = []
 
 for p in fake_pts_lst_str: 
-    that_thing = map(float, p[0:-1].split(", "))
+    that_thing = map(int, p[0:-1].split(", "))
     fake_pts_x.append(that_thing[0])
     fake_pts_y.append(that_thing[1])
+
+print fake_pts_x
+print fake_pts_y
+#fake_pts_x_i = np.linspace(fake_pts_x[0], fake_pts_x[-1], len(fake_pts_x))
+#f = interp1d(fake_pts_x, fake_pts_y, kind='cubic')
+t = np.arange(0.0,1.2,(1.2)/100)
+tck,u = interpolate.splprep([fake_pts_x, fake_pts_y], s=0)
+unew = np.arange(0, 1.01, 0.01)
+out = interpolate.splev(unew, tck)
+print out
+plt.figure()
+plt.plot(fake_pts_x, fake_pts_y, 'x', out[0],out[1])
+plt.axis('scaled')
+plt.show()
+
+#plt.plot(fake_pts_x, fake_pts_y, 'o', fake_pts_x_i, f(fake_pts_x_i), '--')
+#plt.show()
 
 
 
