@@ -5,9 +5,17 @@ from scipy import interpolate
 import numpy as np
 
 
-#fake_pts_str = sys.argv[1]
 
-fake_pts_str = "[[100, 200], [150, 110], [170, 200], [200, 210]]"
+def writePts(x,y,f,l):
+    for i in xrange(l):
+	f.write(str(x[i]))
+	f.write(" ")
+	f.write(str(y[i]))
+        f.write("\n")
+
+fake_pts_str = sys.argv[1]
+
+#fake_pts_str = "[[100, 200], [150, 110], [170, 200], [200, 210]]"
 
 fake_pts_str = fake_pts_str[2:-1]
 fake_pts_lst_str = fake_pts_str.split(", [")
@@ -28,15 +36,25 @@ print fake_pts_y
 tck,u = interpolate.splprep([fake_pts_x, fake_pts_y], k = 2, s=1.0)
 unew = np.arange(0, 1.00, 0.001)
 out = interpolate.splev(unew, tck)
-print str(out)
+#print str(out)
 print len(out[0])
+for p in out[0]:
+    print p
+
+
 plt.figure()
 plt.plot(fake_pts_x, fake_pts_y, 'x', out[0],out[1])
 plt.axis('scaled')
 plt.show()
 
+f = open('interpolate_fake_linkingPts.txt','w')
+writePts(out[0],out[1],f,len(out[0]))
+
+
 #plt.plot(fake_pts_x, fake_pts_y, 'o', fake_pts_x_i, f(fake_pts_x_i), '--')
 #plt.show()
+
+
 
 
 
