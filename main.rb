@@ -53,7 +53,7 @@ $display_fake_linking = true
 $fake_linkingPts = []
 $fake_indices = [0, 55, 70, 155, 200, 235, 270, 305, 320, 355, 380, 415, 478, 510]
 
-$render_from_base = true
+$render_from_base = false
 
 def transform_interp_spoke_index(n)
      k = n - 1
@@ -280,12 +280,16 @@ class Field
   def render_fake_linkingPts(shifts)
      @app.stroke Color.black
      shift = shifts[0]
-     $fake_linkingPts.each_with_index do |p, i|
-
-	 if i < $fake_linkingPts.size - 1
-              @app.line(p[0]+shift, p[1]+shift, $fake_linkingPts[i+1][0]+shift, $fake_linkingPts[i+1][1]+shift)
-          end
-
+     system('python interpolate_fake_curve.py ' + $fake_linkingPts.to_s)
+     interpolated_fake_linkingPts_reader = File.open('saved_interpolated_fake_linkingPts.txt','r')
+     interpolated_fake_linkingPts = []
+     while line = interpolated_fake_linkingPts.gets
+         interpolated_fake_linkingPts << [line.strip.split(" ")[0].to_f, line.strip.split(" ")[1].to_f
+     end
+     interpolated_fake_linkingPts.each_with_index do |p, i|
+	 if i < interpolated_fake_linkingPts.size - 1
+              @app.line(p[0]+shift, p[1]+shift, interpolated_fake_linkingPts[i+1][0]+shift, interpolated_fake_linkingPts[i+1][1]+shift)
+         end
        # @app.stroke rgb(i *255 / 12, 0 ,0 )
   #      @app.oval p[0]+300, p[1]+300,3
    #     @app.line p
