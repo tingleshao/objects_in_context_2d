@@ -257,30 +257,42 @@ class Field
   end
 
   def refine_fake_linking_structure()
+=begin
      if $linkingPts.size > 0
          $linkingPts.sort_by! {|p| p[0]}
          $linkingPts.each_with_index do |p, i|
            #  alert(p)
+
              if $fake_indices.include? i and p[1] < 150
 		$fake_linkingPts << p
-             end
+             end	 
          end
+     end
+=end
+ $fake_linkingPts = []
+     $subset_index.each do |i|
+	pt =  $sreps[0].getExtendInterpolatedSpokesEnd()[i]
+        $fake_linkingPts << [ pt[0], pt[1] ]
      end
      $fake_linkingPts.sort_by! {|p| p[0]}
   end
 
   def render_fake_linkingPts(shifts)
-   
+     @app.stroke Color.black
      shift = shifts[0]
      $fake_linkingPts.each_with_index do |p, i|
-=begin
+
 	 if i < $fake_linkingPts.size - 1
               @app.line(p[0]+shift, p[1]+shift, $fake_linkingPts[i+1][0]+shift, $fake_linkingPts[i+1][1]+shift)
           end
-=end
-     @app.stroke rgb(i *255 / 12, 0 ,0 )
-     @app.oval p[0]+300, p[1]+300,3
+
+       # @app.stroke rgb(i *255 / 12, 0 ,0 )
+  #      @app.oval p[0]+300, p[1]+300,3
+   #     @app.line p
      end
+     @app.line $fake_linkingPts[0][0]+shift, $fake_linkingPts[0][1]+shift, 270, 320
+     @app.line $fake_linkingPts[8][0]+shift, $fake_linkingPts[8][1]+shift, 770, 370
+     @app.line $fake_linkingPts[2][0]+shift, $fake_linkingPts[2][1]+shift, 430, 600
   end
 
   #dispalys refine window
@@ -564,7 +576,7 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
             # dilate interpolated spokes
             # and check intersection 
             # user can specify first serval count to speed up dilate
-            if $dilateCount > 20
+            if $dilateCount > 6
               sublinkingPts = srep.extendInterpolatedSpokes($dilate_ratio, $sreps, true)
               sublinkingPts.each do |p|
                 $linkingPts << p
@@ -1076,14 +1088,16 @@ Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
            srep.show_extend_disk = @list[3][0].checked?
          end
          $show_linking_structure = @list[4][0].checked?
-         if @list[4][0].checked?
-           $sreps.each do |srep|
-             srep.extend_interpolated_spokes_end.each_with_index do |spoke_end, i|
-                if spoke_end[2] != -1 
-                   $linkingPts << [spoke_end[0], spoke_end[1]]  
-                end
-             end
-           end
+         if not $dispaly_fake_linking
+		 if @list[4][0].checked?
+		   $sreps.each do |srep|
+		     srep.extend_interpolated_spokes_end.each_with_index do |spoke_end, i|
+		        if spoke_end[2] != -1 
+		           $linkingPts << [spoke_end[0], spoke_end[1]]  
+		        end
+		     end
+		   end
+		 end
          end
          refresh @points, $sreps, @shifts
          if @list[4][0].checked?
