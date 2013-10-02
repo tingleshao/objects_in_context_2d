@@ -51,6 +51,7 @@ $refined_linkingPts = []
 
 $display_fake_linking = true
 $fake_linkingPts = []
+$fake_linkingPts2 = []
 $fake_indices = [0, 55, 70, 155, 200, 235, 270, 305, 320, 355, 380, 415, 478, 510]
 
 $render_from_base = true
@@ -274,21 +275,35 @@ class Field
 	pt =  $sreps[0].getExtendInterpolatedSpokesEnd()[i]
         $fake_linkingPts << [ pt[0], pt[1] ]
      end
-     $fake_linkingPts << [270-300, 320-300]
-     $fake_linkingPts << [770-300, 370-300]
+     #$fake_linkingPts << [270-300, 320-300]
+     #$fake_linkingPts << [770-300, 370-300]
+     
+     $fake_linkingPts << [301-300, 350-300]
+     $fake_linkingPts << [760-300, 375-300]
+   
    # $fake_linkingPts << [430-300, 600-300]
      $fake_linkingPts.sort_by! {|p| p[0]}
+
+   #  $fake_linkingPts2 << [450-300, 550-300]
+   #  $fake_linkingPts2 << [440-300, 500-300]
+     $fake_linkingPts2 << [430-300, 600-300]
+     $fake_linkingPts2 << [440-300, 550-300]
+   
+     $fake_linkingPts2 << $fake_linkingPts[3]
+ #    alert($fake_linkingPts2)
+     $fake_linkingPts2.sort_by! {|p| p[0]}
   end
 
   def render_fake_linkingPts(shifts)
      @app.stroke Color.black
      shift = shifts[0]
-     system('python interpolate_fake_curce.py ' + $fake_linkingPts.to_s)
+     system('python interpolate_fake_curce.py ' + "'" + $fake_linkingPts.to_s + "'")
      interpolated_fake_linkingPts_reader = File.open('interpolate_fake_linkingPts.txt','r')
      interpolated_fake_linkingPts = []
      while line = interpolated_fake_linkingPts_reader.gets
          interpolated_fake_linkingPts << [line.strip.split(" ")[0].to_f, line.strip.split(" ")[1].to_f ]
      end
+     interpolated_fake_linkingPts_reader.close
      interpolated_fake_linkingPts.each_with_index do |p, i|
 	 if i < interpolated_fake_linkingPts.size - 1
               @app.line(p[0]+shift, p[1]+shift, interpolated_fake_linkingPts[i+1][0]+shift, interpolated_fake_linkingPts[i+1][1]+shift)
@@ -296,6 +311,18 @@ class Field
        # @app.stroke rgb(i *255 / 12, 0 ,0 )
   #      @app.oval p[0]+300, p[1]+300,3
    #     @app.line p
+     end
+     system('python interpolate_fake_curce.py ' + "'" + $fake_linkingPts2.to_s + "'")
+     interpolated_fake_linkingPts_reader = File.open('interpolate_fake_linkingPts.txt', 'r')
+     interpolated_fake_linkingPts2 = []
+     while line = interpolated_fake_linkingPts_reader.gets
+          interpolated_fake_linkingPts2 << [line.strip.split(" ")[0].to_f, line.strip.split(" ")[1].to_f]
+     end
+     interpolated_fake_linkingPts_reader.close
+     interpolated_fake_linkingPts2.each_with_index do |p, i|
+         if i < interpolated_fake_linkingPts2.size - 1
+               @app.line(p[0]+shift, p[1]+shift, interpolated_fake_linkingPts2[i+1][0]+shift, interpolated_fake_linkingPts2[i+1][1]+shift)
+         end
      end
   #   @app.line $fake_linkingPts[0][0]+shift, $fake_linkingPts[0][1]+shift, 270, 320
   #   @app.line $fake_linkingPts[8][0]+shift, $fake_linkingPts[8][1]+shift, 770, 370
