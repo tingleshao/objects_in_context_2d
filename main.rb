@@ -41,7 +41,7 @@ $end_disk_spoke_number = 20
 
 $show_subsetof_extended_spokes = true
 # 0 to 277
-$subset_index = [7, 25, 51, 71, 89, 113, 131, 151, 171]
+$subset_index = [7, 25, 51, 75, 93, 113, 131, 151, 171]
 
 $refine_linking_structure = false
 $refine_window_r = 20
@@ -52,6 +52,8 @@ $refined_linkingPts = []
 $display_fake_linking = true
 $fake_linkingPts = []
 $fake_linkingPts2 = []
+$fake_linkingPts3 = []
+$fake_linkingPts4 = []
 $fake_indices = [0, 55, 70, 155, 200, 235, 270, 305, 320, 355, 380, 415, 478, 510]
 
 $render_from_base = true
@@ -147,14 +149,18 @@ class Field
     shifty = args[2]
     scale = args[3]
     show_sphere = args[4]
-      
-    srep.atoms.each_with_index do |atom|
+    show_sphere = false
+    srep.atoms.each_with_index do |atom, i|
       render_atom(atom.x + shiftx, atom.y + shifty, atom.color)
       if show_sphere
-        center_x = atom.x + shiftx - atom.spoke_length[0]
-        center_y = atom.y + shifty - atom.spoke_length[0]
-        d = atom.spoke_length[0] * 2
-	render_circle(center_x, center_y, d, srep.color)
+          center_x = atom.x + shiftx - atom.spoke_length[0]
+          center_y = atom.y + shifty - atom.spoke_length[0]
+          d = atom.spoke_length[0] * 2
+      #  if (srep.index != 1 or i != 2)
+	  render_circle(center_x, center_y, d, srep.color)
+   #     else
+     #     render_circle(center_x+10, center_y+10, 80, srep.color)
+     #   end
       end
       if srep.show_extend_disk
         center_x = atom.x + shiftx - atom.expand_spoke_length[0]
@@ -275,21 +281,34 @@ class Field
 	pt =  $sreps[0].getExtendInterpolatedSpokesEnd()[i]
         $fake_linkingPts << [ pt[0], pt[1] ]
      end
-     #$fake_linkingPts << [270-300, 320-300]
-     #$fake_linkingPts << [770-300, 370-300]
+     $fake_linkingPts << [270-300, 320-300]
+     $fake_linkingPts << [770-300, 370-300]
      
-     $fake_linkingPts << [301-300, 350-300]
-     $fake_linkingPts << [760-300, 375-300]
+  #   $fake_linkingPts << [301-300, 350-300]
+ #    $fake_linkingPts << [760-300, 375-300]
    
-   # $fake_linkingPts << [430-300, 600-300]
+ #   $fake_linkingPts << [430-300, 600-300]
      $fake_linkingPts.sort_by! {|p| p[0]}
+     $fake_linkingPts3 << $fake_linkingPts[0]
+     $fake_linkingPts3 << $fake_linkingPts[1]
+     $fake_linkingPts3 << $fake_linkingPts[2]
+     $fake_linkingPts3 << $fake_linkingPts[3]
+     $fake_linkingPts3 << $fake_linkingPts[4]
+     $fake_linkingPts3 << [$fake_linkingPts[5][0],  $fake_linkingPts[5][1] ]
+     $fake_linkingPts4 << [$fake_linkingPts[5][0],  $fake_linkingPts[5][1] ]
 
-   #  $fake_linkingPts2 << [450-300, 550-300]
-   #  $fake_linkingPts2 << [440-300, 500-300]
-     $fake_linkingPts2 << [430-300, 600-300]
-     $fake_linkingPts2 << [440-300, 550-300]
+   #  $fake_linkingPts4 << $fake_linkingPts[5]
+     $fake_linkingPts4 << $fake_linkingPts[6]
+     $fake_linkingPts4 << $fake_linkingPts[7]
+     $fake_linkingPts4 << $fake_linkingPts[8]
+     $fake_linkingPts4 << $fake_linkingPts[9]
+     $fake_linkingPts4 << $fake_linkingPts[10]
+     $fake_linkingPts2 << [450-300-5, 500-300]
+     $fake_linkingPts2 << [440-300-5, 550-300]
+   #  $fake_linkingPts2 << [430-300, 600-300]
+   #  $fake_linkingPts2 << [440-300, 550-300]
    
-     $fake_linkingPts2 << $fake_linkingPts[3]
+     $fake_linkingPts2 << [$fake_linkingPts[5][0],  $fake_linkingPts[5][1]]
  #    alert($fake_linkingPts2)
      $fake_linkingPts2.sort_by! {|p| p[0]}
   end
@@ -297,7 +316,7 @@ class Field
   def render_fake_linkingPts(shifts)
      @app.stroke Color.black
      shift = shifts[0]
-     system('python interpolate_fake_curce.py ' + "'" + $fake_linkingPts.to_s + "'")
+     system('python interpolate_fake_curce.py ' + "'" + $fake_linkingPts3.to_s + "'")
      interpolated_fake_linkingPts_reader = File.open('interpolate_fake_linkingPts.txt','r')
      interpolated_fake_linkingPts = []
      while line = interpolated_fake_linkingPts_reader.gets
@@ -313,6 +332,18 @@ class Field
    #     @app.line p
      end
      system('python interpolate_fake_curce.py ' + "'" + $fake_linkingPts2.to_s + "'")
+     interpolated_fake_linkingPts_reader = File.open('interpolate_fake_linkingPts.txt', 'r')
+     interpolated_fake_linkingPts2 = []
+     while line = interpolated_fake_linkingPts_reader.gets
+          interpolated_fake_linkingPts2 << [line.strip.split(" ")[0].to_f, line.strip.split(" ")[1].to_f]
+     end
+     interpolated_fake_linkingPts_reader.close
+     interpolated_fake_linkingPts2.each_with_index do |p, i|
+         if i < interpolated_fake_linkingPts2.size - 1
+               @app.line(p[0]+shift, p[1]+shift, interpolated_fake_linkingPts2[i+1][0]+shift, interpolated_fake_linkingPts2[i+1][1]+shift)
+         end
+     end
+     system('python interpolate_fake_curce.py ' + "'" + $fake_linkingPts4.to_s + "'")
      interpolated_fake_linkingPts_reader = File.open('interpolate_fake_linkingPts.txt', 'r')
      interpolated_fake_linkingPts2 = []
      while line = interpolated_fake_linkingPts_reader.gets
@@ -533,7 +564,8 @@ class Field
 	    if i != 48 and i != 73 and i != 24 
            	 @app.line base_pts_xy[i+1][0]+shift, base_pts_xy[i+1][1]+shift, base_pts_xy[i+1][0] +shift+ spoke_dir_xy[i+139][0]+extended[0], base_pts_xy[i+1][1]+shift + spoke_dir_xy[i+139][1] + extended[1]
             end
-	    @app.stroke Color.green
+	#    @app.stroke Color.green
+            @app.stroke rgb(0,51,0,1)
           
             @app.line base_pts_xy[i+1+101][0]+shift, base_pts_xy[i+1+101][1]+shift, base_pts_xy[i+1+101][0] +shift+ spoke_dir_xy[i+278][0], base_pts_xy[i+1+101][1]+shift + spoke_dir_xy[i+278][1]
           
@@ -552,7 +584,8 @@ class Field
             end
             @app.line base_pts_xy[99][0]+shift, base_pts_xy[99][1]+shift, base_pts_xy[99][0] +shift+ spoke_dir_xy[i+99][0], base_pts_xy[99][1]+shift + spoke_dir_xy[i+99][1]
 
-            @app.stroke Color.green
+        #    @app.stroke Color.green
+            @app.stroke rgb(0,51,0,1)
             @app.line base_pts_xy[1+101][0]+shift, base_pts_xy[1+101][1]+shift, base_pts_xy[1+101][0] +shift+ spoke_dir_xy[i+238+278][0], base_pts_xy[1+101][1]+shift + spoke_dir_xy[i+238+278][1] 
             @app.line base_pts_xy[99+101][0]+shift, base_pts_xy[99+101][1]+shift, base_pts_xy[99+101][0] +shift+ spoke_dir_xy[i+99+278][0], base_pts_xy[99+101][1]+shift + spoke_dir_xy[i+99+278][1]
  
@@ -594,7 +627,8 @@ end
 Shoes.app :width => 1000, :height => 800, :title => '2d multi object' do
   def render_field
     clear do 
-      background rgb(192, 192, 192, 0.7)   # light gray
+      #background rgb(192, 192, 192, 0.7)   # light gray
+      background rgb(205,205,0,0.7) # yellow
    #       html_doc = Nokogiri::HTML("<html><body><h1>Loaded with XML</h1></body></html>")
    #  para html_doc
    #  para " \n\n\n\n"
@@ -1198,7 +1232,8 @@ def initialConfig
   #u1 = [[[-1,6],[0.5,-3],[-9,1]],[[-1,4],[-1,-3]],[[-1,4],[-0.1,-6]],[[1,9],[1,-1.5]],[[1,2],[2,-5],[6,1]]]
   srep1_noise_data = getNoiseForOneSrep(noise_data,1)
   srep1 = generate2DDiscreteSrep(points1,l1,u1,0.01,1,srep1_noise_data)
-  srep1.color = Color.green
+ # srep1.color = Color.green
+  srep1.color = rgb(0,204,0,0.7)
   srep1.orientation = [0,1]
   $sreps << srep1
 
